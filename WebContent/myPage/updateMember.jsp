@@ -124,28 +124,30 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="/updateMF?id=${loginId}">마이페이지</a>
-                       <ul class="myPage">
+                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                      	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <span> > </span>
+                       <ul id="myPage">
                            <li>
-                               <a href="/updateMF?id=${loginId}">회원 정보 수정</a>
+                               <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="withdraw.jsp">회원 탈퇴</a>
+                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="reviewList.jsp">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="likeMovie.jsp">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="likeReview.jsp">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="follower.jsp">팔로워</a>
+                               <a href="./followerList?id=${loginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="following.jsp">팔로잉</a>
+                               <a href="./followingList?id=${loginId}">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
@@ -195,12 +197,14 @@
 	                    <th>비밀번호 찾기 질문</th>
 	                </tr>
 	                <tr>
-	                    <td>
-	                        <select name="Question">
-	                            <option value="${qDto.content}">${qDto.content}</option>
+	                	<td>
+	                		<select name="Question">
+	                			<c:forEach items="${qList}" var="list" >
+	                            	<option value="${list.idx}">${list.content}</option>
+	                        	</c:forEach>
 	                        </select>
-	                    </td>
-	                 </tr>
+	                   	</td>
+					</tr>
 	                <tr>
 	                    <th>비밀번호 찾기 답변</th>
 	                </tr>
@@ -263,11 +267,8 @@
 	                </tr>
 	                <tr>
 	                	<td>
-	                		<input type="url" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
+	                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
                 			<input type="file"  name="photo"/>
-		    			</td>
-		    			<td>
-		    				<img src="photo/${mDto.newFileName}" alt="${mDto.oriFileName}" width="200px"/>
 		    			</td>
 	                <tr>
 	                    <th colspan="2">
@@ -279,5 +280,12 @@
 	    </div>
     </body>
     <script>
+	    var showIf = document.getElementById('myPage').style.display;
+		
+	    function showMyPage(){
+			if(showIf = 'none'){
+				document.getElementById('myPage').style.display='block';				
+			} 
+		}
     </script>
 </html>
