@@ -68,7 +68,7 @@
         <tr>
             <th>좋아요</th>
             <td>${review.cntLike}</td>
-            <td colspan="2"><a href="./report.jsp" target="_blank">신고</a></td>
+            <td colspan="2"><a href="./review/report.jsp" target="_blank">신고</a></td>
             <th>작성일</th>
             <td>${review.reg_date}</td>
         </tr>
@@ -101,14 +101,16 @@
             <th>작성자</th>
             <th>작성일</th>
         </tr>
+        <c:forEach items="${comment}" var="comment">
         <tr>
-            <td>댓글을 달아봐요</td>
-            <td>test2</td>
-            <td>2021.03.19</td>
-            <td style="border-top: white; border-bottom: white; "><a href="./report.jsp" target="_blank">신고</a></td>
+            <td>${comment.content}</td>
+            <td>${comment.id}</td>
+            <td>${comment.reg_date}</td>
+            <td style="border-top: white; border-bottom: white; "><a href="./review/report.jsp" target="_blank">신고</a></td>
             <td style="border-top: white; border-bottom: white; text-align: right;"><a href="#">수정</a></td>
             <td style="border-top: white; border-bottom: white; text-align: left;"><a href="#">삭제</a></td>
         </tr>
+        </c:forEach>
     </table>
 </body>
 </html>
