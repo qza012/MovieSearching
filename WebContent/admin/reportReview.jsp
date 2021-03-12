@@ -29,7 +29,7 @@
 			<td>${review.reportId}</td>
 			<td>${review.email }</td>
 			<td>${review.regDate }</td>
-			<td>${review.complete }</td>
+			<td id="${review.idx }">${review.complete }</td>
 			<td>
 				<c:if test="${review.complete == 'y' || review.complete == 'Y'}">
 					<button value="${review.idx }">처리중</button>
@@ -43,5 +43,6 @@
 		</table>
 	</body>
 	<script>
+	
 	</script>
 </html>

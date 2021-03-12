@@ -23,12 +23,15 @@ public class AdminReportCommentService {
 		this.resp = resp;
 	}
 
-	public void list() throws ServletException, IOException {
-		String page = "admin/reportComment.jsp";
+	public void reportCommentList() throws ServletException, IOException {
+		String nextPage = "list";
+		// 최종 도착 페이지 설정.
+		String finalPage = "reportComment.jsp";
+		req.setAttribute("finalPage", finalPage);
+		
 		LinkedList<ReportDTO> list = null;
 		
-		AdminDAO comDao = new AdminDAO();
-		
+		AdminDAO comDao = new AdminDAO();	
 		try {
 			list = comDao.getReportList();
 			if(list != null) {
@@ -41,13 +44,8 @@ public class AdminReportCommentService {
 		} finally {
 			comDao.resClose();
 		}
-		
-		String finalPage = (String)req.getAttribute("finalPage");
-		if(finalPage != null) {
-			page = finalPage;
-		}
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
+
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);	
 	}
 	

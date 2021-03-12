@@ -22,8 +22,12 @@ public class AdminPwFindService {
 		this.resp = resp;
 	}
 
-	public void list() throws ServletException, IOException {
-		String page = "admin/pwQuestion.jsp";
+	public void pwQuestionList() throws ServletException, IOException {
+		String nextPage = "list";
+		// 최종 도착 페이지 설정.
+		String finalPage = "pwQuestion.jsp";
+		req.setAttribute("finalPage", finalPage);
+		
 		ArrayList<QuestionDTO> list = null;
 		
 		AdminDAO memDao = new AdminDAO();
@@ -38,13 +42,8 @@ public class AdminPwFindService {
 		} finally {
 			memDao.resClose();
 		}
-		
-		String finalPage = (String)req.getAttribute("finalPage");
-		if(finalPage != null) {
-			page = finalPage;
-		}
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
+
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);	
 	}
 	

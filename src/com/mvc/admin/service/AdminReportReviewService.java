@@ -17,22 +17,25 @@ import com.mvc.admin.dao.AdminDAO;
 import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
 
-public class AdimReportReviewService{
+public class AdminReportReviewService{
 
 	private HttpServletRequest req = null;
 	private HttpServletResponse resp = null;
 	
-	public AdimReportReviewService(HttpServletRequest req, HttpServletResponse resp) {
+	public AdminReportReviewService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
 		this.resp = resp;
 	}
 
-	public void list() throws ServletException, IOException {
-		String page = "admin/reportReview.jsp";
+	public void reportReviewList() throws ServletException, IOException {
+		String nextPage = "list";
+		// 최종 도착 페이지 설정.
+		String finalPage = "reportReview.jsp";
+		req.setAttribute("finalPage", finalPage);
+		
 		LinkedList<ReportDTO> list = null;
 
 		AdminDAO comDao = new AdminDAO();
-
 		try {
 			list = comDao.getReportList();
 			if (list != null) {
@@ -46,26 +49,10 @@ public class AdimReportReviewService{
 			comDao.resClose();
 		}
 
-		String finalPage = (String) req.getAttribute("finalPage");
-		if (finalPage != null) {
-			page = finalPage;
-		}
-
-		RequestDispatcher dis = req.getRequestDispatcher(page);
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);
 	}
 
-	private ArrayList<ReportDTO> filter(LinkedList<ReportDTO> list) {
-		// 리뷰 신고 번호 2001
-		ArrayList<ReportDTO> result = new ArrayList<ReportDTO>();
-		for (ReportDTO dto : list) {
-			if (dto.getTypeIdx() == 2001) {
-				result.add(dto);
-			}
-		}
-
-		return result;
-	}
 
 	public void toggleDelType() throws ServletException, IOException {
 		String strIdx = req.getParameter("idx");
@@ -102,5 +89,17 @@ public class AdimReportReviewService{
 		resp.setContentType("text/html; charset=UTF-8");
 		resp.setHeader("Access-Control-Allow", "*");
 		resp.getWriter().print(json);
+	}
+	
+	private ArrayList<ReportDTO> filter(LinkedList<ReportDTO> list) {
+		// 리뷰 신고 번호 2001
+		ArrayList<ReportDTO> result = new ArrayList<ReportDTO>();
+		for (ReportDTO dto : list) {
+			if (dto.getTypeIdx() == 2001) {
+				result.add(dto);
+			}
+		}
+
+		return result;
 	}
 }

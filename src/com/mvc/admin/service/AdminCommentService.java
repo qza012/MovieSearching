@@ -25,23 +25,17 @@ public class AdminCommentService{
 		this.resp = resp;
 	}
 	
-	public void list() throws ServletException, IOException {
-		String page = "admin/comment.jsp";
+	public void commentList() throws ServletException, IOException {
+		String nextPage = "list";
+		// 최종 도착 페이지 설정.
+		String finalPage = "comment.jsp";
+		req.setAttribute("finalPage", finalPage);
+		
 		ArrayList<CommentDTO> list = null;
 		
 		AdminDAO dao = new AdminDAO();
 		try {
 			list = dao.getCommentList();
-			
-//			CommentDTO dto = new CommentDTO();
-//			dto.setIdx(3);
-//			dto.setId("www");
-//			dto.setReviewIdx(5);
-//			dto.setContent("content");
-//			dto.setRegDate("111111");
-//			dto.setDelType("Y");
-//			list.add(dto);
-					
 			if(list != null) {
 				req.setAttribute("list", list);
 			}
@@ -51,12 +45,7 @@ public class AdminCommentService{
 			dao.resClose();
 		}
 		
-		String finalPage = (String)req.getAttribute("finalPage");
-		if(finalPage != null) {
-			page = finalPage;
-		}
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);	
 	}
 	
@@ -72,7 +61,8 @@ public class AdminCommentService{
 		try {
 			comDto = comDao.getComment(idx);
 			if(comDto != null) {
-				int result = comDao.toggleDelType(comDto);				
+				int result = comDao.toggleDelType(comDto);
+				comDto = comDao.getComment(idx);	// 토글한 데이터로 갱신
 			}
 			
 		} catch (SQLException e) {
@@ -84,7 +74,7 @@ public class AdminCommentService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(comDto != null) {
-			map.put("delType", comDto.getDel_type());
+			map.put("del_type", comDto.getDel_type());
 		}
 		
 		Gson gson =  new Gson();

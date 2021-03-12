@@ -29,7 +29,7 @@
 			<td>${member.gender}</td>
 			<td>${member.email }</td>
 			<td>${member.withdraw }</td>
-			<td>${member.disable }</td>
+			<td id="${member.id }">${member.disable }</td>
 			<td>
 				<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
 					<button value="${member.id }">비활성화</button>
@@ -49,25 +49,31 @@
 		}
 		
 		$('button').click(function() {
-
+			var button = $(this);
+			var flag = $("#"+this.value);
+		
+			//console.log(button);
+			//console.log(flag);
+			
 			$.ajax({
 				type:'POST'
 				,url:'toggleMemberDisable'
 				,data:{'id' : this.value}
 				,dataType:'JSON'
 				,success:function(data) {
-					//console.log(data);
-					
+
 					if(data.disable == "Y") {
-						$(this).html("비활성화");
+						flag.html("Y");
+						button.html("비활성화");
 					} else {
-						$(this).html("활성화");
+						flag.html("N");
+						button.html("활성화");
 					}
-					location.reload(true);
+
 				},error:function(e) {
 					console.log("활성화/비활성화 버튼 비동기 에러");
 				}
-			})				
+			})	
 		})
 		
 	</script>

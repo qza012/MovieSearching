@@ -53,7 +53,7 @@ public class AdminDAO {
 	}
 	
 	public ArrayList<ReviewDTO> getReviewList() throws SQLException {
-		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3";
+		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 ORDER BY idx DESC";
 		
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		
@@ -98,7 +98,7 @@ public class AdminDAO {
 	}
 	
 	public ArrayList<CommentDTO> getCommentList() throws SQLException {
-		String sql = "SELECT idx, id, review_idx, content, reg_date, del_type FROM comment3";
+		String sql = "SELECT idx, id, review_idx, content, reg_date, del_type FROM comment3 ORDER BY idx DESC";
 		
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		
@@ -212,7 +212,13 @@ public class AdminDAO {
 	 */
 	public int toggleDisable(MemberDTO dto) throws SQLException {
 		int result = 0;
-		String disableFlag = dto.getDisable().toUpperCase();
+		String disableFlag = dto.getDisable();
+
+		if(disableFlag == null) {
+			return result;
+		}
+		
+		disableFlag = disableFlag.toUpperCase();
 		String id = dto.getId();
 		
 		if(disableFlag.equals("Y")) {

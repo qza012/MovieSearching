@@ -15,27 +15,27 @@
 		</style>
 	</head>
 	<body>
-		<h3>리뷰 관리</h3>
+		<h3>리뷰 관리 </h3>
 		<hr/>
 		<table>
 		<tr>
 			<th>리뷰번호</th><th>제목</th><th>영화 제목</th><th>작성자 ID</th><th>작성날짜</th><th>삭제여부</th>
 		</tr>
 		<!-- key : reviewList, value : movieList-->
-		<c:forEach items="${map }" var="list">
+		<c:forEach items="${reviewList }" var="review" varStatus="status">
 		<tr>
-			<td>${list.key.idx }</td>
-			<td>${list.key.subject }</td>
-			<td>${list.value.subject }</td>
-			<td>${list.key.id}</td>
-			<td>${list.key.date }</td>
-			<td>${list.key.delType }</td>
+			<td>${review.idx }</td>
+			<td>${review.subject }</td>
+			<td>${movieList[status.index].movieName }</td>
+			<td>${review.id}</td>
+			<td>${review.reg_date }</td>
+			<td id="${review.idx }">${review.del_type }</td>
 			<td>
-				<c:if test="${list.value.delType == 'y' || list.value.delType == 'Y'}">
-					<button value="${review.idx }">처리중</button>
+				<c:if test="${review.del_type == 'y' || review.del_type == 'Y'}">
+					<button value="${review.idx }">삭제 취소</button>
 				</c:if>
-				<c:if test="${list.value.delType == 'n' || list.value.delType == 'N'}">
-					<button value="${review.idx }">처리완료</button>
+				<c:if test="${review.del_type == 'n' || review.del_type == 'N'}">
+					<button value="${review.idx }">삭제</button>
 				</c:if>
 			</td>
 		</tr>
@@ -43,5 +43,34 @@
 		</table>
 	</body>
 	<script>
+		var msg = "${msg}";
+		if(msg != "") {
+			alert(msg);
+		}
+		
+		$('button').click(function() {
+			var button = $(this);
+			var flag = $("#"+this.value);
+			
+			$.ajax({
+				type:'POST'
+				,url:'toggleRevieDelType'
+				,data:{'idx' : this.value}
+				,dataType:'JSON'
+				,success:function(data) {
+					
+					if(data.del_type == "Y") {
+						flag.html("Y");
+						button.html("삭제 취소");
+					} else {
+						flag.html("N");
+						button.html("삭제");
+					}
+					
+				},error:function(e) {
+					console.log("삭제/삭제 취소 버튼 비동기 에러");
+				}
+			})				
+		})
 	</script>
 </html>
