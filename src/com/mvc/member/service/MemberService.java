@@ -29,32 +29,85 @@ public class MemberService {
 
 	public void updateMemberForm() throws ServletException, IOException {
 		String loginId = (String) req.getAttribute("loginId");
-		if (loginId != null) {
+		if(loginId != null) {
 			String id = req.getParameter("id");
-			System.out.println(id + "님의 회원정보");
-
-			String msg = "현재 이용이 불가합니다.";
-			String page = "./";
-
+			System.out.println(id+"님의 회원정보");
+			
 			MemberDAO dao = new MemberDAO();
-			MemberDTO dto = new MemberDTO();
-			try {
-				dto = dao.updateForm(id);
-
-				QuestionDTO qDto = new QuestionDTO();
-				if (dto != null) {
-					System.out.println("데이터 보내주기");
-					req.setAttribute("mDto", dto);
-					req.setAttribute("qDto", qDto);
-					msg = "";
-					page = "updateMember.jsp";
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();
+			MemberDTO dto  = new MemberDTO();
+			dto = dao.updateForm(id);
+			ArrayList<QuestionDTO> list = new ArrayList<QuestionDTO>();
+			list = dao.bringQ();
+			
+			
+			String msg = "현재 이용이 불가합니다.";
+			String page="./";
+			
+			if(dto != null) {
+				System.out.println("데이터 보내주기");
+				req.setAttribute("mDto", dto);
+				req.setAttribute("qList", list);
+				msg = "";
+				page="updateMember.jsp";
 			}
+			dao.resClose();
+			
+			req.setAttribute("msg", msg);
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./");			
+		}
+	}
 
+	public void update() throws ServletException, IOException {
+		String loginId = (String) req.getAttribute("loginId");
+		if(loginId != null) {
+			FileService file = new FileService(req);
+			MemberDTO dto = file.regist();
+			System.out.println(dto.getOriFileName()+"=>"+dto.getNewFileName());
+		
+			MemberDAO dao = new MemberDAO();
+			int success = dao.updateMember(dto);
+			
+			if(dto.getOriFileName() != null) {
+				String id = dto.getId();
+				String delFileName = dao.getFileName(id);
+				int change = dao.savePhoto(delFileName,dto);
+				System.out.println("교체한 파일 갯수 : "+change);
+				if(delFileName != null) {
+					file.delete(delFileName);
+				}
+			}
+			if(success > 0) {
+				req.setAttribute("photoPath", dto.getNewFileName());
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id="+req.getAttribute("loginId"));
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./");
+		}
+	}
+
+	public void withdraw() throws ServletException, IOException {
+		String loginId = (String) req.getAttribute("loginId");
+		if(loginId != null) {
+			String id = (String) req.getAttribute("loginId");
+			String pw = req.getParameter("userPw");
+			System.out.println(id+" / "+pw);
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.withdraw(id, pw);
+			
+			String msg = "비밀번호를 다시 확인해주세요!";
+			String page="withdraw.jsp";
+			
+			if(success) {
+				msg="탈퇴되었습니다.";
+				page="/";
+			}
+			dao.resClose();
 			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
@@ -62,43 +115,28 @@ public class MemberService {
 			resp.sendRedirect("./");
 		}
 	}
-
-	public void updateMember() throws ServletException, IOException {
+	
+	public void follow() throws ServletException, IOException {
 		String loginId = (String) req.getAttribute("loginId");
-		if (loginId != null) {
-			FileService file = new FileService(req);
-			MemberDTO dto = file.regist();
-			System.out.println(dto.getOriFileName() + "=>" + dto.getNewFileName());
-
+		if(loginId != null) {
+			String myId = (String) req.getAttribute("loginId");
+			String targetId = req.getParameter("targetId");
+			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
+			
 			MemberDAO dao = new MemberDAO();
-			int success;
-			try {
-				success = dao.updateMember(dto);
-				if (dto.getOriFileName() != null) {
-					int idx = dto.getIdx();
-					String delFileName = dao.getFileName(String.valueOf(idx));
-					int change = dao.savePhoto(delFileName, dto);
-					System.out.println("교체한 파일 갯수 : " + change);
-					if (delFileName != null) {
-						file.delete(delFileName);
-					}
-				}
-				if (success > 0) {
-					req.setAttribute("photoPath", dto.getNewFileName());
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();
+			boolean success = dao.follow(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로우 신청!");
 			}
-
-			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id=" + req.getAttribute("loginId"));
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/followingList?id=${loginId}");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("./");
 		}
 	}
-
 	public void idChk() throws IOException {
 		String id = req.getParameter("id");
 		boolean success = false;
