@@ -4,10 +4,10 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>UpdateMember</title>
+		<title>likeMovie</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-       	<style>
- 			h2{
+        <style>
+            h2{
                 text-align: center; 
                 border: 10px solid cornflowerblue;
                 width: 100px;
@@ -49,37 +49,27 @@
             div{
                 float: left;
             }
-            .updateMember {
+            .likeMovie {
                 font-family: Verdana;
-                width: 50%;
+                width: 75%;
                 margin-top: 40px;
-                margin-left: 25%;
-            }    
+                margin-left: 10%;
+            } 
             table {
                 text-align: center;
-                border:1px solid darkgrey;
-                border-collapse: collapse;
                 width: 100%;
             }
-            th{
-                background-color: lightgrey;
-            }
-            td{
+            th, td{
                 background-color: whitesmoke;
             }
             th, td{
-                padding: 1%;
-                border-bottom: 1px solid darkslategrey;
+                padding: 10px;
+                background-color: whitesmoke;
             }
-            input[type="text"],select{
-                text-align: center;
-                width: 70%;
-                height: 20px;
-            }
-            #urlArea{
-            	width: 40%;
-            	margin-left:1%;
-            }
+            #notLikeMovie{
+            	font-size: small;
+            	font-weight: 600;
+            }   
         </style>
     </head>
     <body>
@@ -101,19 +91,19 @@
                        </a>
                    </li>    
                    <li>
-                       <a href="moviList.jsp"> 영화 리스트
+                       <a href="#"> 영화 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="reviewBoard.jsp"> 리뷰 게시판
+                       <a href="#"> 리뷰 게시판
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="memberList.jsp"> 회원 리스트
+                       <a href="#"> 회원 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -164,128 +154,43 @@
                </ul>
            </nav>
        </div>
-       <div class="updateMember">
-            <h3>회원정보 수정</h3>
-            <form action="./update" method="post" enctype="multipart/form-data" >
-	            <table>
-	                <tr>
-	                    <th>아이디</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="userId" id="userId" value="${mDto.id}" readonly="readonly"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>비밀번호</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="userPw" id="userPw"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>비밀번호 확인</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" id="conPw"/>
-	                    </td>
-	                    <span></span>
-	                </tr>
-	                <tr>
-	                    <th>비밀번호 찾기 질문</th>
-	                </tr>
-	                <tr>
-	                	<td>
-	                		<select name="Question">
-	                			<c:forEach items="${qList}" var="list" >
-	                            	<option value="${list.idx}">${list.content}</option>
-	                        	</c:forEach>
-	                        </select>
-	                   	</td>
-					</tr>
-	                <tr>
-	                    <th>비밀번호 찾기 답변</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="answer" id="answer"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>이름</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="userName" value="${mDto.name}"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>나이</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="age" value="${mDto.age}"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>성별</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                    	<c:if test="${mDto.gender == '남'}">
-	                        	<input type="radio" name="gender" value="남" checked="checked"/>남
-	                        	<input type="radio" name="gender" value="여" />여
-	                    	</c:if>
-	                    	<c:if test="${mDto.gender == '여'}">
-		                    	<input type="radio" name="gender" value="남"/>남
-	                        	<input type="radio" name="gender" value="여" checked="checked"/>여
-	                    	</c:if>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>이메일</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <input type="text" name="email" value="${mDto.email}"/>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>선호하는 영화 장르</th>
-	                </tr>
-	                <tr>
-	                    <td>
-	                        <select name="genre">
-	                            <option value="${mDto.genre}">${mDto.genre}</option>
-	                         </select>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <th>프로필 사진 등록</th>
-	                </tr>
-	                <tr>
-	                	<td>
-	                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
-                			<input type="file"  name="photo"/>
-		    			</td>
-	                <tr>
-	                    <th colspan="2">
-	                        <input type="submit" value="저장">
-	                    </th>
-	                </tr>
-	            </table>
-	    	</form>        
-	    </div>
+        <div class="likeMovie">
+            <h3>좋아요한 영화</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>영화제목</th>
+                    <th>장르</th>
+                    <th>감독</th>
+                    <th>배우</th>
+                    <th>개봉일</th>
+                    <th></th>
+                </tr>
+                <tr>
+                	<td><img src="https://i.pinimg.com/originals/96/a0/0d/96a00d42b0ff8f80b7cdf2926a211e47.jpg" width="100px"></td>
+                	<td> 영화는 어떻게 만들어 지는가 </td><td> 다큐 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
+                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
+               	</tr>
+                <tr>
+                    <td><img src="https://i.pinimg.com/736x/30/d5/38/30d53895b7337958e79aff2e974c7a1f.jpg" width="100px"></td>
+                	<td> The Title </td><td> 액션 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
+                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
+                </tr>
+                <tr>
+                    <td><img src="https://i.pinimg.com/originals/9e/4b/97/9e4b97433364d774a2a4a9c6290e8906.jpg" width="100px"></td>
+                	<td> 영화같은 삶 </td><td> 멜로 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
+                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
+                </tr>
+            </table>
+        </div>
     </body>
-    <script>
-	    var showIf = document.getElementById('myPage').style.display;
+	<script>
+		var showIf = document.getElementById('myPage').style.display;
 		
-	    function showMyPage(){
+		function showMyPage(){
 			if(showIf = 'none'){
 				document.getElementById('myPage').style.display='block';				
-			} 
+			}
 		}
-    </script>
+	</script>
 </html>

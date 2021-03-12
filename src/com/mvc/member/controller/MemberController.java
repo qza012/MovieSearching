@@ -2,6 +2,7 @@ package com.mvc.member.controller;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF"
-			,"/update", "/withdraw","/member","/search"})
+@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF","/update","/withdrawForm",
+	"/withdraw","/member/member","/follow"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -71,22 +72,28 @@ public class MemberController extends HttpServlet {
 				
 			case "/update":
 				System.out.println("프로필 사진 저장 요청");
-				service.updateMember();
+				service.update();
+				break;
+				
+			case "/withdrawForm":
+				System.out.println("회원 탈퇴 폼으로");
+				RequestDispatcher dis = req.getRequestDispatcher("withdraw.jsp");
+				dis.forward(req, resp);
 				break;
 				
 			case "/withdraw":
 				System.out.println("회원 탈퇴 요청");
-				//service.withdraw();
+				service.withdraw();
 				break;
 				
-			case "/member":
+			case "/member/member":
 				System.out.println("회원이 작성한 리뷰,top7  요청");
-				service.memberList();
+				service.getMemberList();
 				break;
 				
-			case "/search":
-				System.out.println("검색 요청");
-				service.search();
+			case "/follow":
+				System.out.println("팔로우 하기");
+				service.follow();
 				break;
 		}
 		

@@ -71,7 +71,7 @@
     </table>
     <div class="button">
         <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="location.href='./reviewList.jsp' "/>
+        <input type="button" value="취소" onclick="location.href='../reviewList' "/>
     </div>
 </body>
 <script>

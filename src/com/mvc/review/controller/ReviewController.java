@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.review.service.ReviewService;
 
-@WebServlet({"/reviewList","/reviewDetail","/reviewWrite"})
+@WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/memReviewList","/reviewUpdateForm","/reviewUpdate","/reviewDel",
+	"/myReviewList","/deleteMyReview","/iLikeReview","/iDonotLike"})
 public class ReviewController extends HttpServlet {
 
 	@Override
@@ -49,7 +50,46 @@ public class ReviewController extends HttpServlet {
 			System.out.println("리뷰 작성 요청");
 			service.write();
 			break;
+			
+		case "/memReviewList":
+			System.out.println("회원이 작성한 리뷰 요청");
+			service.memReviewList();
+			break;
+			
+		case "/reviewUpdateForm":
+			System.out.println("리뷰 수정폼 요청");
+			service.updateFrom();
+			break;
+			
+		case "/reviewUpdate":
+			System.out.println("리뷰 수정 요청");
+			service.update();
+			break;
+			
+		case "/reviewDel":
+			System.out.println("리뷰 삭제 요청");
+			service.del();
+			break;
+			
+		case "/myReviewList":
+			System.out.println("내가 쓴 리뷰리스트로");
+			service.myReviewList();
+			break;
+			
+		case "/deleteMyReview":
+			System.out.println("내가 쓴 리뷰 삭제");
+			service.deleteMyReview();
+			break;
 		
+		case "/iLikeReview":
+			System.out.println("좋아요한 리뷰 리스트로");
+			service.iLikeReview();
+			break;
+			
+		case "/iDonotLike":
+			System.out.println("좋아요 취소하기");
+			service.iDonotLike();
+			break;
 		}
 	}
 	

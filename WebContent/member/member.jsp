@@ -16,7 +16,7 @@
     }
     #search{
         text-align: center;
-        margin-top: 10%;
+        margin-top: 5%;
     }
     input[type=text]{
         width: 500px;
@@ -60,16 +60,64 @@
         position: relative;
         left: 30%;
     }
-     #member{
-        margin-top: 100px;
+    nav{
+    	text-align: center;
+    }
+ 	#topMenu { 
+        height: 30px;
         position: relative;
-        margin-left: 30%;
-    }
-    #member a{
+        float: left;
+        left: 22%;
+    } 
+    #topMenu ul {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+    } 
+    #topMenu ul li {
+        color: white;
+        background-color: #2d2d2d;
+        float: left;
+        line-height: 30px;
+        vertical-align: middle;
+        text-align: center;
+        position: relative;
+    } 
+    .menuLink, .submenuLink {
+        text-decoration: none;
         display: block;
+        width: 150px;
+        font-size: 12px;
+        font-weight: bold;
     }
-    #member th:hover{
-        background-color: lightgray;
+    .menuLink {
+        color: white;
+    }
+    .topMenuLi:hover .menuLink {
+        color: lightblue;
+        background-color: #4d4d4d;
+    }
+    .longLink {
+        width: 150px;
+    }
+    .submenuLink {
+        color: #2d2d2d;
+        background-color: white;
+        border: solid 1px black;
+        margin-right: -1px;
+    }
+    .submenu {
+        position: absolute;
+        height: 0px;
+        overflow: hidden;
+        transition: height .2s;
+        width: 574px;
+    }
+    .topMenuLi:hover .submenu {
+        height: 32px;
+    } 
+    .submenuLink:hover {
+        background-color: #dddddd;
     }
 </style>
 <body>
@@ -79,25 +127,26 @@
         <a href="#">알람</a>
     </div>
     <hr>
-    <h3>인기 회원</h3>
+    <h3>인기 리뷰</h3>
     <div id="member">
-        <table>
-	        <c:forEach items="${top_list}" var="review3">
-	            <tr>
-	                <th><a href="#">${review3.subject}</a></th>
-	            </tr>
-	            <tr>
-	                <td>${review3.score}</td>
-	            </tr>
-	         </c:forEach>
-        </table>
+        <c:forEach items="${top_list}" var="review3">
+	        <nav id="topMenu">
+		        <ul>
+		            <li class="topMenuLi"> <a class="menuLink" href="#">${review3.subject}</a>
+		                <ul class="submenu">
+		                    <li><href class="submenuLink longLink">평점:${review3.score}</href></li>
+		                </ul>
+		            </li>
+	        	</ul>
+	    	</nav>
+        </c:forEach>
     </div>
     <div id="search">
-        <form action="search" method="GET">
+        <form action="member" method="GET">
             <select id="select" name="search">
                 <option value="id">ID</option>
-                <option value="이름">이름</option>
-                <option value="나이">나이</option>
+                <option value="name">이름</option>
+                <option value="age">나이</option>
             </select>
             <input type="text" value="${param.keyWord}" name="keyWord" placeholder="검색어를 입력하세요">
             <input type="submit" value="검색">
@@ -114,7 +163,7 @@
             </tr>
             <c:forEach items="${member_list}" var="member3">
 	            <tr>
-	                <td><a href="review?id=${member3.id}">${member3.id}</a></td>
+	                <td><a href="memReviewList?id=${member3.id}">${member3.id}</a></td>
 	                <td>${member3.name}</td>
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
@@ -125,9 +174,5 @@
     </div>
 </body>
 <script>
-	var msg ="${msg}";
-	if(msg != ""){
-		alert(msg);
-	}
 </script>
 </html>
