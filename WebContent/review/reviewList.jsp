@@ -80,10 +80,10 @@
             <th>작성일</th>
         </tr>
 	
-		<c:forEach items="${list}" var="review">
+		<c:forEach items="${review}" var="review">
 			 <tr>
             <td>${review.idx}</td>
-            <td class="reviewDetail" onclick="location.href='./reviewDetail?Idx=${review.idx}' ">${review.subject}</td>
+            <td class="reviewDetail" onclick="location.href='reviewDetail?Idx=${review.idx}' ">${review.subject}</td>
             <td class="movieDetail" onclick="location.href='#' ">${review.movieName}</td>
             <td>${review.score}</td>
             <td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
@@ -94,13 +94,29 @@
     </table>
 
     <div class="paging">
-    <a href="#">이전</a>
-    <a href="#">1</a>
-    <a href="#">다음</a>   
+		<span>
+			<c:if test="${currPage>1}">
+				<a href="reviewList?page=${currPage-1}">이전</a>
+			</c:if>
+			<c:if test="${currPage == 1}">
+			이전
+			</c:if>
+		</span>
+		
+		<span id="pageArea">${currPage}</span>
+		
+		<span>
+			<c:if test="${currPage < maxPage}">
+				<a href="reviewList?page=${currPage+1}">다음</a>
+			</c:if>
+			<c:if test="${currPage == maxPage}">
+			다음
+			</c:if>
+		</span>
     </div>
 
     <div class="button">
-    <input type="button" value="리뷰 작성" onclick="location.href='./reviewWrite.jsp' ">
+    <input type="button" value="리뷰 작성" onclick="location.href='./review/reviewWrite.jsp' ">
     </div>
 </body>
 </html>

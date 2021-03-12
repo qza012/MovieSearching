@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +59,7 @@ public class ReviewService {
 			success = 1;
 		}
 		dao.resClose();
+		
 		//map에 msg와 success 담기
 		map.put("msg", msg);
 		map.put("success",success);
@@ -81,20 +83,27 @@ public class ReviewService {
 	}
 
 	public void list() throws ServletException, IOException {
-		ReviewDAO dao = new ReviewDAO();
+		String pageParam = req.getParameter("page");
 		
-		ArrayList<ReviewDTO> list = dao.list();
-		dao.resClose();
-		
-		String page="reviewList.jsp";
-		
-		if(list!=null) {
-			page="reviewList.jsp";
+		//1페이지 그룹 -> 1~10번
+		int group = 1;
+		if(pageParam !=null) {
+			group = Integer.parseInt(pageParam);
 		}
 		
-		req.setAttribute("list", list);
-		req.getRequestDispatcher(page).forward(req, resp);
+		ReviewDAO dao = new ReviewDAO();
+		HashMap<String, Object> map = dao.list(group);
+		dao.resClose();
 		
+		String page="review/reviewList.jsp";
+		
+		req.setAttribute("maxPage", map.get("maxPage"));
+		req.setAttribute("review", map.get("list"));
+		req.setAttribute("currPage", group);
+		
+		//특정 페이지로 보내기
+		RequestDispatcher dis = req.getRequestDispatcher(page);
+		dis.forward(req, resp);
 	}
 
 	public void detail() throws ServletException, IOException {
@@ -102,24 +111,24 @@ public class ReviewService {
 		System.out.println(reviewIdx);
 		
 		ReviewDTO review_dto = new ReviewDTO();
-		CommentDTO comment_dto = new CommentDTO();
+		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		ReviewDAO dao = new ReviewDAO();
 		
 		//리뷰 상세 가져오기
 		review_dto = dao.dtail(reviewIdx);
 		
 		//댓글 가져오기
-		comment_dto = dao.commentList(reviewIdx);
-		
+		list = dao.commentList(reviewIdx);
 		dao.resClose();
+		
 		if(review_dto!=null) {
 			req.setAttribute("review", review_dto);
-			if(comment_dto!=null) {
-				req.setAttribute("comment", comment_dto);
+			if(list!=null) {
+				req.setAttribute("comment", list);
 			}
 		}
 		
-		req.getRequestDispatcher("reviewDetail.jsp").forward(req, resp);
+		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 
 }

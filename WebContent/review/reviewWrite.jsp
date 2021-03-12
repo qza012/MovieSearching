@@ -45,8 +45,8 @@
         <tr>
         <th>영화제목</th>
         <td>
-        	<input type="hidden" id="movieCode" value="20192145"/>
-            <input type="text" id="movieName" style="width: 80%;"/>
+        	<input type="hidden" id="movieCode" value="19398001"/>
+            <input type="text" id="movieName" value="오즈의 마법사" style="width: 80%;"/>
             <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
         </td>
         
@@ -78,7 +78,7 @@
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = "jw4774";
+	var id = "juju";
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
@@ -88,7 +88,7 @@ $("#save").click(function(){
 
 	$.ajax({ //jquery로 ajax사용
 		type:'post' //[GET|POST] 전송방식
-		,url:'reviewWrite' //action 어디에 요청할 건지
+		,url:'../reviewWrite' //action 어디에 요청할 건지
 		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
 			'subject':subject,
 			'id':id,
@@ -103,7 +103,7 @@ $("#save").click(function(){
 			console.log('data.success');
 			if(data.success == 1){
 				alert(data.msg);
-				location.href = "reviewList";
+				location.href = "../reviewList";
 			}else{
 				alert('리뷰 작성에 실패했습니다.');
 			}

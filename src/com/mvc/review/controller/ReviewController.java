@@ -46,7 +46,7 @@ public class ReviewController extends HttpServlet {
 			break;
 			
 		case "/reviewWrite":
-			System.out.println("리뷰 작성");
+			System.out.println("리뷰 작성 요청");
 			service.write();
 			break;
 		
