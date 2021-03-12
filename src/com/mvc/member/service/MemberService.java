@@ -26,8 +26,7 @@ public class MemberService {
 		this.req = req;
 		this.resp = resp;
 	}
-	
-	//로그인한 회원(myPage) 상세정보 불러오기
+
 	public void updateMemberForm() throws ServletException, IOException {
 		String loginId = (String) req.getAttribute("loginId");
 		if (loginId != null) {
@@ -38,24 +37,24 @@ public class MemberService {
 			String page = "./";
 
 			MemberDAO dao = new MemberDAO();
-			MemberDTO dto  = new MemberDTO();
+			MemberDTO dto = new MemberDTO();
 			try {
 				dto = dao.updateForm(id);
-				ArrayList<QuestionDTO> list = new ArrayList<QuestionDTO>();
-				//내 질문지 가져오기
-				list = dao.bringQ();				
+
+				QuestionDTO qDto = new QuestionDTO();
 				if (dto != null) {
 					System.out.println("데이터 보내주기");
 					req.setAttribute("mDto", dto);
-					req.setAttribute("qList", list);
+					req.setAttribute("qDto", qDto);
 					msg = "";
-					page="updateMember.jsp";
+					page = "updateMember.jsp";
 				}
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
 				dao.resClose();
 			}
+
 			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
@@ -64,7 +63,6 @@ public class MemberService {
 		}
 	}
 
-	//개인정보 수정사항 저장 및 프로필 등록
 	public void updateMember() throws ServletException, IOException {
 		String loginId = (String) req.getAttribute("loginId");
 		if (loginId != null) {
@@ -77,11 +75,11 @@ public class MemberService {
 			try {
 				success = dao.updateMember(dto);
 				if (dto.getOriFileName() != null) {
-					String id = dto.getId();
-					String delFileName = dao.getFileName(id);
-					int change = dao.savePhoto(delFileName,dto);
-					System.out.println("교체한 파일 갯수 : "+change);
-					if(delFileName != null) {
+					int idx = dto.getIdx();
+					String delFileName = dao.getFileName(String.valueOf(idx));
+					int change = dao.savePhoto(delFileName, dto);
+					System.out.println("교체한 파일 갯수 : " + change);
+					if (delFileName != null) {
 						file.delete(delFileName);
 					}
 				}
@@ -93,7 +91,8 @@ public class MemberService {
 			} finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id="+req.getAttribute("loginId"));
+
+			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id=" + req.getAttribute("loginId"));
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("./");
@@ -231,77 +230,6 @@ public class MemberService {
 //		} else {
 //			resp.sendRedirect("index.jsp");
 //		}
-	}
-	//회원 탈퇴(탈퇴 상태 Y)
-	public void withdraw() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
-		if(loginId != null) {
-			String id = (String) req.getAttribute("loginId");
-			String pw = req.getParameter("userPw");
-			System.out.println(id+" / "+pw);
-			
-			String msg = "비밀번호를 다시 확인해주세요!";
-			String page="withdraw.jsp";
-			MemberDAO dao = new MemberDAO();
-			try {
-				boolean success = dao.withdraw(id, pw);				
-				if(success) {
-					msg="탈퇴되었습니다.";
-					page="/";
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();				
-			}
-			req.setAttribute("msg", msg);
-			RequestDispatcher dis = req.getRequestDispatcher(page);
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("./");
-		}
-	}
-	
-	public void follow() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
-		if(loginId != null) {
-			String myId = (String) req.getAttribute("loginId");
-			String targetId = req.getParameter("targetId");
-			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
-			
-			MemberDAO dao = new MemberDAO();
-			boolean success = dao.follow(myId,targetId);
-			
-			if(success) {
-				System.out.println("팔로우 신청!");
-			}
-			dao.resClose();
-			
-			RequestDispatcher dis = req.getRequestDispatcher("/followingList?id=${loginId}");
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("./");
-		}
-	}
-
-	public void followingList() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
-		if(loginId != null) {
-			MemberDAO dao = new MemberDAO();
-			ArrayList<ReviewDTO> list = dao.followingList(loginId);
-			
-			String page="./";
-			
-			if(list!=null) {
-				page="followingList.jsp";
-			}
-			dao.resClose();
-			req.setAttribute("list", list);
-			RequestDispatcher dis = req.getRequestDispatcher(page);
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("./");
-		}
 	}
 
 }

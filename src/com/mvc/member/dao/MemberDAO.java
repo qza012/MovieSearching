@@ -19,7 +19,7 @@ public class MemberDAO {
 	Connection conn = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
-	
+
 	public MemberDAO() {
 		try {
 			Context ctx = new InitialContext();
@@ -29,23 +29,121 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void resClose() {
 		try {
-			if(rs != null) {
-				rs.close();				
+			if (rs != null) {
+				rs.close();
 			}
-			if(ps != null) {
-				ps.close();				
+			if (ps != null) {
+				ps.close();
 			}
-			if(conn != null) {
-				conn.close();				
+			if (conn != null) {
+				conn.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public MemberDTO updateForm(String id) throws SQLException {
+		long pk = 0;
+		int success = 0;
+		MemberDTO dto = null;
+		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx " + "FROM member3 WHERE id=?";
+
+		ps = conn.prepareStatement(sql, new String[] { "question_idx" });
+		ps.setString(1, id);
+		rs = ps.executeQuery();
+		if (rs.next()) {
+			System.out.println("데이터 담기");
+			dto = new MemberDTO();
+			dto.setId(rs.getString("id"));
+			dto.setPw(rs.getString("pw"));
+			dto.setName(rs.getString("name"));
+			dto.setAge(rs.getInt("age"));
+			dto.setGender(rs.getString("gender"));
+			dto.setEmail(rs.getString("email"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setPw_answer(rs.getString("pw_answer"));
+			dto.setQuestion_idx(rs.getInt("question_idx"));
+		}
+		rs = ps.getGeneratedKeys();
+		if (rs.next()) {
+			pk = rs.getLong(1);
+			System.out.println("idx : " + pk);
+			sql = "SELECT idx, content FROM question3 WHERE idx =?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, dto.getIdx());
+			rs = ps.executeQuery();
+			QuestionDTO qdto = new QuestionDTO();
+			if (rs.next()) {
+				qdto.setContent(rs.getString("content"));
+			}
+			System.out.println(qdto.getContent());
+		}
+
+		return dto;
+	}
+
+	public int savePhoto(String delFileName, MemberDTO dto) throws SQLException {
+		int success = 0;
+		String sql = "";
+
+		if (delFileName != null) {
+			sql = "UPDATE photo3 SET oriFileName=?, newFileName=? WHERE id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getOriFileName());
+			ps.setString(2, dto.getNewFileName());
+			ps.setString(3, dto.getId());
+		} else {
+			sql = "INSERT INTO photo3(idx,oriFileName,newFileName,id) " + "VALUES(photo3_seq.NEXTVAL,?,?,?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getOriFileName());
+			ps.setString(2, dto.getNewFileName());
+			ps.setString(3, dto.getId());
+		}
+		success = ps.executeUpdate();
+
+		return success;
+	}
+
+	public int updateMember(MemberDTO mDto) throws SQLException {
+		int success = 0;
+		String sql = "UPDATE member3 SET pw=?, name=?, age=?, gender=?, email=?, genre=?,pw_answer=? WHERE id=?";
+
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, mDto.getPw());
+		ps.setString(2, mDto.getName());
+		ps.setInt(3, mDto.getAge());
+		ps.setString(4, mDto.getGender());
+		ps.setString(5, mDto.getEmail());
+		ps.setString(6, mDto.getGenre());
+		ps.setString(7, mDto.getPw_answer());
+		ps.setString(8, mDto.getId());
+		success = ps.executeUpdate();
+		if (success > 0) {
+			System.out.println("회원 정보 업데이트 성공");
+		}
+
+		return success;
+	}
+
+	public String getFileName(String idx) throws SQLException {
+		String delFileName = null;
+		String sql = "SELECT newFileName FROM photo3 WHERE idx =?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, idx);
+		rs = ps.executeQuery();
+		if (rs.next()) {
+			delFileName = rs.getString("newFileName");
+		}
+
+		System.out.println("삭제파일 : " + delFileName);
+		return delFileName;
+	}
+
+	/////////////////////////////////////////
 	public boolean idChk(String id) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=?";
@@ -208,154 +306,6 @@ public class MemberDAO {
 			keyWord_list.add(dto);
 		}
 		return keyWord_list;
-	}
-	
-	//로그인한 회원(myPage) 상세정보 불러오기
-	public MemberDTO updateForm(String id) throws SQLException {
-		MemberDTO dto = null;
-		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=?";
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
-		rs = ps.executeQuery();
-		if(rs.next()) {
-			System.out.println("데이터 담기");
-			dto = new MemberDTO();
-			dto.setId(rs.getString("id"));
-			dto.setPw(rs.getString("pw"));
-			dto.setName(rs.getString("name"));
-			dto.setAge(rs.getInt("age"));
-			dto.setGender(rs.getString("gender"));
-			dto.setEmail(rs.getString("email"));
-			dto.setGenre(rs.getString("genre"));
-			dto.setPw_answer(rs.getString("pw_answer"));
-			dto.setQuestion_idx(rs.getInt("question_idx"));
-		}
-		return dto;
-	}
-
-	//내 질문지 가져오기
-	public ArrayList<QuestionDTO> bringQ() throws SQLException {
-		String sql = "SELECT *FROM question3";
-		ArrayList<QuestionDTO> Qlist = null;
-		ps = conn.prepareStatement(sql);
-		rs = ps.executeQuery();
-		Qlist = new ArrayList<QuestionDTO>();
-		while(rs.next()) {
-			QuestionDTO dto = new QuestionDTO();
-			dto.setIdx(rs.getInt("idx"));
-			dto.setContent(rs.getString("content"));
-			Qlist.add(dto);
-		}
-		return Qlist;
-	}
-	
-	//프로필 사진 저장
-	public int savePhoto(String delFileName, MemberDTO dto) throws SQLException {
-		int success = 0;
-		String sql="";
-		if(delFileName != null) {
-			sql = "UPDATE photo3 SET oriFileName=?, newFileName=? WHERE id=?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, dto.getOriFileName());
-			ps.setString(2, dto.getNewFileName());
-			ps.setString(3, dto.getId());
-		} else {
-			sql = "INSERT INTO photo3(idx,oriFileName,newFileName,id) "
-					+ "VALUES(photo3_seq.NEXTVAL,?,?,?)";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, dto.getOriFileName());
-			ps.setString(2, dto.getNewFileName());
-			ps.setString(3, dto.getId());
-		} 
-		success = ps.executeUpdate();
-		return success;
-	}
-	
-	//회원 수정사항 저장
-	public int updateMember(MemberDTO mDto) throws SQLException {
-		int success = 0;
-		String sql = "UPDATE member3 SET pw=?, name=?, age=?, gender=?, email=?, genre=?,pw_answer=? WHERE id=?";
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, mDto.getPw());
-		ps.setString(2, mDto.getName());
-		ps.setInt(3, mDto.getAge());
-		ps.setString(4, mDto.getGender());
-		ps.setString(5, mDto.getEmail());
-		ps.setString(6, mDto.getGenre());
-		ps.setString(7, mDto.getPw_answer());
-		/*질문 변경 불가
-		ps.setInt(8, mDto.getQuestion_idx());
-		*/
-		ps.setString(8, mDto.getId());
-		success = ps.executeUpdate();
-		if(success > 0) {
-			System.out.println("회원 정보 업데이트 성공");
-		}
-		return success;
-	}
-
-	//파일 변경(파일 기보유 여부 확인)
-	public String getFileName(String id) throws SQLException { 
-		String delFileName = null;
-		String sql = "SELECT newFileName FROM photo3 WHERE id =?";
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
-		rs = ps.executeQuery();
-		if(rs.next()) { 
-			delFileName = rs.getString("newFileName");
-		}
-		System.out.println("삭제파일 : "+delFileName);
-		return delFileName;
-	}
-
-	// 회원 탈퇴
-	public boolean withdraw(String id, String pw) throws SQLException {
-		boolean success = false;
-		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
-		ps.setString(2, pw);
-		rs = ps.executeQuery();
-		if(rs.next()) {
-			sql = "UPDATE member3 SET withdraw=?, disable=? WHERE id = ?";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, "Y");
-			ps.setString(2, "Y");
-			ps.setString(3, rs.getString("id"));
-			System.out.println(rs.getString("id"));
-			int data = ps.executeUpdate();
-			if(data>0) {
-				success = true;
-			}
-		}
-		System.out.println("성공여부 : "+success);
-		return success;
-	}
-	
-	public boolean follow(String myId, String targetId) {
-		boolean success = false;
-		String sql="INSERT INTO follow3(idx,id,target_id) VALUES(follow3_seq.NEXTVAL,?,?)";
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, myId);
-			ps.setString(2, targetId);
-			int count = ps.executeUpdate();
-			if(count>0) {
-				System.out.println(myId+"가 팔로우 신청 ->"+targetId);
-				success = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return success;
-	}
-
-	public ArrayList<ReviewDTO> followingList(String loginId) {
-		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
-		String sql="또르륵...쿼리 어려운데요 테이블에 팔로잉수/팔로워수 넣을까..";
-		
-		return list;
 	}
 	
 }

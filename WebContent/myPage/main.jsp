@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -50,9 +49,6 @@
            div{
                float: left;
            }
-           #myPage{
-            	display: none;
-            }
            .mainData{
                font-family: Verdana;
                width: 70%;
@@ -117,30 +113,28 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
-                      	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                         <span> > </span>
-                       <ul id="myPage">
+                       <a href="./updateMF?id=${loginId}">마이페이지</a>
+                       <ul class="myPage">
                            <li>
                                <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
+                               <a href="withdraw.jsp">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
+                               <a href="reviewList.jsp">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
+                               <a href="likeMovie.jsp">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
+                               <a href="likeReview.jsp">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./followerList?id=${loginId}">팔로워</a>
+                               <a href="follower.jsp">팔로워</a>
                            </li>
                            <li>
-                               <a href="./followingList?id=${loginId}">팔로잉</a>
+                               <a href="following.jsp">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
@@ -159,9 +153,6 @@
        </div>
        <div class="mainData">
            <h3>데이터</h3>
-           <span>
-           		<button onclick="location.href='./follow?targetId=${targetId}'">팔로우</button>
-           </span>
            <table>
                <tr>
                    <th></th>
@@ -181,12 +172,6 @@
        </div>
    </body>
    <script>
-   		var showIf = document.getElementById('myPage').style.display;
-   		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			} 
-		}
+   
    </script>
 </html>

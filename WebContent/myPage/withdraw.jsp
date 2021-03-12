@@ -115,30 +115,28 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
-                      	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                         <span> > </span>
-                       <ul id="myPage">
+                       <a href="./updateMF?id=${loginId}">마이페이지</a>
+                       <ul class="myPage">
                            <li>
                                <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
+                               <a href="withdraw.jsp">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
+                               <a href="reviewList.jsp">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
+                               <a href="likeMovie.jsp">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
+                               <a href="likeReview.jsp">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./followerList?id=${loginId}">팔로워</a>
+                               <a href="follower.jsp">팔로워</a>
                            </li>
                            <li>
-                               <a href="./followingList?id=${loginId}">팔로잉</a>
+                               <a href="following.jsp">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
