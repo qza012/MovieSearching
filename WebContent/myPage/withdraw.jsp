@@ -68,7 +68,7 @@
             	width: 50%;
             	height: 20px;
             }
-            #btn{
+            input[type="submit"]{
             	margin: 10% 30%;
             }
        </style>
@@ -115,28 +115,30 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}">마이페이지</a>
-                       <ul class="myPage">
+                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                      	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <span> > </span>
+                       <ul id="myPage">
                            <li>
                                <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="withdraw.jsp">회원 탈퇴</a>
+                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="reviewList.jsp">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="likeMovie.jsp">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="likeReview.jsp">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="follower.jsp">팔로워</a>
+                               <a href="./followerList?id=${loginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="following.jsp">팔로잉</a>
+                               <a href="./followingList?id=${loginId}">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
@@ -153,17 +155,23 @@
                </ul>
            </nav>
        </div>
-        <div class="withdraw">
-            <h3>회원 탈퇴</h3>
-            <span class="conPW">
+       <form action="./withdraw">
+        	<div class="withdraw">
+            	<h3>회원 탈퇴</h3>
+            	<span class="conPW">
                 	비밀번호 &nbsp;
-                    <input type="text" placeholder="현재 비밀번호"/>
-       		</span>
-       		<br/>           
-	    	<button id="btn" onclick="location.href='./withdraw?id=${loginId}'">회원 탈퇴</button>
-        </div>
+                    <input type="text" name="userPw" placeholder="현재 비밀번호"/>
+       			</span>       
+	    		<input type="submit" value="회원 탈퇴"/>
+        	</div>
+       	</form>
     </body>
     <script>
-     
+    	var showIf = document.getElementById('myPage').style.display;
+		function showMyPage(){
+			if(showIf = 'none'){
+				document.getElementById('myPage').style.display='block';				
+			} 
+		}
     </script>
 </html>

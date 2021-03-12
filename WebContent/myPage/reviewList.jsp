@@ -51,9 +51,9 @@
             }
             .reviewList {
                 font-family: Verdana;
-                width: 70%;
+                width: 75%;
                 margin-top: 40px;
-                margin-left: 12%;
+                margin-left: 10%;
             }    
             table {
                 text-align: center;
@@ -66,8 +66,11 @@
                 background-color: whitesmoke;
             }
             th, td{
-                padding: 1%;
+                padding: 10px;
                 border-bottom: 1px solid darkslategrey;
+            }
+            #delete{
+            	color: red;
             }
         </style>
     </head>
@@ -90,19 +93,19 @@
                        </a>
                    </li>    
                    <li>
-                       <a href="moviList.jsp"> 영화 리스트
+                       <a href="#"> 영화 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="reviewBoard.jsp"> 리뷰 게시판
+                       <a href="#"> 리뷰 게시판
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="memberList.jsp"> 회원 리스트
+                       <a href="#"> 회원 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -113,28 +116,30 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="/updateMF?id=${loginId}">마이페이지</a>
-                       <ul class="myPage">
+                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                      	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <span> > </span>
+                       <ul id="myPage">
                            <li>
-                               <a href="/updateMF?id=${loginId}">회원 정보 수정</a>
+                               <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="withdraw.jsp">회원 탈퇴</a>
+                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="reviewList.jsp">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="likeMovie.jsp">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="likeReview.jsp">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="follower.jsp">팔로워</a>
+                               <a href="./followerList?id=${loginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="following.jsp">팔로잉</a>
+                               <a href="./followingList?id=${loginId}">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
@@ -155,7 +160,7 @@
             <h3>작성한 리뷰</h3>
             <table>
                 <tr>
-                    <th>순번</th>
+                    <th>리뷰 번호</th>
                     <th>제목</th>
                     <th>영화 제목</th>
                     <th>평점</th>
@@ -163,50 +168,22 @@
                     <th>작성일</th>
                     <th>삭제</th>
                 </tr>
-                <tr>
-                    <td> 1 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 2 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 3 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 4 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 5 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 6 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 7 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 8 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 9 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
-                <tr>
-                    <td> 10 </td><td> 등골이 오싹한 영화 </td><td> 컨저링 </td><td> 4점 </td><td> 5 </td><td> 2021-03-09 </td>
-                    <td> <a href="delete">삭제</a> </td>
-                </tr>
+                <c:forEach items="${list}" var="review">
+                	<tr>
+                		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
+                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteReview?idx=${review.idx}">삭제</a> </td>
+                	</tr>
+                </c:forEach>
             </table>
         </div>
     </body>
 	<script>
-	
+		var showIf = document.getElementById('myPage').style.display;
+		
+		function showMyPage(){
+			if(showIf = 'none'){
+				document.getElementById('myPage').style.display='block';				
+			} 
+		}
 	</script>
 </html>
