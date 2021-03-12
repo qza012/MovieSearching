@@ -190,22 +190,22 @@ public class MemberService {
 		String pw = req.getParameter("pw");
 		System.out.println(id + "/" + pw);
 
-		boolean use = false;
+		boolean result = false;
 		
 		try {
-			use = dao.login(id, pw);
+			result = dao.login(id, pw);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dao.resClose();
 		}
 
-		if(use) {
+		if(result) {
 			req.getSession().setAttribute("id", id);
 		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		map.put("use", use);
+		map.put("use", result);
 		Gson gson = new Gson();
 		String json = gson.toJson(map);
 		System.out.println(json);
