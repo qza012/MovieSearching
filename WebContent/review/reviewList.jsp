@@ -119,4 +119,11 @@
     <input type="button" value="리뷰 작성" onclick="location.href='./review/reviewWrite.jsp' ">
     </div>
 </body>
+<script>
+	var msg="${msg}";
+	
+	if(msg!=""){
+		alert(msg);
+	}
+</script>
 </html>

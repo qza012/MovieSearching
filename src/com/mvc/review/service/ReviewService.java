@@ -110,19 +110,19 @@ public class ReviewService {
 		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
 		System.out.println(reviewIdx);
 		
-		ReviewDTO review_dto = new ReviewDTO();
+		ReviewDTO dto = new ReviewDTO();
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		ReviewDAO dao = new ReviewDAO();
 		
 		//리뷰 상세 가져오기
-		review_dto = dao.dtail(reviewIdx);
+		dto = dao.dtail(reviewIdx);
 		
 		//댓글 가져오기
 		list = dao.commentList(reviewIdx);
 		dao.resClose();
 		
-		if(review_dto!=null) {
-			req.setAttribute("review", review_dto);
+		if(dto!=null) {
+			req.setAttribute("review", dto);
 			if(list!=null) {
 				req.setAttribute("comment", list);
 			}
@@ -153,4 +153,95 @@ public class ReviewService {
 		
 	}
 
+	public void updateFrom() throws ServletException, IOException {
+		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
+		System.out.println(reviewIdx);
+		
+		ReviewDTO dto = new ReviewDTO();
+		ReviewDAO dao = new ReviewDAO();
+		
+		dto = dao.updateForm(reviewIdx);
+		dao.resClose();
+		
+		if(dto != null) {
+			req.setAttribute("review", dto);
+		}
+		req.getRequestDispatcher("review/reviewUpdate.jsp").forward(req, resp);
+	}
+
+	public void update() throws IOException {
+		int reviewIdx = Integer.parseInt(req.getParameter("idx"));
+		String subject = req.getParameter("subject");
+		String id = req.getParameter("id");
+		String movieCode = req.getParameter("movieCode");
+		String movieName = req.getParameter("movieName");
+		int score = Integer.parseInt(req.getParameter("score"));
+		String content = req.getParameter("content");
+		
+		System.out.println(reviewIdx + " / " + subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
+		
+		//비동기 방식은 데이터를 다른 페이지에 전달 할 수 없다.
+		//(요청한 페이지에게만 보낼 수 있음 asyncLogin.jsp에서 받았으면 거기에만 보낼 수 있음 result.jsp로 못보냄)
+		//response객체를 통해서 답변하므로 다른 페이지로 데이터를 보낼 수 없다. => request사용 못함, map에 데이터 담기
+		
+		//json과 HashMap이 가장 비슷한 형태
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		String msg ="리뷰수정에 실패했습니다.";
+		int success = 0;
+		
+		ReviewDTO dto = new ReviewDTO();
+		ReviewDAO dao = new ReviewDAO();
+		dto.setIdx(reviewIdx);
+		dto.setSubject(subject);
+		dto.setId(id);
+		dto.setMovieCode(movieCode);
+		dto.setScore(score);
+		dto.setContent(content);
+		
+		if(dao.update(dto)) {
+			msg="리뷰수정에 성공했습니다.";
+			success = 1;
+		}
+		dao.resClose();
+		
+		//map에 msg와 success 담기
+		map.put("msg", msg);
+		map.put("success",success);
+		
+		//맵형태로 전달하면 javascript에서 읽을 수 없어서 map을 json 형태로 변경
+		//map -> json으로 바꾸기 작업 (gson사용)
+		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
+		String json = gson.toJson(map); //map을 json형태로 변환
+		System.out.println(json);
+		
+		//이 컨텐츠가 보낼 데이터 타입과 한글깨짐 방지를 위한 인코딩 타입 지정
+		resp.setContentType("text/html; charset=UTF-8");
+		
+		//javascript에서 다른 도메인으로 통신은 기본적으로 안됨(cross domain issue) , 자바스크립트는 보안에 취약해서 안됨
+		//그래서 접속하려는 것에 대해 허용해야함
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		//resp에서 쓸수있는 객체를 하나 꺼내서 json을 씀
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void del() throws ServletException, IOException {
+		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
+		System.out.println(reviewIdx);
+		
+		String msg="삭제에 실패했습니다.";
+		String page="/reviewDetail?Idx="+reviewIdx;
+		
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.del(reviewIdx)) {
+			msg="삭제가 완료되었습니다.";
+			page="/reviewList";
+		}
+		dao.resClose();
+		
+		req.setAttribute("msg", msg);
+		req.getRequestDispatcher(page).forward(req, resp);
+	}
 }
