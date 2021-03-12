@@ -44,6 +44,7 @@ public class AdminReviewService{
 			if(reviewList != null) {
 				movieList = new ArrayList<MovieDTO>();
 				
+				// 리뷰 리스트에서 영화 코드를 가져온 후, 영화 세부사항을 추출.
 				for(ReviewDTO reviewDto : reviewList) {
 					MovieDTO movieDto = dao.getMovie(reviewDto.getMovieCode());
 					movieList.add(movieDto);
@@ -59,7 +60,7 @@ public class AdminReviewService{
 			dao.resClose();
 		}
 		
-		RequestDispatcher dis = req.getRequestDispatcher(finalPage);
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);	
 	}
 

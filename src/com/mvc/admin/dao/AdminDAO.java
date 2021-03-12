@@ -178,17 +178,40 @@ public class AdminDAO {
 		while(rs.next()) {
 			ReportDTO dto = new ReportDTO();
 			dto.setIdx(rs.getInt("idx"));
-			dto.setReportId(rs.getString("report_id"));
-			dto.setReportIdx(rs.getInt("report_idx"));
+			dto.setReport_id(rs.getString("report_id"));
+			dto.setReport_idx(rs.getInt("report_idx"));
 			dto.setContent(rs.getString("content"));
-			dto.setRegDate(rs.getString("reg_date"));
-			dto.setTypeIdx(rs.getInt("type_idx"));
+			dto.setReg_date(rs.getDate("reg_date"));
+			dto.setType_idx(rs.getInt("type_idx"));
 			dto.setComplete(rs.getString("complete"));
 			
 			list.add(dto);
 		}
 		
 		return list;
+	}
+	
+	public ReportDTO getReport(int idx) throws SQLException {
+		String sql = "SELECT idx, report_id, report_idx, content, reg_date, type_idx, complete "
+				+ "FROM report3 WHERE idx=?";
+		
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, idx);
+		rs = ps.executeQuery();
+		
+		ReportDTO dto = null;
+		if(rs.next()) {
+			dto = new ReportDTO();
+			dto.setIdx(rs.getInt("idx"));
+			dto.setReport_id(rs.getString("report_id"));
+			dto.setReport_idx(rs.getInt("report_idx"));
+			dto.setContent(rs.getString("content"));
+			dto.setReg_date(rs.getDate("reg_date"));
+			dto.setType_idx(rs.getInt("type_idx"));
+			dto.setComplete(rs.getString("complete"));
+		}
+		
+		return dto;
 	}
 	
 	public int insertPwQuestion(String content) throws SQLException {
@@ -232,12 +255,18 @@ public class AdminDAO {
 	
 	public int toggleDelType(CommentDTO dto) throws SQLException {
 		int result = 0;
-		String DelType = dto.getDel_type().toUpperCase();
-		int idx = dto.getIdx();
+		String delType = dto.getDel_type();
 		
-		if(DelType.equals("Y")) {
+		if(delType == null) {
+			return result;
+		}
+		
+		delType = dto.getDel_type().toUpperCase();
+		int idx = dto.getIdx();
+	
+		if(delType.equals("Y")) {
 			result = delType(idx, false, AdminSql.UPDATE_COMMENT_DELTYPE);
-		} else if(DelType.equals("N")){
+		} else if(delType.equals("N")){
 			result = delType(idx, true, AdminSql.UPDATE_COMMENT_DELTYPE);
 		}
 		
@@ -246,27 +275,39 @@ public class AdminDAO {
 
 	public int toggleDelType(ReviewDTO dto) throws SQLException {
 		int result = 0;
-		String DelType = dto.getDel_type().toUpperCase();
+		String delType = dto.getDel_type();
+		
+		if(delType == null) {
+			return result;
+		}
+			
+		delType = dto.getDel_type().toUpperCase();
 		int idx = dto.getIdx();
 		
-		if(DelType.equals("Y")) {
+		if(delType.equals("Y")) {
 			result = delType(idx, false, AdminSql.UPDATE_REVIEW_DELTYPE);
-		} else if(DelType.equals("N")){
+		} else if(delType.equals("N")){
 			result = delType(idx, true, AdminSql.UPDATE_REVIEW_DELTYPE);
 		}
 		
 		return result;
 	}
 	
-	public int togggleDelType(ReviewDTO dto) throws SQLException {
+	public int toggleComplete(ReportDTO dto) throws SQLException {
 		int result = 0;
-		String DelType = dto.getDel_type().toUpperCase();
+		String delType = dto.getComplete();
+		
+		if(delType == null) {
+			return result;
+		}
+		
+		delType = dto.getComplete().toUpperCase();
 		int idx = dto.getIdx();
 		
-		if(DelType.equals("Y")) {
-			result = delType(idx, false, AdminSql.UPDATE_REVIEW_DELTYPE);
-		} else if(DelType.equals("N")){
-			result = delType(idx, true, AdminSql.UPDATE_REVIEW_DELTYPE);
+		if(delType.equals("Y")) {
+			result = delType(idx, false, AdminSql.UPDATE_REPORT_COMPLETE);
+		} else if(delType.equals("N")){
+			result = delType(idx, true, AdminSql.UPDATE_REPORT_COMPLETE);
 		}
 		
 		return result;

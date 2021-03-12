@@ -21,7 +21,6 @@
 		<tr>
 			<th>리뷰번호</th><th>제목</th><th>영화 제목</th><th>작성자 ID</th><th>작성날짜</th><th>삭제여부</th>
 		</tr>
-		<!-- key : reviewList, value : movieList-->
 		<c:forEach items="${reviewList }" var="review" varStatus="status">
 		<tr>
 			<td>${review.idx }</td>

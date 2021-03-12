@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.admin.service.AdminReportReviewService;
 
-@WebServlet({"/admin/reportReviewList"})
+@WebServlet({"/admin/reportReviewList", "/admin/toggleReportReviewComplete"})
 public class AdminReportReviewController extends HttpServlet {
 
 	@Override
@@ -34,6 +34,11 @@ public class AdminReportReviewController extends HttpServlet {
 		case "/admin/reportReviewList" :
 			System.out.println("/admin/reportReviewList 요청");
 			service.reportReviewList();
+			break;
+			
+		case "/admin/toggleReportReviewComplete" :
+			System.out.println("/admin/toggleReportReviewComplete 요청");
+			service.toggleCompleteType();
 			break;
 		}
 	}

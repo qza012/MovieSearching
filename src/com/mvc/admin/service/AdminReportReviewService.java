@@ -33,20 +33,35 @@ public class AdminReportReviewService{
 		String finalPage = "reportReview.jsp";
 		req.setAttribute("finalPage", finalPage);
 		
-		LinkedList<ReportDTO> list = null;
+		LinkedList<ReportDTO> reportList = null;
+		ArrayList<ReviewDTO> reviewList = null;
 
-		AdminDAO comDao = new AdminDAO();
+		AdminDAO reportDao = new AdminDAO();
 		try {
-			list = comDao.getReportList();
-			if (list != null) {
-				ArrayList<ReportDTO> filteredList = filter(list);
-				req.setAttribute("list", filteredList);
+			ArrayList<ReportDTO> filteredReportList = null;
+			
+			reportList = reportDao.getReportList();
+			reviewList = new ArrayList<ReviewDTO>();
+			
+			if (reportList != null) {
+				// 타입 번호가 2001인 것만 추출.
+				filteredReportList = filter(reportList);
+				
+				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
+				for(ReportDTO reportDto : filteredReportList) {
+					ReviewDTO reviewDto = reportDao.getReview(reportDto.getReport_idx());
+					reviewList.add(reviewDto);
+				}
+				
+				req.setAttribute("reportList", filteredReportList);
+				req.setAttribute("reviewList", reviewList);
+				
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			comDao.resClose();
+			reportDao.resClose();
 		}
 
 		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
@@ -54,32 +69,33 @@ public class AdminReportReviewService{
 	}
 
 
-	public void toggleDelType() throws ServletException, IOException {
+	public void toggleCompleteType() throws ServletException, IOException {
 		String strIdx = req.getParameter("idx");
 		int idx = 0;
 		if(strIdx != null) {
 			idx = Integer.parseInt(strIdx);
 		}
 		
-		ReviewDTO reviewDto = null;
-		AdminDAO reviewDao = new AdminDAO();
+		ReportDTO reportDto = null;
+		AdminDAO reportDao = new AdminDAO();
 		try {
-			reviewDto = reviewDao.getReview(idx);
-			if(reviewDto != null) {
-				int result = reviewDao.toggleDelType(reviewDto);				
+			reportDto = reportDao.getReport(idx);
+			if(reportDto != null) {
+				int result = reportDao.toggleComplete(reportDto);
+				reportDto = reportDao.getReport(idx);	// 토글한 데이터도 갱신
 			}
 			//System.out.println(result);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			reviewDao.resClose();
+			reportDao.resClose();
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 	
-		if(reviewDao != null) {
-			map.put("delType", reviewDto.getDel_type());
+		if(reportDao != null) {
+			map.put("complete", reportDto.getComplete());
 		}
 		
 		Gson gson =  new Gson();
@@ -95,7 +111,7 @@ public class AdminReportReviewService{
 		// 리뷰 신고 번호 2001
 		ArrayList<ReportDTO> result = new ArrayList<ReportDTO>();
 		for (ReportDTO dto : list) {
-			if (dto.getTypeIdx() == 2001) {
+			if (dto.getType_idx() == 2001) {
 				result.add(dto);
 			}
 		}

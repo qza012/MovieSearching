@@ -1,10 +1,12 @@
 package com.mvc.follow.dto;
 
+import java.sql.Date;
+
 public class FollowDTO {
 	private int idx;
-	private String targetId;
+	private String target_id;
 	private String id;
-	private String regDate;
+	private Date reg_date;
 	
 	public int getIdx() {
 		return idx;
@@ -12,11 +14,11 @@ public class FollowDTO {
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
-	public String getTargetId() {
-		return targetId;
+	public String getTarget_id() {
+		return target_id;
 	}
-	public void setTargetId(String targetId) {
-		this.targetId = targetId;
+	public void setTarget_id(String target_id) {
+		this.target_id = target_id;
 	}
 	public String getId() {
 		return id;
@@ -24,10 +26,10 @@ public class FollowDTO {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getRegDate() {
-		return regDate;
+	public Date getReg_date() {
+		return reg_date;
 	}
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setReg_date(Date reg_date) {
+		this.reg_date = reg_date;
 	}
 }
