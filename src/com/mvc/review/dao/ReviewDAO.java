@@ -197,4 +197,110 @@ public class ReviewDAO {
 		return review_list;
 	}
 	
+	public ReviewDTO updateForm(int idx) {
+		ReviewDTO dto = new ReviewDTO();
+		
+		String sql = "SELECT * FROM (SELECT r.idx, r.id, r.subject, r.content, r.score, m.movieCode, m.movieName FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r WHERE r.idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, idx);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				dto.setIdx(rs.getInt("idx"));
+				dto.setId(rs.getString("id"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setScore(rs.getInt("score"));
+				dto.setMovieCode(rs.getString("movieCode"));
+				dto.setMovieName(rs.getString("movieName"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+
+	public boolean update(ReviewDTO dto) {
+		boolean success = false;
+		String sql="UPDATE review3 SET subject=?, content=?, score=? WHERE idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getSubject());
+			ps.setString(2, dto.getContent());
+			ps.setInt(3, dto.getScore());
+			ps.setInt(4, dto.getIdx());
+			if(ps.executeUpdate()>0) {
+				success=true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return success;
+	}
+
+	public boolean del(int reviewIdx) {
+		boolean success = false;
+		
+		//댓글 갯수 확인
+		int commentCnt = getCommentCnt(reviewIdx);
+		//댓글이 있는 경우
+		if(commentCnt > 0) {
+			success = commentDel(reviewIdx, commentCnt);
+			if(success == false) {
+				return false;
+			}
+		}
+		//리뷰 삭제
+		success = false;
+		String sql="UPDATE review3 SET del_type='Y' WHERE idx=?";
+		try {
+			ps= conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	private int getCommentCnt(int reviewIdx) {
+		int commentCnt = 0;
+		
+		String sql="SELECT COUNT(idx) FROM comment3 WHERE del_type='N' AND review_idx=?";
+		
+		try {
+			ps= conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				commentCnt = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return commentCnt;
+	}
+	
+	public boolean commentDel(int reviewIdx, int commentCnt) {
+		boolean success= false;
+		String sql="UPDATE comment3 SET del_type='Y' WHERE review_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			if(ps.executeUpdate()==commentCnt) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return success;
+	}
 }

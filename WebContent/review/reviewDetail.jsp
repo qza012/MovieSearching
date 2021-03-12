@@ -75,8 +75,8 @@
     </table>
 
     <div class="aTag">
-    <a href="#">수정</a>
-    <a href="#">삭제</a>
+    <a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
+    <a href="reviewDel?Idx=${review.idx}">삭제</a>
     </div>
 
     <div class="list">
@@ -85,7 +85,7 @@
 
 
     <div style="margin-bottom: 10px;">
-    <sapn>댓글</sapn>
+    <span>댓글</span>
     </div>
 
     <div class="comment">
