@@ -184,23 +184,32 @@ public class MemberService {
 		}
 	}
 
-	public boolean login() {
+	public void login() throws IOException {
 		MemberDAO dao = new MemberDAO();
 		String id = req.getParameter("id");
 		String pw = req.getParameter("pw");
 		System.out.println(id + "/" + pw);
 
-		boolean result = false;
-		;
+		boolean use = false;
+		
 		try {
-			result = dao.login(id, pw);
+			use = dao.login(id, pw);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dao.resClose();
 		}
 
-		return result;
+		if(use) {
+			req.getSession().setAttribute("id", id);
+		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("use", use);
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		System.out.println(json);
+		resp.getWriter().print(json);
 	}
 
 	//회원 목록 불러오기+입력한 키워드가 포함된 아이디 검색기능
