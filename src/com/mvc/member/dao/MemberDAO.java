@@ -272,18 +272,15 @@ public class MemberDAO {
 	 */
 	public ArrayList<ReviewDTO> top() throws SQLException {
 		String scoreSQL = "SELECT subject,score FROM (SELECT subject,score FROM review3 ORDER BY score DESC) WHERE ROWNUM <= 7";
-		// 제목,평점을 review3 에서 score기준 내림차순으로 7개 가져오기
 		ArrayList<ReviewDTO> top_list = new ArrayList<ReviewDTO>();
 		ps = conn.prepareStatement(scoreSQL);
 		rs = ps.executeQuery();
-
 		while (rs.next()) {
 			ReviewDTO dto = new ReviewDTO();
 			dto.setSubject(rs.getString("subject"));
 			dto.setScore(rs.getInt("score"));
 			top_list.add(dto);
 		}
-
 		return top_list;
 	}
 
@@ -296,7 +293,6 @@ public class MemberDAO {
 	public ArrayList<MemberDTO> search(String keyWord) throws SQLException {
 		String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
 		ArrayList<MemberDTO> keyWord_list = new ArrayList<MemberDTO>();
-
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, "%" + keyWord + "%");
 		rs = ps.executeQuery();
@@ -309,7 +305,7 @@ public class MemberDAO {
 			dto.setGenre(rs.getString("genre"));
 			keyWord_list.add(dto);
 		}
-
 		return keyWord_list;
 	}
+	
 }

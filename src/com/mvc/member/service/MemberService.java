@@ -203,58 +203,33 @@ public class MemberService {
 		return result;
 	}
 
-	public void memberList() throws ServletException, IOException {
-		String loginId = (String) req.getSession().getAttribute("loginId");
-		if (loginId != null) {
-			MemberDAO dao = new MemberDAO();
-			ArrayList<MemberDTO> member_list;
+	//회원 목록 불러오기+입력한 키워드가 포함된 아이디 검색기능
+	public void getMemberList() throws ServletException, IOException {
+//		String loginId = (String) req.getSession().getAttribute("loginId");
+//		if (loginId != null) {
+		MemberDAO dao = new MemberDAO();
 			try {
-				member_list = dao.getMemberList();
+				String keyWord = req.getParameter("keyWord");
+				System.out.println("검색 요청한 키워드:" + keyWord);
+				ArrayList<MemberDTO> list = dao.getMemberList();
 				ArrayList<ReviewDTO> top_list = dao.top();
-				if (member_list == null) {
-					req.setAttribute("member_list", req.getParameter("keyWord_list"));
+				ArrayList<MemberDTO> keyWord_list = dao.search(keyWord);
+				if (keyWord== null) {
+					req.setAttribute("member_list", list);
 				} else {
-					req.setAttribute("member_list", member_list);
-					req.setAttribute("top_list", top_list);
+					req.setAttribute("member_list", keyWord_list);
 				}
+				req.setAttribute("top_list", top_list);
+				RequestDispatcher dis = req.getRequestDispatcher("/member/member.jsp");
+				dis.forward(req, resp);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
 				dao.resClose();
 			}
-
-			RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("index.jsp");
-		}
+//		} else {
+//			resp.sendRedirect("index.jsp");
+//		}
 	}
 
-	public void search() throws ServletException, IOException {
-		String loginId = (String) req.getSession().getAttribute("loginId");
-		if (loginId != null) {// search?search=id&keyWord=0310
-			String keyWord = req.getParameter("keyWord");
-			String search = req.getParameter("search");
-			System.out.println("검색조건:" + search + "검색 요청한 키워드:" + keyWord);
-
-			MemberDAO dao = new MemberDAO();
-			ArrayList<MemberDTO> keyWord_list;
-			try {
-				keyWord_list = dao.search(keyWord);
-
-				if (keyWord_list != null) {
-					req.setAttribute("keyWord_list", keyWord_list);
-					switch (search) {
-
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member");
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("index.jsp");
-		}
-	}
 }

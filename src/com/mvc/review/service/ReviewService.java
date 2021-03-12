@@ -130,5 +130,27 @@ public class ReviewService {
 		
 		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
+	
+	public void memReviewList() throws ServletException, IOException {
+//		String loginId = (String) req.getSession().getAttribute("loginId");
+//		if(loginId!=null) {		
+			String id = req.getParameter("id");
+			System.out.println("상세보기 할 id:"+id);
+			ReviewDAO dao = new ReviewDAO();
+			try {
+				ArrayList<ReviewDTO> review_list = dao.memReviewList(id);
+				if(review_list!=null) {
+					req.setAttribute("review_list", review_list);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			RequestDispatcher dis = req.getRequestDispatcher("member/review.jsp");
+			dis.forward(req, resp);
+//		}else {
+//			resp.sendRedirect("index.jsp");
+//		}
+		
+	}
 
 }

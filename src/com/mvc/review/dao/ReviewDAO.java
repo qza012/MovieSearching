@@ -178,5 +178,23 @@ public class ReviewDAO {
 		}
 		return list;
 	}
-
+	
+	public ArrayList<ReviewDTO> memReviewList(String id) throws SQLException {
+		String sql = "SELECT idx,subject,moviecode,score,reg_date FROM review3 WHERE id=? ORDER BY reg_date DESC";
+		ArrayList<ReviewDTO> review_list = new ArrayList<ReviewDTO>();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				ReviewDTO dto = new ReviewDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setMovieCode(rs.getString("moviecode"));
+				dto.setScore(rs.getInt("score"));
+				dto.setReg_date(rs.getDate("reg_date"));
+				review_list.add(dto);
+			}
+		return review_list;
+	}
+	
 }

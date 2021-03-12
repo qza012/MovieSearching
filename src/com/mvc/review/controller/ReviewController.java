@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.review.service.ReviewService;
 
-@WebServlet({"/reviewList","/reviewDetail","/reviewWrite"})
+@WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/memReviewList"})
 public class ReviewController extends HttpServlet {
 
 	@Override
@@ -49,7 +49,11 @@ public class ReviewController extends HttpServlet {
 			System.out.println("리뷰 작성 요청");
 			service.write();
 			break;
-		
+			
+		case "/memReviewList":
+			System.out.println("회원이 작성한 리뷰 요청");
+			service.memReviewList();
+			break;
 		}
 	}
 	

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF"
-			,"/update", "/withdraw","/member","/search"})
+			,"/update", "/withdraw","/member/member"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -79,15 +79,11 @@ public class MemberController extends HttpServlet {
 				//service.withdraw();
 				break;
 				
-			case "/member":
+			case "/member/member":
 				System.out.println("회원이 작성한 리뷰,top7  요청");
-				service.memberList();
+				service.getMemberList();
 				break;
 				
-			case "/search":
-				System.out.println("검색 요청");
-				service.search();
-				break;
 		}
 		
 	}
