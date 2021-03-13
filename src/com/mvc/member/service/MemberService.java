@@ -179,7 +179,7 @@ public class MemberService {
 
 		if (QuestionList != null) {
 			req.setAttribute("Qlist", QuestionList);
-			RequestDispatcher rd = req.getRequestDispatcher("joinForm.jsp");
+			RequestDispatcher rd = req.getRequestDispatcher("/join/joinForm.jsp");
 			rd.forward(req, resp);
 		}
 	}
