@@ -328,4 +328,123 @@ public class ReviewService {
 			resp.sendRedirect("./");
 		}
 	}
+
+	public void commentWrite() throws IOException {
+		String content = req.getParameter("content");
+		String id = req.getParameter("id");
+		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+		
+		System.out.println(review_idx + " / " + id + " / " + content);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		String msg ="댓글성에 실패했습니다.";
+		int success = 0;
+		
+		CommentDTO dto = new CommentDTO();
+		ReviewDAO dao = new ReviewDAO();
+		dto.setContent(content);
+		dto.setId(id);
+		dto.setReview_idx(review_idx);
+		
+		if(dao.commentWrite(dto)) {
+			msg="댓글작성에 성공했습니다.";
+			success = 1;
+		}
+		dao.resClose();
+		
+		//map에 msg와 success 담기
+		map.put("msg", msg);
+		map.put("success",success);
+		
+		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
+		String json = gson.toJson(map); //map을 json형태로 변환
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void commentUpdateForm() throws IOException {
+		int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
+		System.out.println(comment_idx);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		int success = 0;
+		String content = null;
+		
+		ReviewDAO dao = new ReviewDAO();
+		content = dao.commentUpdateForm(comment_idx);
+		if(content != null) {
+			success = 1;
+		}
+		dao.resClose();
+		
+		map.put("success",success);
+		map.put("content", content);
+		
+		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
+		String json = gson.toJson(map); //map을 json형태로 변환
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void commentUpdate() throws IOException {
+		int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
+		String content = req.getParameter("content");
+		System.out.println(comment_idx + " / " + content);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		int success = 0;
+		String msg = "댓글 수정에 실패했습니다.";
+		
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.commentUpdate(comment_idx, content)) {
+			success = 1;
+			msg = "댓글 수정에 성공했습니다.";
+		}
+		dao.resClose();
+	
+		map.put("success",success);
+		map.put("msg", msg);
+		
+		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
+		String json = gson.toJson(map); //map을 json형태로 변환
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void commentDel() throws ServletException, IOException {
+		int comment_idx = Integer.parseInt(req.getParameter("idx"));
+		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+		System.out.println(comment_idx + " / " + review_idx);
+		
+		String msg = "댓글 삭제에 실패했습니다.";
+		String page= "/reviewDetail?Idx="+review_idx;
+		
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.commentDel(comment_idx)) {
+			msg="댓글을 삭제했습니다.";
+		}
+		dao.resClose();
+		
+		req.setAttribute("msg", msg);
+		req.getRequestDispatcher(page).forward(req, resp);
+		
+	}
 }

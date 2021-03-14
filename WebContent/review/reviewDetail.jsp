@@ -43,6 +43,7 @@
     </style>
 </head>
 <body>
+	<input type="hidden" id="review_idx" value="${review.idx}"/>
 	<table>
         <tr>
             <td colspan="6">
@@ -90,8 +91,10 @@
 
     <div class="comment">
         <div>
-        <input style="width: 90%; height: 50px;"/>
-        <input type="button" value="등록"  style="width:7%; height: 50px;"/>
+        <input type="hidden" id="comment_idx"/>
+        <input type="text" id="comment_content" style="width: 90%; height: 50px;"/>
+        <input type="button" id="save" value="등록"  style="width:7%; height: 50px;"/>
+        <input type="hidden" id="update" value="수정" style="width:7%; height: 50px;"/>
         </div>
     </div>
 
@@ -107,10 +110,100 @@
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
             <td style="border-top: white; border-bottom: white; "><a href="./review/report.jsp" target="_blank">신고</a></td>
-            <td style="border-top: white; border-bottom: white; text-align: right;"><a href="#">수정</a></td>
-            <td style="border-top: white; border-bottom: white; text-align: left;"><a href="#">삭제</a></td>
+            <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;"><a onclick="update('${comment.idx}')">수정</a></td>
+            <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;"><a href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a></td>
         </tr>
         </c:forEach>
     </table>
 </body>
+<script>
+$("#save").click(function(){
+	var content = $("#comment_content").val();
+	var id = "comment"; //세션에서 현재 접속한 사람 아이디 가져와야함
+	var review_idx = $("#review_idx").val();
+	
+	console.log(content + " / " + id + " / " + review_idx);
+
+	$.ajax({ //jquery로 ajax사용
+		type:'post' //[GET|POST] 전송방식
+		,url:'./commentWrite' //action 어디에 요청할 건지
+		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+			'content':content,
+			'id':id,
+			'review_idx':review_idx,
+		}
+		,dataType: 'json' //주고 받을 테이터 타입
+		,success: function(data){//성공한 내용은 data로 들어옴
+			console.log(data);
+			console.log('data.success');
+			if(data.success == 1){
+				alert(data.msg);
+				location.href = "./reviewDetail?Idx="+review_idx;
+			}else{
+				alert('댓글 작성에 실패했습니다.');
+			}
+		}
+		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+			console.log(e);
+		}
+	});
+});
+
+function update(comment_idx){
+	$.ajax({ //jquery로 ajax사용
+		type:'post' //[GET|POST] 전송방식
+		,url:'./commentUpdateForm' //action 어디에 요청할 건지
+		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+			'comment_idx':comment_idx,
+		}
+		,dataType: 'json' //주고 받을 테이터 타입
+		,success: function(data){//성공한 내용은 data로 들어옴
+			console.log(data);
+			console.log(data.content);
+			$("#comment_content").val(data.content);
+			$("#comment_idx").val(comment_idx);
+			$("#save").attr('type', 'hidden');
+			$("#update").attr('type', 'button');
+		}
+		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+			console.log(e);
+		}
+	});
+}
+
+$("#update").click(function(){
+	var comment_idx = $("#comment_idx").val();
+	var content = $("#comment_content").val();
+	var review_idx = $("#review_idx").val();
+	console.log(content + " / "+ comment_idx);
+
+	$.ajax({ //jquery로 ajax사용
+		type:'post' //[GET|POST] 전송방식
+		,url:'./commentUpdate' //action 어디에 요청할 건지
+		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+			'content':content,
+			'comment_idx':comment_idx,
+		}
+		,dataType: 'json' //주고 받을 테이터 타입
+		,success: function(data){//성공한 내용은 data로 들어옴
+			console.log(data);
+			if(data.success == 1){
+				alert(data.msg);
+				location.href = "./reviewDetail?Idx="+review_idx;
+			}else{
+				alert('댓글 수정에 실패했습니다.');
+			}
+		}
+		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+			console.log(e);
+		}
+	});
+});
+
+var msg="${msg}";
+
+if(msg!=""){
+	alert(msg);
+}
+</script>
 </html>
