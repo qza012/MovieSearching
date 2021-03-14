@@ -127,7 +127,7 @@ public class ReviewDAO {
 		return max;
 	}
 
-	public ReviewDTO dtail(int idx) {
+	public ReviewDTO detail(int idx) {
 		ReviewDTO dto = new ReviewDTO();
 		
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.content, r.score, r.reg_date, r.del_type, m.movieName, m.posterurl FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike   " + 
@@ -453,6 +453,59 @@ public class ReviewDAO {
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, comment_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
+	public boolean reviewLikeCheck(int reviewIdx, String loginId) {
+		boolean success= false;
+		String sql="SELECT * FROM review_like3 WHERE review_idx=? AND id=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			ps.setString(2, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return success;
+	}
+
+	public boolean reviewLikeUp(int review_idx, String loginId) {
+		boolean success= false;
+		String sql = "INSERT INTO review_like3(idx, id, review_idx) VALUES(review_like3_seq.NEXTVAL,?,?)";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, review_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean reviewLikeDown(int review_idx, String loginId) {
+		boolean success= false;
+		String sql = "DELETE FROM review_like3 WHERE id=? AND review_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, review_idx);
 			if(ps.executeUpdate()>0) {
 				success = true;
 			}

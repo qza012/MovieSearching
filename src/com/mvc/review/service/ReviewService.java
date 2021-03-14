@@ -110,13 +110,24 @@ public class ReviewService {
 		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
 		System.out.println(reviewIdx);
 		
+		//테스트용
+		req.getSession().setAttribute("loginId", "relike");
+		String loginId = (String)req.getSession().getAttribute("loginId");
+		
 		ReviewDTO dto = new ReviewDTO();
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		ReviewDAO dao = new ReviewDAO();
 		
 		//리뷰 상세 가져오기
-		dto = dao.dtail(reviewIdx);
+		dto = dao.detail(reviewIdx);
 		
+		//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
+		int reviewLike = 0;
+		if(dao.reviewLikeCheck(reviewIdx, loginId)) {
+			reviewLike = 1;	
+		}
+		req.setAttribute("reviewLike", reviewLike);
+
 		//댓글 가져오기
 		list = dao.commentList(reviewIdx);
 		dao.resClose();
@@ -127,7 +138,6 @@ public class ReviewService {
 				req.setAttribute("comment", list);
 			}
 		}
-		
 		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 	
@@ -180,11 +190,6 @@ public class ReviewService {
 		
 		System.out.println(reviewIdx + " / " + subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 		
-		//비동기 방식은 데이터를 다른 페이지에 전달 할 수 없다.
-		//(요청한 페이지에게만 보낼 수 있음 asyncLogin.jsp에서 받았으면 거기에만 보낼 수 있음 result.jsp로 못보냄)
-		//response객체를 통해서 답변하므로 다른 페이지로 데이터를 보낼 수 없다. => request사용 못함, map에 데이터 담기
-		
-		//json과 HashMap이 가장 비슷한 형태
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		String msg ="리뷰수정에 실패했습니다.";
@@ -446,5 +451,43 @@ public class ReviewService {
 		req.setAttribute("msg", msg);
 		req.getRequestDispatcher(page).forward(req, resp);
 		
+	}
+
+	public void reviewLike() throws IOException {
+		//테스트용
+		String loginId = (String)req.getSession().getAttribute("loginId");
+		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		int reviewLikeState = 0;
+		int success = 0;
+		
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.reviewLikeCheck(review_idx, loginId)) {
+			reviewLikeState = 1;
+		}
+		if(reviewLikeState == 0) {
+			if(dao.reviewLikeUp(review_idx, loginId)) {
+				success = 1;
+			}
+		}else if(reviewLikeState == 1){
+			if(dao.reviewLikeDown(review_idx, loginId)) {
+				success = 1;
+			}
+		}
+		dao.resClose();
+		
+		map.put("success",success);
+		
+		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
+		String json = gson.toJson(map); //map을 json형태로 변환
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
 	}
 }

@@ -48,7 +48,7 @@
         <tr>
             <td colspan="6">
                 <div>
-                    ${review.posterURL}
+                    <img src="${review.posterURL}"/>
                 </div>
                 <div>
                     ${review.movieName}
@@ -67,17 +67,36 @@
             <td colspan="6">${review.content}</td>
         </tr>
         <tr>
-            <th>좋아요</th>
-            <td>${review.cntLike}</td>
-            <td colspan="2"><a href="./review/report.jsp" target="_blank">신고</a></td>
+        	<!-- 세션아이디 가져와서 작성자와 같으면 그냥 냅두고 -->
+        	<!-- 작성자와 다른데 좋아요 이미 눌렀으면? -->
+        	<!-- 작성자와 다른데 좋아요 안눌렀으면? -->
+        	<c:if test="${sessionScope.loginId eq review.id}">
+        		<th>좋아요</th>
+        	</c:if>
+        	<c:if test="${sessionScope.loginId ne review.id}">
+        		<c:if test="${reviewLike eq 1}">
+        			<th class="like" style="cursor: pointer;  color: red;" onclick="reviewLike(${review.idx})">좋아요 취소</th>
+        		</c:if>
+        		<c:if test="${reviewLike eq 0}">
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})">좋아요</th>
+        		</c:if>
+        	</c:if>
+            <td id="reviewCntLike">${review.cntLike}</td>
+            <!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
+            <td colspan="2">
+            <c:if test="${sessionScope.loginId ne review.id}">
+            	<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            </c:if>
+            </td>
             <th>작성일</th>
             <td>${review.reg_date}</td>
         </tr>
     </table>
-
     <div class="aTag">
-    <a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
-    <a href="reviewDel?Idx=${review.idx}">삭제</a>
+	  	<c:if test="${sessionScope.loginId eq review.id}">
+	   		<a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
+	    	<a href="reviewDel?Idx=${review.idx}">삭제</a>
+	    </c:if>
     </div>
 
     <div class="list">
@@ -109,9 +128,22 @@
             <td>${comment.content}</td>
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
-            <td style="border-top: white; border-bottom: white; "><a href="./review/report.jsp" target="_blank">신고</a></td>
-            <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;"><a onclick="update('${comment.idx}')">수정</a></td>
-            <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;"><a href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a></td>
+            
+            <td style="border-top: white; border-bottom: white; ">
+            	<c:if test="${sessionScope.loginId ne comment.id}">
+            		<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            	</c:if>
+            </td>
+            <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
+            	<c:if test="${sessionScope.loginId eq comment.id}">
+            		<a onclick="update(${comment.idx})">수정</a>
+            	</c:if>
+            </td>
+            <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
+            	<c:if test="${sessionScope.loginId eq comment.id}">
+            		<a href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
+            	</c:if>
+            </td>
         </tr>
         </c:forEach>
     </table>
@@ -124,16 +156,16 @@ $("#save").click(function(){
 	
 	console.log(content + " / " + id + " / " + review_idx);
 
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'./commentWrite' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({ 
+		type:'post' 
+		,url:'./commentWrite' 
+		,data:{ 
 			'content':content,
 			'id':id,
 			'review_idx':review_idx,
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json' 
+		,success: function(data){
 			console.log(data);
 			console.log('data.success');
 			if(data.success == 1){
@@ -143,21 +175,21 @@ $("#save").click(function(){
 				alert('댓글 작성에 실패했습니다.');
 			}
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});
 });
 
 function update(comment_idx){
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'./commentUpdateForm' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({
+		type:'post' 
+		,url:'./commentUpdateForm' 
+		,data:{
 			'comment_idx':comment_idx,
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json'
+		,success: function(data){
 			console.log(data);
 			console.log(data.content);
 			$("#comment_content").val(data.content);
@@ -165,7 +197,7 @@ function update(comment_idx){
 			$("#save").attr('type', 'hidden');
 			$("#update").attr('type', 'button');
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});
@@ -177,15 +209,15 @@ $("#update").click(function(){
 	var review_idx = $("#review_idx").val();
 	console.log(content + " / "+ comment_idx);
 
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'./commentUpdate' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({
+		type:'post' 
+		,url:'./commentUpdate' 
+		,data:{
 			'content':content,
 			'comment_idx':comment_idx,
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json' 
+		,success: function(data){
 			console.log(data);
 			if(data.success == 1){
 				alert(data.msg);
@@ -194,14 +226,37 @@ $("#update").click(function(){
 				alert('댓글 수정에 실패했습니다.');
 			}
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});
 });
 
-var msg="${msg}";
+function reviewLike(review_idx){
+	$.ajax({
+		type:'post' 
+		,url:'./reviewLike' 
+		,data:{
+			'review_idx':review_idx,
+		}
+		,dataType: 'json' 
+		,success: function(data){
+			console.log(data);
+			if(data.success == 1){
+				location.href = "./reviewDetail?Idx="+review_idx;
+			}
+		}
+		,error: function(e){
+			console.log(e);
+		}
+	});
+}
 
+function reportOpen(){
+	window.open("./review/report.jsp", "report", "width=400, height=400, left=100, top=100");
+}
+
+var msg="${msg}";
 if(msg!=""){
 	alert(msg);
 }

@@ -78,7 +78,7 @@
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = "juju";
+	var id = "juju"; //아이디 세션에서 가져오기
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
@@ -86,10 +86,10 @@ $("#save").click(function(){
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'../reviewWrite' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({ 
+		type:'post' 
+		,url:'../reviewWrite' 
+		,data:{
 			'subject':subject,
 			'id':id,
 			'movieCode':movieCode,
@@ -97,8 +97,8 @@ $("#save").click(function(){
 			'score':score,
 			'content':content
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json' 
+		,success: function(data){
 			console.log(data);
 			console.log('data.success');
 			if(data.success == 1){
@@ -108,7 +108,7 @@ $("#save").click(function(){
 				alert('리뷰 작성에 실패했습니다.');
 			}
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});
