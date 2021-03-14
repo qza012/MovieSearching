@@ -93,10 +93,10 @@ $("#save").click(function(){
 	
 	console.log(idx + " / " + subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'./reviewUpdate' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({ 
+		type:'post'
+		,url:'./reviewUpdate' 
+		,data:{
 			'idx':idx,
 			'subject':subject,
 			'id':id,
@@ -105,14 +105,14 @@ $("#save").click(function(){
 			'score':score,
 			'content':content
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json'
+		,success: function(data){
 			console.log(data);
 		
 			alert(data.msg);
 			location.href = "./reviewDetail?Idx="+idx;
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});

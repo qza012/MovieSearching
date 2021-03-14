@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.review.service.ReviewService;
 
 @WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/memReviewList","/reviewUpdateForm","/reviewUpdate","/reviewDel",
-	"/myReviewList","/deleteMyReview","/iLikeReview","/iDonotLike"})
+	"/myReviewList","/deleteMyReview","/iLikeReview","/iDonotLike","/commentWrite","/commentUpdateForm","/commentUpdate","/commentDel","/reviewLike"})
 public class ReviewController extends HttpServlet {
 
 	@Override
@@ -89,6 +89,31 @@ public class ReviewController extends HttpServlet {
 		case "/iDonotLike":
 			System.out.println("좋아요 취소하기");
 			service.iDonotLike();
+			break;
+			
+		case "/commentWrite":
+			System.out.println("댓글 작성 요청");
+			service.commentWrite();
+			break;
+			
+		case "/commentUpdateForm":
+			System.out.println("댓글 수정폼 요청");
+			service.commentUpdateForm();
+			break;
+			
+		case "/commentUpdate":
+			System.out.println("댓글 수정 요청");
+			service.commentUpdate();
+			break;
+			
+		case "/commentDel":
+			System.out.println("댓글 삭제 요청");
+			service.commentDel();
+			break;
+			
+		case "/reviewLike":
+			System.out.println("좋아요 상태 변경 요청");
+			service.reviewLike();
 			break;
 		}
 	}

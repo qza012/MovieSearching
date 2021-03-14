@@ -50,7 +50,7 @@
     </table>
     <div class="button">
         <input type="button" value="신고"/>
-        <input type="button" value="취소" onclick="location.href='./reviewList.jsp' "/>
+        <input type="button" value="취소" onclick="window.close()"/>
     </div>
 </body>
 </html>
