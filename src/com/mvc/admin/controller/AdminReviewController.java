@@ -36,8 +36,8 @@ public class AdminReviewController extends HttpServlet {
 			service.reviewList();
 			break;
 			
-		case "/admin/toggleReportCommentComplete" :
-			System.out.println();
+		case "/admin/toggleRevieDelType" :
+			System.out.println("/admin/toggleRevieDelType 요청");
 			service.toggleDelType();
 			break;
 		}

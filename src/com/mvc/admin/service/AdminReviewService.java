@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -13,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
-import com.mvc.member.dao.MemberDAO;
-import com.mvc.member.dto.MemberDTO;
+import com.mvc.admin.util.AdminSql;
 import com.mvc.movie.dto.MovieDTO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -34,23 +34,40 @@ public class AdminReviewService{
 		String finalPage = "review.jsp";
 		req.setAttribute("finalPage", finalPage);
 		
-		ArrayList<ReviewDTO> reviewList = null;
-		ArrayList<MovieDTO> movieList = null;
+		String standard = req.getParameter("standard");
+		String keyWord = req.getParameter("keyWord");
+		String strCurPage = req.getParameter("curPage");
+		String strRowsPerPage = req.getParameter("rowsPerPage");
+		
+		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
+		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
+		
+		List<ReviewDTO> reviewList = null;
+		List<MovieDTO> movieList = null;
 		
 		AdminDAO dao = new AdminDAO();
 		try {
-			reviewList = dao.getReviewList();
 			
-			if(reviewList != null) {
-				movieList = new ArrayList<MovieDTO>();
-				
-				// 리뷰 리스트에서 영화 코드를 가져온 후, 영화 세부사항을 추출.
-				for(ReviewDTO reviewDto : reviewList) {
-					MovieDTO movieDto = dao.getMovie(reviewDto.getMovieCode());
-					movieList.add(movieDto);
-				}	
+			if(keyWord == null || keyWord.equals("")) {
+				reviewList = dao.getReviewList(curPage, rowsPerPage);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.REVIEW_TABLE)/rowsPerPage + 1);
+				req.removeAttribute("keyWord");
+			} else {
+				reviewList = dao.getReviewList(curPage, rowsPerPage, standard, keyWord);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.REVIEW_TABLE, standard, keyWord)/rowsPerPage + 1);
+				req.setAttribute("keyWord", keyWord);
 			}
 			
+			movieList = new ArrayList<MovieDTO>();
+			// 리뷰 리스트에서 영화 코드를 가져온 후, 영화 세부사항을 추출.
+			for(ReviewDTO reviewDto : reviewList) {
+				MovieDTO movieDto = dao.getMovie(reviewDto.getMovieCode());
+				movieList.add(movieDto);
+			}
+			
+			req.setAttribute("curPage", curPage);
+			req.setAttribute("standard", standard);
 			req.setAttribute("reviewList", reviewList);
 			req.setAttribute("movieList", movieList);
 			

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.admin.service.AdminMemberService;
 
-@WebServlet({ "/admin/memberDisableList", "/admin/toggleMemberDisable" })
+@WebServlet({ "/admin/memberDisableList", "/admin/toggleMemberDisable", "/admin/memberSearch" })
 public class AdminMemberController extends HttpServlet {
 
 	@Override
@@ -31,15 +31,20 @@ public class AdminMemberController extends HttpServlet {
 		AdminMemberService service = new AdminMemberService(req, resp);
 		
 		switch (sub) {
-		case "/admin/memberDisableList":
+		case "/admin/memberDisableList" :
 			System.out.println("/admin/memberDisableList 요청");
 			service.memberList();
 			break;
 			
-		case "/admin/toggleMemberDisable":
+		case "/admin/toggleMemberDisable" :
 			System.out.println("/admin/ToggleMemberDisable 요청");
 			service.toggleDisable();
 			break;
+			
+//		case "/admin/memberSearch" :
+//			System.out.println("/admin/memberSearch");
+//			service.memberSearch();
+//			break;
 		}
 	}
 

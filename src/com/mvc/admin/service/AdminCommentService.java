@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -13,7 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
+import com.mvc.admin.util.AdminSql;
+import com.mvc.admin.util.AdminUtil;
 import com.mvc.comment.dto.CommentDTO;
+import com.mvc.member.dto.MemberDTO;
 
 public class AdminCommentService{
 
@@ -31,14 +35,34 @@ public class AdminCommentService{
 		String finalPage = "comment.jsp";
 		req.setAttribute("finalPage", finalPage);
 		
-		ArrayList<CommentDTO> list = null;
+		String standard = req.getParameter("standard");
+		String keyWord = req.getParameter("keyWord");
+		String strCurPage = req.getParameter("curPage");
+		String strRowsPerPage = req.getParameter("rowsPerPage");
+		//AdminUtil.log(keyWord);
+		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
+		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
 		
+		List<CommentDTO> commentList = null;
+
 		AdminDAO dao = new AdminDAO();
 		try {
-			list = dao.getCommentList();
-			if(list != null) {
-				req.setAttribute("list", list);
+
+			if(keyWord == null || keyWord.equals("")) {
+				commentList = dao.getCommentList(curPage, rowsPerPage);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE)/rowsPerPage + 1);
+				req.removeAttribute("keyWord");
+			} else {
+				commentList = dao.getCommentList(curPage, rowsPerPage, standard, keyWord);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE, standard, keyWord)/rowsPerPage + 1);
+				req.setAttribute("keyWord", keyWord);
 			}
+			
+			
+			req.setAttribute("curPage", curPage);
+			req.setAttribute("standard", standard);
+			req.setAttribute("list", commentList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

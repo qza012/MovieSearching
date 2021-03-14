@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
+import com.mvc.admin.util.AdminSql;
 import com.mvc.admin.util.AdminUtil;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
@@ -27,45 +29,40 @@ public class AdminMemberService {
 		this.resp = resp;
 	}
 
-//	public void list() throws ServletException, IOException {
-//		String page = "#";
-//		ArrayList<MemberDTO> list = null;
-//
-//		MemberDAO dao = new MemberDAO();
-//		try {
-//			list = dao.getMemberList();
-//			if(list != null) {
-//				req.setAttribute("list", list);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			dao.resClose();
-//		}
-//		
-//		String finalPage = (String)req.getAttribute("finalPage");
-//		if(finalPage != null) {
-//			page = finalPage;
-//		}
-//		
-//		RequestDispatcher dis = req.getRequestDispatcher(page);
-//		dis.forward(req, resp);	
-//	}
-
 	public void memberList() throws ServletException, IOException {
 		String nextPage = "list";
 		// 최종 도착 페이지 설정.
 		String finalPage = "memberDisable.jsp";
 		req.setAttribute("finalPage", finalPage);
 
-		ArrayList<MemberDTO> list = null;
+		String standard = req.getParameter("standard");
+		String keyWord = req.getParameter("keyWord");
+		String strCurPage = req.getParameter("curPage");
+		String strRowsPerPage = req.getParameter("rowsPerPage");
+		//AdminUtil.log(keyWord);
+		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
+		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
+		
+		List<MemberDTO> memberList = null;
 
-		MemberDAO dao = new MemberDAO();
+		AdminDAO dao = new AdminDAO();
 		try {
-			list = dao.getMemberList();
-			if (list != null) {
-				req.setAttribute("list", list);
+			
+			if(keyWord == null || keyWord.equals("")) {
+				memberList = dao.getMemberList(curPage, rowsPerPage);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.MEMBER_TABLE)/rowsPerPage + 1);
+				req.removeAttribute("keyWord");
+			} else {
+				memberList = dao.getMemberList(curPage, rowsPerPage, standard, keyWord);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.MEMBER_TABLE, standard, keyWord)/rowsPerPage + 1);
+				req.setAttribute("keyWord", keyWord);
 			}
+			
+			
+			req.setAttribute("curPage", curPage);
+			req.setAttribute("standard", standard);
+			req.setAttribute("list", memberList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -74,6 +71,7 @@ public class AdminMemberService {
 
 		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);
+		
 	}
 
 	public void toggleDisable() throws ServletException, IOException {
@@ -82,7 +80,6 @@ public class AdminMemberService {
 		AdminDAO adminDao = null;
 		MemberDAO memDao = null;
 		try {
-
 			memDao = new MemberDAO();
 			memDto = memDao.getMember(id);
 			
@@ -114,4 +111,17 @@ public class AdminMemberService {
 		resp.setHeader("Access-Control-Allow", "*");
 		resp.getWriter().print(json);
 	}
+
+//	public void memberSearch() throws ServletException, IOException {
+//		String nextPage = "list";
+//		String standard = req.getParameter("standard");
+//		String keyWord = req.getParameter("keyWord");
+//		AdminUtil.log("search", standard, keyWord);
+//		
+//		String finalPage = "memberDisable.jsp";
+//		req.setAttribute("finalPage", finalPage);
+//		
+//		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
+//		dis.forward(req, resp);
+//	}
 }

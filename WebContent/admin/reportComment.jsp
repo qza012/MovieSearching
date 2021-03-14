@@ -17,6 +17,23 @@
 	<body>
 		<h3>댓글 리포트</h3>
 		<hr/>
+		<div>
+			<form action="reportCommentList" method="GET">
+			    <select class="standard" name="standard">
+			    	<option value="all">전체</option>
+			    	<option value="idx">신고번호</option>    	
+			        <option value="report_idx">댓글번호</option>
+			        <option value="subject">리뷰제목</option>
+			        <option value="content">사유</option>
+			        <option value="report_id">신고한 회원ID</option>
+			        <option value="id">신고당한 회원ID</option>
+			        <option value="reg_date">신고날짜</option>
+			        <option value="complete">처리 유무</option>
+			    </select>
+				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
+			    <input type="submit" value="검색"/>
+			</form>
+		</div>
 		<table>
 		<tr>
 			<th>신고번호</th><th>댓글번호</th><th>리뷰번호</th><th>사유</th><th>신고한 회원 ID</th><th>신고당한 회원 ID</th><th>신고날짜</th><th>처리 유무</th>
@@ -54,7 +71,7 @@
 			var flag = $("#"+this.value);
 			
 			$.ajax({
-				type:'POST'
+				type:'GET'
 				,url:'toggleReportCommentComplete'
 				,data:{'idx' : this.value}
 				,dataType:'JSON'

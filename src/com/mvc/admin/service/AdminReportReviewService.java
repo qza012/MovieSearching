@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
+import com.mvc.admin.util.AdminSql;
+import com.mvc.admin.util.AdminUtil;
+import com.mvc.movie.dto.MovieDTO;
 import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -33,35 +38,83 @@ public class AdminReportReviewService{
 		String finalPage = "reportReview.jsp";
 		req.setAttribute("finalPage", finalPage);
 		
-		LinkedList<ReportDTO> reportList = null;
-		ArrayList<ReviewDTO> reviewList = null;
+		String standard = req.getParameter("standard");
+		String keyWord = req.getParameter("keyWord");
+		String strCurPage = req.getParameter("curPage");
+		String strRowsPerPage = req.getParameter("rowsPerPage");
+		//AdminUtil.log(standard);
+		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
+		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
+		
+		List<ReportDTO> reportList = null;
+		List<ReportDTO> filteredReportList = null;
+		List<ReviewDTO> reviewList = null;
 
-		AdminDAO reportDao = new AdminDAO();
+		AdminDAO dao = new AdminDAO();
 		try {
-			ArrayList<ReportDTO> filteredReportList = null;
 			
-			reportList = reportDao.getReportList();
-			reviewList = new ArrayList<ReviewDTO>();
-			
-			if (reportList != null) {
+			if(keyWord == null || keyWord.equals("")) {
+				reportList = dao.getReportList(curPage, rowsPerPage);
 				// 타입 번호가 2001인 것만 추출.
-				filteredReportList = filter(reportList);
+				filteredReportList = reportList.stream()
+									.filter(dto -> dto.getType_idx() == 2001)
+									.collect(Collectors.toList());
 				
-				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
-				for(ReportDTO reportDto : filteredReportList) {
-					ReviewDTO reviewDto = reportDao.getReview(reportDto.getReport_idx());
-					reviewList.add(reviewDto);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE)/rowsPerPage + 1);
+				req.removeAttribute("keyWord");
+			} else {
+				if(standard.equals("subject") || standard.equals("id")) {
+					System.out.println("업데이트 바람.");
+				} else {		
+					reportList = dao.getReportList(curPage, rowsPerPage, standard, keyWord);
+					// 타입 번호가 2001인 것만 추출.
+					filteredReportList = reportList.stream()
+										.filter(dto -> dto.getType_idx() == 2001)
+										.collect(Collectors.toList());
+					
+					req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE, standard, keyWord)/rowsPerPage + 1);
+					req.setAttribute("keyWord", keyWord);
 				}
-				
-				req.setAttribute("reportList", filteredReportList);
-				req.setAttribute("reviewList", reviewList);
-				
 			}
+			
+			reviewList = new ArrayList<ReviewDTO>();
+			// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
+			for(ReportDTO reportDto : filteredReportList) {
+				ReviewDTO reviewDto = dao.getReview(reportDto.getReport_idx());
+				reviewList.add(reviewDto);
+			}
+			
+			req.setAttribute("curPage", curPage);
+			req.setAttribute("standard", standard);
+			req.setAttribute("reportList", reportList);
+			req.setAttribute("reviewList", reviewList);
+			
+			
+			
+//			reportList = reportDao.getReportList();
+//			reviewList = new ArrayList<ReviewDTO>();
+//			
+//			if (reportList != null) {
+//				// 타입 번호가 2001인 것만 추출.
+//				filteredReportList = reportList.stream()
+//									.filter(dto -> dto.getType_idx() == 2001)
+//									.collect(Collectors.toList());
+//				
+//				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
+//				for(ReportDTO reportDto : filteredReportList) {
+//					ReviewDTO reviewDto = reportDao.getReview(reportDto.getReport_idx());
+//					reviewList.add(reviewDto);
+//				}
+//				
+//				req.setAttribute("reportList", filteredReportList);
+//				req.setAttribute("reviewList", reviewList);				
+//			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			reportDao.resClose();
+			dao.resClose();
 		}
 
 		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
@@ -106,16 +159,5 @@ public class AdminReportReviewService{
 		resp.setHeader("Access-Control-Allow", "*");
 		resp.getWriter().print(json);
 	}
-	
-	private ArrayList<ReportDTO> filter(LinkedList<ReportDTO> list) {
-		// 리뷰 신고 번호 2001
-		ArrayList<ReportDTO> result = new ArrayList<ReportDTO>();
-		for (ReportDTO dto : list) {
-			if (dto.getType_idx() == 2001) {
-				result.add(dto);
-			}
-		}
 
-		return result;
-	}
 }
