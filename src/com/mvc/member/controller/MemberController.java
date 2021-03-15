@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF","/update","/withdrawForm",
-	"/withdraw","/member/member","/follow"})
+
+@WebServlet({"/idChk","/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
+	"/member/member","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/join/idFind","/join/pwFind"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -49,7 +50,7 @@ public class MemberController extends HttpServlet {
 				service.join();
 				break;
 				
-			case "/login":
+			case "/join/login":
 				System.out.println("로그인 요청");
 				service.login();
 				break;
@@ -60,28 +61,27 @@ public class MemberController extends HttpServlet {
 				resp.sendRedirect("index.jsp");
 				break;
 				
-			case "/Qlist":
+			case "/questionList":
 				System.out.println("질문지 요청");
 				service.questionList();
 				break;
 				
-			case "/updateMF":
+			case "/myPage/loginForMyPage":
+				System.out.println("마이페이지 구성을 위한 임시 로그인");
+				service.loginForMyPage();
+				break;
+				
+			case "/myPage/updateMF":
 				System.out.println("회원정보 수정 폼으로");
 				service.updateMemberForm();
 				break;
 				
-			case "/update":
+			case "/myPage/update":
 				System.out.println("프로필 사진 저장 요청");
 				service.update();
 				break;
 				
-			case "/withdrawForm":
-				System.out.println("회원 탈퇴 폼으로");
-				RequestDispatcher dis = req.getRequestDispatcher("withdraw.jsp");
-				dis.forward(req, resp);
-				break;
-				
-			case "/withdraw":
+			case "/myPage/withdraw":
 				System.out.println("회원 탈퇴 요청");
 				service.withdraw();
 				break;
@@ -91,9 +91,30 @@ public class MemberController extends HttpServlet {
 				service.getMemberList();
 				break;
 				
-			case "/follow":
-				System.out.println("팔로우 하기");
+
+			case "/join/idFind":
+				System.out.println("아이디 찾기 요청");
+				service.idFind();
+				break;
+				
+			case "/join/pwFind":
+				System.out.println("비밀번호 찾기 요청");
+				service.pwFind();
+				break;
+				
+			case "/myPage/follow":
+				System.out.println("팔로우 하기_마이페이지");
 				service.follow();
+				break;
+				
+			case "/myPage/followerList":
+				System.out.println("나를 팔로우 하는 사람들");
+				service.followerList();
+				break;
+				
+			case "/myPage/followingList":
+				System.out.println("내가 팔로잉하는 사람들");
+				service.followingList();
 				break;
 		}
 		

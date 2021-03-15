@@ -77,7 +77,7 @@
    <body>
        <h2>로고</h2>
        <p>
-     		${loginId}님,
+     		${sessionScope.myLoginId}님,
            <a href="./logout">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
@@ -116,30 +116,30 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                       <a href="./updateMF?id=${sessionScope.myLoginId}" onclick="showMyPage()">마이페이지</a>
                       	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          <span> > </span>
                        <ul id="myPage">
                            <li>
-                               <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
+                               <a href="./updateMF?id=${sessionScope.myLoginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
+                               <a href="./withdraw.jsp">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${sessionScope.myLoginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${sessionScope.myLoginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${sessionScope.myLoginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./followerList?id=${loginId}">팔로워</a>
+                               <a href="./followerList?id=${sessionScope.myLoginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="./followingList?id=${loginId}">팔로잉</a>
+                               <a href="./followingList?id=${sessionScope.myLoginId}">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
@@ -157,27 +157,32 @@
            </nav>
        </div>
        <div class="mainData">
-           <h3>데이터</h3>
+           <h3>로그인</h3>
            <span>
            		<button onclick="location.href='./follow?targetId=${targetId}'">팔로우</button>
            </span>
-           <table>
-               <tr>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-               </tr>
-               <tr>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-               </tr>
-           </table>
-       </div>
+           <form action="./loginForMyPage" method="post">
+	           <table>
+	               <tr>
+	                   <th>아이디</th>
+	                   <td>
+	                   		<input type="text" id="userId" name="userId"/>
+	                   </td>
+	               </tr>
+	           		<tr>
+	                   <th>비밀번호</th>
+	                   <td>
+	                   		<input type="text" id="userPw" name="userPw"/>
+	                   </td>
+	               </tr>
+	               <tr>
+	               		<td colspan="2">
+	               			<input type="submit" value="로그인"/>
+	               		</td>
+	               </tr>
+	    		</table>
+           </form>
+    	</div>
    </body>
    <script>
    		var showIf = document.getElementById('myPage').style.display;

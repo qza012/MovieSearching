@@ -78,7 +78,7 @@
     <body>
         <h2>로고</h2>
         <p>
-     		${loginId}님,
+     		${sessionScope.myLoginId}님,
            <a href="./logout">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
@@ -172,7 +172,7 @@
                 <c:forEach items="${list}" var="review">
                 	<tr>
                 		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td><button id="notLike" onclick="location.href='./notLike?idx=${review.idx}'">좋아요 취소</button></td>
+                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td><button id="notLike" onclick="location.href='./iDonotLike?idx=${review.idx}'">좋아요 취소</button></td>
                 	</tr>
                 </c:forEach>
             </table>
