@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF","/update","/withdrawForm",
-	"/withdraw","/member/member","/follow"})
+@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update","/withdrawForm",
+	"/withdraw","/member/member","/follow","/myPage/loginForMyPage"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -65,12 +65,17 @@ public class MemberController extends HttpServlet {
 				service.questionList();
 				break;
 				
-			case "/updateMF":
+			case "/myPage/loginForMyPage":
+				System.out.println("마이페이지 구성을 위한 임시 로그인");
+				service.loginForMyPage();
+				break;
+				
+			case "/myPage/updateMF":
 				System.out.println("회원정보 수정 폼으로");
 				service.updateMemberForm();
 				break;
 				
-			case "/update":
+			case "/myPage/update":
 				System.out.println("프로필 사진 저장 요청");
 				service.update();
 				break;
@@ -95,6 +100,7 @@ public class MemberController extends HttpServlet {
 				System.out.println("팔로우 하기");
 				service.follow();
 				break;
+				
 		}
 		
 	}

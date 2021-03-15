@@ -28,7 +28,7 @@ public class MemberService {
 	}
 
 	public void updateMemberForm() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			String id = req.getParameter("id");
 			System.out.println(id+"님의 회원정보");
@@ -41,14 +41,14 @@ public class MemberService {
 			
 			
 			String msg = "현재 이용이 불가합니다.";
-			String page="./";
+			String page="./main.jsp";
 			
 			if(dto != null) {
 				System.out.println("데이터 보내주기");
 				req.setAttribute("mDto", dto);
 				req.setAttribute("qList", list);
 				msg = "";
-				page="updateMember.jsp";
+				page="./updateMember.jsp";
 			}
 			dao.resClose();
 			
@@ -56,12 +56,12 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");			
+			resp.sendRedirect("./main.jsp");			
 		}
 	}
 
 	public void update() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			FileService file = new FileService(req);
 			MemberDTO dto = file.regist();
@@ -83,10 +83,10 @@ public class MemberService {
 				req.setAttribute("photoPath", dto.getNewFileName());
 			}
 			dao.resClose();
-			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id="+req.getAttribute("loginId"));
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 
@@ -296,7 +296,7 @@ public class MemberService {
 		} finally {
 			dao.resClose();
 		}
-		RequestDispatcher dis = req.getRequestDispatcher("./myPage/main.jsp");
+		RequestDispatcher dis = req.getRequestDispatcher("./main.jsp");
 		dis.forward(req, resp);
 	}
 

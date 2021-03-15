@@ -85,7 +85,7 @@
     <body>
         <h2>로고</h2>
         <p>
-     		${loginId}님,
+     		${sessionScope.myLoginId}님,
            <a href="./logout">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
@@ -129,25 +129,25 @@
                          <span> > </span>
                        <ul id="myPage">
                            <li>
-                               <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
+                               <a href="./updateMF?id=${sessionScope.myLoginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
+                               <a href="./withdrawForm?id=${sessionScope.myLoginId}">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${sessionScope.myLoginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${sessionScope.myLoginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${sessionScope.myLoginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./followerList?id=${loginId}">팔로워</a>
+                               <a href="./followerList?id=${sessionScope.myLoginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="./followingList?id=${loginId}">팔로잉</a>
+                               <a href="./followingList?id=${sessionScope.myLoginId}">팔로잉</a>
                            </li>
                            <li>
                                <a href="alram.jsp">알람</a>
