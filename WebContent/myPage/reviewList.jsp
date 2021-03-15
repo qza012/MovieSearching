@@ -171,7 +171,7 @@
                 <c:forEach items="${list}" var="review">
                 	<tr>
                 		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteReview?idx=${review.idx}">삭제</a> </td>
+                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteMyReview?idx=${review.idx}">삭제</a> </td>
                 	</tr>
                 </c:forEach>
             </table>

@@ -251,49 +251,49 @@ public class ReviewService {
 	}
 	
 	public void myReviewList() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			ReviewDAO dao = new ReviewDAO();
 			ArrayList<ReviewDTO> list = dao.myReviewList(loginId);
 			
-			String page="./";
+			String page="./main.jsp";
 			
 			if(list!=null) {
-				page="reviewList.jsp";
+				page="./reviewList.jsp";
 			}
 			dao.resClose();
 			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}	
 	}
 
 	public void iLikeReview() throws IOException, ServletException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			ReviewDAO dao = new ReviewDAO();
 			ArrayList<ReviewDTO> list = dao.likeReview(loginId);
 			
-			String page="./";
+			String page="./main.jsp";
 			
 			if(list!=null) {
-				page="likeReview.jsp";
+				page="./likeReview.jsp";
 			}
 			dao.resClose();
 			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 
 	public void iDonotLike() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String id = (String) req.getAttribute("loginId");
+			String id = (String) req.getSession().getAttribute("myLoginId");
 			String idx = req.getParameter("idx");
 			System.out.println(id+"님이, "+idx+"번 리뷰 좋아요 취소.");
 			
@@ -305,17 +305,17 @@ public class ReviewService {
 			}
 			dao.resClose();
 			
-			RequestDispatcher dis = req.getRequestDispatcher("/iLikeReview?id=${loginId}");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/iLikeReview?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 
 	public void deleteMyReview() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String id = (String) req.getAttribute("loginId");
+			String id = (String) req.getSession().getAttribute("myLoginId");
 			String idx = req.getParameter("idx");
 			System.out.println(id+"님이, "+idx+"번 리뷰 삭제.");
 			
@@ -327,10 +327,10 @@ public class ReviewService {
 			}
 			dao.resClose();
 			
-			RequestDispatcher dis = req.getRequestDispatcher("/myReviewList?id=${loginId}");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/myReviewList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 
