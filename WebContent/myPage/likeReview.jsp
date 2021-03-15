@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>ReviewList</title>
+		<title>likeReview</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
             h2{
@@ -49,12 +49,12 @@
             div{
                 float: left;
             }
-            .reviewList {
+            .likeReview {
                 font-family: Verdana;
                 width: 75%;
                 margin-top: 40px;
                 margin-left: 10%;
-            }    
+            }
             table {
                 text-align: center;
                 width: 100%;
@@ -69,9 +69,10 @@
                 padding: 10px;
                 border-bottom: 1px solid darkslategrey;
             }
-            #delete{
-            	color: red;
-            }
+            #notLike{
+            	font-size: small;
+            	font-weight: 600;
+            }    
         </style>
     </head>
     <body>
@@ -156,8 +157,8 @@
                </ul>
            </nav>
        </div>
-        <div class="reviewList">
-            <h3>작성한 리뷰</h3>
+        <div class="likeReview">
+            <h3>좋아요한 리뷰</h3>
             <table>
                 <tr>
                     <th>리뷰 번호</th>
@@ -166,12 +167,12 @@
                     <th>평점</th>
                     <th>좋아요</th>
                     <th>작성일</th>
-                    <th>삭제</th>
+                    <th></th>
                 </tr>
                 <c:forEach items="${list}" var="review">
                 	<tr>
                 		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteMyReview?idx=${review.idx}">삭제</a> </td>
+                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td><button id="notLike" onclick="location.href='./iDonotLike?idx=${review.idx}'">좋아요 취소</button></td>
                 	</tr>
                 </c:forEach>
             </table>
@@ -183,7 +184,7 @@
 		function showMyPage(){
 			if(showIf = 'none'){
 				document.getElementById('myPage').style.display='block';				
-			} 
+			}
 		}
 	</script>
 </html>

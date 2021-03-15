@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,24 +17,25 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
 import com.mvc.admin.util.AdminSql;
-import com.mvc.comment.dto.CommentDTO;
+import com.mvc.admin.util.AdminUtil;
+import com.mvc.movie.dto.MovieDTO;
 import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
 
-public class AdminReportCommentService {
+public class AdminReportReviewService{
 
 	private HttpServletRequest req = null;
 	private HttpServletResponse resp = null;
 	
-	public AdminReportCommentService(HttpServletRequest req, HttpServletResponse resp) {
+	public AdminReportReviewService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
 		this.resp = resp;
 	}
 
-	public void reportCommentList() throws ServletException, IOException {
+	public void reportReviewList() throws ServletException, IOException {
 		String nextPage = "list";
 		// 최종 도착 페이지 설정.
-		String finalPage = "reportComment.jsp";
+		String finalPage = "reportReview.jsp";
 		req.setAttribute("finalPage", finalPage);
 		
 		String standard = req.getParameter("standard");
@@ -47,8 +49,8 @@ public class AdminReportCommentService {
 		
 		List<ReportDTO> reportList = null;
 		List<ReportDTO> filteredReportList = null;
-		List<CommentDTO> commentList = null;
-		
+		List<ReviewDTO> reviewList = null;
+
 		AdminDAO dao = new AdminDAO();
 		try {
 			
@@ -56,7 +58,7 @@ public class AdminReportCommentService {
 				reportList = dao.getReportList(curPage, rowsPerPage);
 				// 타입 번호가 2001인 것만 추출.
 				filteredReportList = reportList.stream()
-									.filter(dto -> dto.getType_idx() == 2002)
+									.filter(dto -> dto.getType_idx() == 2001)
 									.collect(Collectors.toList());
 				
 				req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE)/rowsPerPage + 1);
@@ -68,7 +70,7 @@ public class AdminReportCommentService {
 					reportList = dao.getReportList(curPage, rowsPerPage, standard, keyWord);
 					// 타입 번호가 2001인 것만 추출.
 					filteredReportList = reportList.stream()
-										.filter(dto -> dto.getType_idx() == 2002)
+										.filter(dto -> dto.getType_idx() == 2001)
 										.collect(Collectors.toList());
 					
 					req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE, standard, keyWord)/rowsPerPage + 1);
@@ -76,37 +78,39 @@ public class AdminReportCommentService {
 				}
 			}
 			
-			commentList = new ArrayList<CommentDTO>();
-			// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 댓글을 추출.
+			reviewList = new ArrayList<ReviewDTO>();
+			// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
 			for(ReportDTO reportDto : filteredReportList) {
-				CommentDTO commentDTO = dao.getComment(reportDto.getReport_idx());
-				commentList.add(commentDTO);
+				ReviewDTO reviewDto = dao.getReview(reportDto.getReport_idx());
+				reviewList.add(reviewDto);
 			}
 			
 			req.setAttribute("curPage", curPage);
 			req.setAttribute("standard", standard);
 			req.setAttribute("reportList", reportList);
-			req.setAttribute("commentList", commentList);
+			req.setAttribute("reviewList", reviewList);
+			
+			
 			
 //			reportList = reportDao.getReportList();
-//			commentList = new ArrayList<CommentDTO>();
-//
-//			if(reportList != null) {
-//				// 타입 번호가 2002인 것만 추출
+//			reviewList = new ArrayList<ReviewDTO>();
+//			
+//			if (reportList != null) {
+//				// 타입 번호가 2001인 것만 추출.
 //				filteredReportList = reportList.stream()
-//									.filter(dto -> dto.getType_idx() == 2002)
+//									.filter(dto -> dto.getType_idx() == 2001)
 //									.collect(Collectors.toList());
 //				
-//				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 댓글을 추출.
+//				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
 //				for(ReportDTO reportDto : filteredReportList) {
-//					CommentDTO commentDto = reportDao.getComment(reportDto.getReport_idx());
-//					commentList.add(commentDto);
+//					ReviewDTO reviewDto = reportDao.getReview(reportDto.getReport_idx());
+//					reviewList.add(reviewDto);
 //				}
 //				
 //				req.setAttribute("reportList", filteredReportList);
-//				req.setAttribute("commentList", commentList);
+//				req.setAttribute("reviewList", reviewList);				
 //			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -114,9 +118,10 @@ public class AdminReportCommentService {
 		}
 
 		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
-		dis.forward(req, resp);	
+		dis.forward(req, resp);
 	}
-	
+
+
 	public void toggleCompleteType() throws ServletException, IOException {
 		String strIdx = req.getParameter("idx");
 		int idx = 0;
@@ -132,6 +137,7 @@ public class AdminReportCommentService {
 				int result = reportDao.toggleComplete(reportDto);
 				reportDto = reportDao.getReport(idx);	// 토글한 데이터도 갱신
 			}
+			//System.out.println(result);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,7 +146,7 @@ public class AdminReportCommentService {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+	
 		if(reportDao != null) {
 			map.put("complete", reportDto.getComplete());
 		}
@@ -153,5 +159,5 @@ public class AdminReportCommentService {
 		resp.setHeader("Access-Control-Allow", "*");
 		resp.getWriter().print(json);
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package com.mvc.movie.controller;
+package com.mvc.admin.controller;
 
 import java.io.IOException;
 
@@ -8,12 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mvc.movie.service.MovieService;
-import com.mvc.review.service.ReviewService;
+import com.mvc.admin.service.AdminMemberService;
 
-@WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", 
-	"/likeMovie"})
-public class MovieController extends HttpServlet {
+@WebServlet({ "/admin/memberDisableList", "/admin/toggleMemberDisable", "/admin/memberSearch" })
+public class AdminMemberController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,34 +25,26 @@ public class MovieController extends HttpServlet {
 
 	private void dual(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
-		System.out.println("요청 확인");
-
 		String sub = req.getRequestURI().substring(req.getContextPath().length());
-		System.out.println("sub : " + sub);
+		System.out.println("호출한 태그 : " + sub);
 
-		MovieService service = new MovieService(req, resp);
-
+		AdminMemberService service = new AdminMemberService(req, resp);
+		
 		switch (sub) {
-		case "/movie/home":
-			System.out.println("홈으로");
-			service.main();
-			break;
-
-		case "/movie/movielist":
-			System.out.println("영화 리스트 불러오기");
-			service.list();
-			break;
-
-		case "/movie/moviedetail":
-			System.out.println("영화 상세보기 요청");
-			service.detail();
-			break;
-
-		case "/likeMovie":
-			System.out.println("회원이 좋아요한 영화 요청");
-			service.detail();
+		case "/admin/memberDisableList" :
+			System.out.println("/admin/memberDisableList 요청");
+			service.memberList();
 			break;
 			
+		case "/admin/toggleMemberDisable" :
+			System.out.println("/admin/ToggleMemberDisable 요청");
+			service.toggleDisable();
+			break;
+			
+//		case "/admin/memberSearch" :
+//			System.out.println("/admin/memberSearch");
+//			service.memberSearch();
+//			break;
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.mvc.member.controller;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/updateMF"
-			,"/update", "/withdraw","/member/member","/join/idFind","/join/pwFind"})
+
+@WebServlet({"/idChk","/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
+	"/member/member","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/join/idFind","/join/pwFind"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -64,19 +66,24 @@ public class MemberController extends HttpServlet {
 				service.questionList();
 				break;
 				
-			case "/updateMF":
+			case "/myPage/loginForMyPage":
+				System.out.println("마이페이지 구성을 위한 임시 로그인");
+				service.loginForMyPage();
+				break;
+				
+			case "/myPage/updateMF":
 				System.out.println("회원정보 수정 폼으로");
 				service.updateMemberForm();
 				break;
 				
-			case "/update":
+			case "/myPage/update":
 				System.out.println("프로필 사진 저장 요청");
-				service.updateMember();
+				service.update();
 				break;
 				
-			case "/withdraw":
+			case "/myPage/withdraw":
 				System.out.println("회원 탈퇴 요청");
-				//service.withdraw();
+				service.withdraw();
 				break;
 				
 			case "/member/member":
@@ -84,6 +91,7 @@ public class MemberController extends HttpServlet {
 				service.getMemberList();
 				break;
 				
+
 			case "/join/idFind":
 				System.out.println("아이디 찾기 요청");
 				service.idFind();
@@ -94,6 +102,20 @@ public class MemberController extends HttpServlet {
 				service.pwFind();
 				break;
 				
+			case "/myPage/follow":
+				System.out.println("팔로우 하기_마이페이지");
+				service.follow();
+				break;
+				
+			case "/myPage/followerList":
+				System.out.println("나를 팔로우 하는 사람들");
+				service.followerList();
+				break;
+				
+			case "/myPage/followingList":
+				System.out.println("내가 팔로잉하는 사람들");
+				service.followingList();
+				break;
 		}
 		
 	}

@@ -10,7 +10,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.member.dto.MemberDTO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.review.dto.ReviewDTO;
 
 public class MovieDAO {
 
@@ -45,9 +47,9 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> top() throws SQLException {
-		ArrayList<MovieDTO> top = new ArrayList<MovieDTO>();
-		String sql = "SELECT r.rank, m.posterurl, m.moviename FROM rank3 r, movie3 m WHERE ROWNUM <= 10";
+	public ArrayList<MovieDTO> main() throws SQLException {
+		ArrayList<MovieDTO> main = new ArrayList<MovieDTO>();
+		String sql = "SELECT r.rank, m.posterurl, m.moviename FROM rank3 r, movie3 m WHERE r.moviecode = m.moviecode";
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
@@ -58,17 +60,18 @@ public class MovieDAO {
 			dto.setMovieName(rs.getString("moviename"));
 		}
 
-		return top;
+		return main;
 	}
 
 	public ArrayList<MovieDTO> list() throws SQLException {
-		String sql = "SELECT posterurl, moviename FROM movie3 WHERE ROWNUM <= 10";
+		String sql = "SELECT moviecode, posterurl, moviename FROM movie3";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		while (rs.next()) {
 			MovieDTO dto = new MovieDTO();
+			dto.setMovieCode(rs.getString("moviecode"));
 			dto.setPosterUrl(rs.getString("posterurl"));
 			dto.setMovieName(rs.getString("moviename"));
 			list.add(dto);
@@ -151,4 +154,50 @@ public class MovieDAO {
 		ps.close();
 		return result;
 	}
+	
+	public ArrayList<ReviewDTO> review(String movieCode) {
+		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
+		
+		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " + 
+				" JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l ON r.IDX = l.IDX WHERE del_type='N' AND r.movieName=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				ReviewDTO dto = new ReviewDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setId(rs.getString("id"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setScore(rs.getInt("score"));
+				dto.setReg_date(rs.getDate("reg_date"));
+				dto.setMovieName(rs.getString("movieName"));
+				dto.setCntLike(rs.getInt("cntLike"));
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public ArrayList<MovieDTO> search(String keyWord) throws SQLException {
+		String sql = "SELECT * FROM movie3 WHERE movieCode=?";
+		ArrayList<MovieDTO> keyWord_list = new ArrayList<MovieDTO>();
+
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, "%" + keyWord + "%");
+		rs = ps.executeQuery();
+		while (rs.next()) {
+			MovieDTO dto = new MovieDTO();
+			dto.setMovieName(rs.getString("movieName"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setDirector(rs.getString("director"));
+			dto.setActors(rs.getString("actors"));
+			keyWord_list.add(dto);
+		}
+
+		return keyWord_list;
+	}
+	
 }

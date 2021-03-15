@@ -1,12 +1,14 @@
 package com.mvc.report.dto;
 
+import java.sql.Date;
+
 public class ReportDTO {
 	private int idx;
-	private String reportId;
-	private int reportIdx;
+	private String report_id;
+	private int report_idx;
 	private String content;
-	private String regDate;
-	private int typeIdx;
+	private Date reg_date;
+	private int type_idx;
 	private String complete;
 	
 	public int getIdx() {
@@ -15,17 +17,17 @@ public class ReportDTO {
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
-	public String getReportId() {
-		return reportId;
+	public String getReport_id() {
+		return report_id;
 	}
-	public void setReportId(String reportId) {
-		this.reportId = reportId;
+	public void setReport_id(String report_id) {
+		this.report_id = report_id;
 	}
-	public int getReportIdx() {
-		return reportIdx;
+	public int getReport_idx() {
+		return report_idx;
 	}
-	public void setReportIdx(int reportIdx) {
-		this.reportIdx = reportIdx;
+	public void setReport_idx(int report_idx) {
+		this.report_idx = report_idx;
 	}
 	public String getContent() {
 		return content;
@@ -33,17 +35,17 @@ public class ReportDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getRegDate() {
-		return regDate;
+	public Date getReg_date() {
+		return reg_date;
 	}
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setReg_date(Date reg_date) {
+		this.reg_date = reg_date;
 	}
-	public int getTypeIdx() {
-		return typeIdx;
+	public int getType_idx() {
+		return type_idx;
 	}
-	public void setTypeIdx(int typeIdx) {
-		this.typeIdx = typeIdx;
+	public void setType_idx(int type_idx) {
+		this.type_idx = type_idx;
 	}
 	public String getComplete() {
 		return complete;
@@ -52,4 +54,5 @@ public class ReportDTO {
 		this.complete = complete;
 	}
 	
+
 }
