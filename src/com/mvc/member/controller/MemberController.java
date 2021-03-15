@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/updateMF"
-			,"/update", "/withdraw","/member/member"})
+@WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/updateMF"
+			,"/update", "/withdraw","/member/member","/join/idFind","/join/pwFind"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -48,7 +48,7 @@ public class MemberController extends HttpServlet {
 				service.join();
 				break;
 				
-			case "/login":
+			case "/join/login":
 				System.out.println("로그인 요청");
 				service.login();
 				break;
@@ -59,7 +59,7 @@ public class MemberController extends HttpServlet {
 				resp.sendRedirect("index.jsp");
 				break;
 				
-			case "/Qlist":
+			case "/questionList":
 				System.out.println("질문지 요청");
 				service.questionList();
 				break;
@@ -82,6 +82,16 @@ public class MemberController extends HttpServlet {
 			case "/member/member":
 				System.out.println("회원이 작성한 리뷰,top7  요청");
 				service.getMemberList();
+				break;
+				
+			case "/join/idFind":
+				System.out.println("아이디 찾기 요청");
+				service.idFind();
+				break;
+				
+			case "/join/pwFind":
+				System.out.println("비밀번호 찾기 요청");
+				service.pwFind();
 				break;
 				
 		}
