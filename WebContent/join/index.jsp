@@ -43,7 +43,9 @@
     a:hover{
                 text-decoration: underline;
     }
-    
+    #id:focus,#pw:focus{
+    	outline-color: black;
+    }
 </style>
 </head>
 <body>
@@ -58,7 +60,7 @@
 			<td>
 				<form action="" method="post">
 					<div>
-						<label>아이디</label><br> <input type="text" id="id" name="id" />
+						<label>아이디</label><br> <input type="text" id="id" name="id"  />
 
 					</div>
 
@@ -74,8 +76,7 @@
 					<td colspan="3"><input type="button" value="로그인"  id="login"/> </br> 
 					<input type="button" value="회원가입" onclick="location.href='../questionList'" /></td>
 				</tr>
-			</td>
-		</tr>
+			
 	</table>
 </body>
 <script>

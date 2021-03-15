@@ -55,7 +55,7 @@ lable {
 <body>
 	<table>
 		<tr>
-			<td align="left"><a href="idFind.jsp" id="idFind">아이디 찾기</a> <a href=""
+			<td align="left" text-size ="1px"><a href="idFind.jsp" id="idFind">아이디 찾기</a> <a href=""
 				id="Findpw">비밀번호 찾기</a></td>
 		</tr>
 		<tr>
@@ -103,7 +103,7 @@ lable {
 		<tr>
 			<td align="right">
 				<div>
-					<a href="index.jsp">로그인 하러 가기</a>
+					<a href="join/index.jsp">로그인 하러 가기</a>
 				</div>
 			</td>
 		</tr>
