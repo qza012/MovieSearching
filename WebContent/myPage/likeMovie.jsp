@@ -169,7 +169,7 @@
                 <tr>
                 	<td><img src="https://i.pinimg.com/originals/96/a0/0d/96a00d42b0ff8f80b7cdf2926a211e47.jpg" width="100px"></td>
                 	<td> 영화는 어떻게 만들어 지는가 </td><td> 다큐 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
+                    <td><button id="notLikeMovie" onclick="location.href='./iDonotLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
                	</tr>
                 <tr>
                     <td><img src="https://i.pinimg.com/736x/30/d5/38/30d53895b7337958e79aff2e974c7a1f.jpg" width="100px"></td>

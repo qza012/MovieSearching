@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.service.MovieService;
+import com.mvc.review.service.ReviewService;
 
-@WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", "/likeMovie" })
+@WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", 
+	"/likeMovie"})
 public class MovieController extends HttpServlet {
 
 	@Override
@@ -52,6 +54,7 @@ public class MovieController extends HttpServlet {
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.detail();
 			break;
+			
 		}
 	}
 

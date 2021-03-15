@@ -274,7 +274,7 @@ public class ReviewService {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			ReviewDAO dao = new ReviewDAO();
-			ArrayList<ReviewDTO> list = dao.likeReview(loginId);
+			ArrayList<ReviewDTO> list = dao.myLikeReview(loginId);
 			
 			String page="./main.jsp";
 			
@@ -298,7 +298,7 @@ public class ReviewService {
 			System.out.println(id+"님이, "+idx+"번 리뷰 좋아요 취소.");
 			
 			ReviewDAO dao = new ReviewDAO();
-			boolean success = dao.notLike(id,idx);
+			boolean success = dao.iDonotLike(id,idx);
 			
 			if(success) {
 				System.out.println("좋아요 취소!");

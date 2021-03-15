@@ -332,7 +332,7 @@ public class ReviewDAO {
 		
 	}
 
-	public ArrayList<ReviewDTO> likeReview(String loginId) { //좋아요한 리뷰 리스트 얻기
+	public ArrayList<ReviewDTO> myLikeReview(String loginId) { //좋아요한 리뷰 리스트 얻기
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
 				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
@@ -359,7 +359,7 @@ public class ReviewDAO {
 		return list;
 	}
 
-	public boolean notLike(String id, String idx) {
+	public boolean iDonotLike(String id, String idx) {
 		boolean success = false;
 		String sql = "DELETE review_like3 WHERE id=? AND review_idx=?";
 		try {
