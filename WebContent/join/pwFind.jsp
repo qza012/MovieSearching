@@ -14,21 +14,22 @@ table {
 	margin-top : 100px;
 }
 
-div {
-	text-align: left;
+input {
+	width: 300px;
+	margin: 5px;
 }
 
 a:link {
 	color: black;
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
 a:visited {
 	color: rgb(58, 55, 55);
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
@@ -38,6 +39,11 @@ a:hover {
 
 lable {
 	text-align: left;
+}
+
+select{
+	width: 300px;
+	margin: 5px;
 }
 
 #Findpw {
@@ -50,6 +56,9 @@ lable {
 	margin-top: 20px;
 	border: solid 2px #212529;
 }
+:focus{
+    	outline-color: black;
+    }
 </style>
 </head>
 <body>
@@ -69,7 +78,7 @@ lable {
 			<td>
 				<div>
 					<lable>비밀번호 찾기 질문</lable>
-					<br> <select id="pw_q">
+					<br> <select id="pw_q" >
 						<!-- <option value="">선택</option> -->
 						<c:forEach items="${pwQuestionList}" var="pwQuestionList">
 

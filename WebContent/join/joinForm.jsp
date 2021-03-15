@@ -14,6 +14,7 @@ div{
 }
 h2{
 	text-align : center;
+	
 }
 table{
 		margin : auto;
@@ -23,14 +24,20 @@ table{
 label{
 	text-align : center;
 }
-
+:focus{
+    	outline-color: black;
+    }
 </style>
 </head>
 
 
 <body>
-	<h2>회원가입</h2>
 		<table>
+			<tr>
+				<td>
+					<h2>회원가입</h2>
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<div>

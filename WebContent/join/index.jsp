@@ -43,7 +43,7 @@
     a:hover{
                 text-decoration: underline;
     }
-    #id:focus,#pw:focus{
+    :focus{
     	outline-color: black;
     }
 </style>
