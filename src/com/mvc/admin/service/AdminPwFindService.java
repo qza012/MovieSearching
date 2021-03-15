@@ -53,7 +53,7 @@ public class AdminPwFindService {
 	
 	public void updatePwQuestion() throws ServletException, IOException {
 		String idx = req.getParameter("idx");
-		
+
 		QuestionDTO questionDto = null;
 		AdminDAO dao = new AdminDAO();
 		try {
@@ -70,7 +70,7 @@ public class AdminPwFindService {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		if(questionDto != null) {
 			map.put("content", questionDto.getContent());
 		}

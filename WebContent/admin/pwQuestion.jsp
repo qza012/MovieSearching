@@ -28,7 +28,7 @@
 				<a id="${question.idx}">${question.content }</a>
 			</td>
 			<td>
-				<button value="${question.idx}">삭제</button>
+				<button value="${question.idx}">변경</button>
 			</td>
 		</tr>
 		</c:forEach>
@@ -38,26 +38,28 @@
 	
 		// 팝업으로 전달할 값
 		var idx;
+		var questionBox;
 		
 		$('button').click(function() {
 			idx = this.value;
-				
+			questionBox = $('#'+idx);
+
 			window.open("pwQuestionPopUp.jsp", "_blank", "height=300px, width=300px");
 		});
 	
 		// 내용 변경 비동기 버튼
-		function updateContent() {
-			var content = $("#"+idx);
+		function updateContent(content) {
 			
 			$.ajax({
 				type:'GET'
 				,url:'updatePwQuestion'
-				,data:{'idx' : this.value}
+				,data:{'idx' : idx,
+						'content' : content}
 				,dataType:'JSON'
 				,success:function(data) {
-					console.log("ㅇㅈ");
+					console.log(data.content);
 					
-					content.html("바뀜");
+					questionBox.html(data.content);
 					
 					/* 실시간으로 바뀌게 수정해야함. */
 					

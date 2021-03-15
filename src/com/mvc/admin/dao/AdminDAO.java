@@ -561,16 +561,18 @@ public class AdminDAO {
 	}
 
 	public QuestionDTO getQuestion(String idx) throws SQLException {
-		String sql = "SELECT " + AdminSql.QUESTION_COLUMNS.getValue() + " FROM " + AdminSql.QUESTION_TABLE.getValue();
+		String sql = "SELECT " + AdminSql.QUESTION_COLUMNS.getValue() + " FROM " + AdminSql.QUESTION_TABLE.getValue()
+					+ " WHERE idx=?";
 		
 		ps = conn.prepareStatement(sql);
+		ps.setString(1, idx);
 		rs = ps.executeQuery();
 
 		QuestionDTO dto = null;
 		if (rs.next()) {
 			dto = new QuestionDTO();
 			dto.setIdx(rs.getInt("idx"));
-			dto.setContent(rs.getString("report_id"));
+			dto.setContent(rs.getString("content"));
 		}
 
 		return dto;
@@ -581,8 +583,8 @@ public class AdminDAO {
 		String sql = "UPDATE question3 SET content=? WHERE idx=?";
 					
 		ps = conn.prepareStatement(sql);
-		ps.setString(1, idx);
-		ps.setString(2, content);
+		ps.setString(1, content);
+		ps.setString(2, idx);
 		result = ps.executeUpdate();
 
 		rs.close();

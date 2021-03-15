@@ -14,6 +14,7 @@
 	</body>
 	<script>
 		function finish() {
+			console.log($(".content").val());
 			opener.parent.updateContent($(".content").val());
 			self.close();
 		}
