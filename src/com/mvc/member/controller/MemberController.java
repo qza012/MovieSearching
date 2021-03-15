@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update","/myPage/withdraw","/member/member",
-	"/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower"})
+	"/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/myPage/page"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -113,6 +113,11 @@ public class MemberController extends HttpServlet {
 			case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
+				break;
+				
+			case "/myPage/page":
+				System.out.println("페이징 처리");
+				/*service.pagingMyPage();*/
 				break;
 		}
 		

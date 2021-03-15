@@ -176,6 +176,21 @@
                 </c:forEach>
             </table>
         </div>
+        <div class="pageArea">
+			<span>
+				<c:if test="${currPage == 1}">이전</c:if>
+				<c:if test="${currPage > 1}">
+					<a href="./?page=${currPage-1}">이전</a>
+				</c:if>				
+			</span>
+			<span id="page">${currPage}</span>
+			<span>
+				<c:if test="${currPage == maxPage}">다음</c:if>
+				<c:if test="${currPage < maxPage}">
+					<a href="./?page=${currPage+1}">다음</a>	
+				</c:if>	
+			</span>
+		</div>
     </body>
 	<script>
 		var showIf = document.getElementById('myPage').style.display;
