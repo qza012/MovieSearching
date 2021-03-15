@@ -253,24 +253,32 @@ public class MemberService {
 	public void getMemberList() throws ServletException, IOException {
 //		String loginId = (String) req.getSession().getAttribute("loginId");
 //		if (loginId != null) {
+		String pageParam = req.getParameter("page");
+		System.out.println("page : "+pageParam);	
+		int group = 1;
+		if(pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}		
 		MemberDAO dao = new MemberDAO();
-			try {
-				dao = new MemberDAO();
-				ArrayList<MemberDTO> member_list = dao.memberList();
-				ArrayList<ReviewDTO> top_list = dao.top();
-				if (req.getAttribute("search_list")== null) {
-					req.setAttribute("member_list", member_list);
-				} else {
-					req.setAttribute("member_list", req.getAttribute("search_list"));
-				}
-				req.setAttribute("top_list", top_list);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}finally {
-				dao.resClose();
+		try {
+			HashMap<String, Object> map = dao.memberList(group);
+			dao = new MemberDAO();
+			ArrayList<ReviewDTO> top_list = dao.top();
+			req.setAttribute("maxPage", map.get("maxPage"));
+			if (req.getAttribute("search_list")== null) {
+				req.setAttribute("member_list", map.get("list"));
+			} else {
+				req.setAttribute("member_list", req.getAttribute("search_list"));
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
-			dis.forward(req, resp);
+			req.setAttribute("currPage", group);
+			req.setAttribute("top_list", top_list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
+		dis.forward(req, resp);
 //		} else {
 //			resp.sendRedirect("index.jsp");
 //		}

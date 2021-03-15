@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.Context;
@@ -380,24 +381,50 @@ public class MemberDAO {
 		return search_list;
 	}
 
-	public ArrayList<MemberDTO> memberList() throws SQLException {
+	public HashMap<String, Object> memberList(int page) throws SQLException {
+		int pagePerCnt = 10;
+		int end = page * pagePerCnt;	
+		int start = end-(pagePerCnt-1);
 		String sql = "SELECT id, name, age, gender, genre,reg_date FROM "
-				+ "(SELECT id, name, age, gender, genre,reg_date FROM member3 ORDER BY reg_date DESC)"
-				+ " WHERE ROWNUM <= 10";
-		ArrayList<MemberDTO> member_list = new ArrayList<MemberDTO>();
-		ps = conn.prepareStatement(sql);
-		rs = ps.executeQuery();
-		while(rs.next()) {
-			MemberDTO dto = new MemberDTO();
-			dto.setId(rs.getString("id"));
-			dto.setName(rs.getString("name"));
-			dto.setAge(rs.getInt("age"));
-			dto.setGender(rs.getString("gender"));
-			dto.setGenre(rs.getString("genre"));
-			dto.setReg_date(rs.getDate("reg_date"));
-			member_list.add(dto);
-		}
-		return member_list;
+				+ "(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id, name, age, gender, genre,reg_date FROM member3)"
+				+ " WHERE rnum BETWEEN ? AND ?";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();				
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				MemberDTO dto = new MemberDTO();
+				dto.setId(rs.getString("id"));
+				dto.setName(rs.getString("name"));
+				dto.setAge(rs.getInt("age"));
+				dto.setGender(rs.getString("gender"));
+				dto.setGenre(rs.getString("genre"));
+				list.add(dto);
+			}
+			System.out.println("list size : "+list.size());			
+			int maxPage = getMaxPage(pagePerCnt);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("max page : "+maxPage);			
+		return map;		
+	}
+	
+	private int getMaxPage(int pagePerCnt) {		
+		String sql="SELECT COUNT(id) FROM member3";		
+		int max = 0;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return max;
 	}
 
 
