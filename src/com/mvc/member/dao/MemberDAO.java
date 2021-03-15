@@ -395,9 +395,8 @@ public class MemberDAO {
 	
 	public String pwFind(String id, String question_idx, String pw_answer) {
 		String pw = null;
-		System.out.println(pw);
 		String sql ="SELECT pw FROM member3 WHERE id=? AND question_idx=? AND pw_answer=?";
-		System.out.println(sql);
+		
 		
 		
 		try {
@@ -406,9 +405,9 @@ public class MemberDAO {
 			ps.setString(2, question_idx);
 			ps.setString(3, pw_answer);
 			rs=ps.executeQuery();
-			System.out.println(rs.next());
 			if(rs.next()) {
 				pw=rs.getString("pw");
+				System.out.println("PW : "+pw);
 			}
 		} catch (SQLException e) {
 
@@ -532,5 +531,8 @@ public class MemberDAO {
 		}
 		return follow3List;
 	}
+
+
 	
+
 }

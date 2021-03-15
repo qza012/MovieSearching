@@ -68,7 +68,7 @@
 
 				</form>
 				<tr>
-					<td colspan="3" align="right"><a href="idFind.jsp">아이디</a>/<a href="pwFind.jsp">비밀번호 찾기</a></td>
+					<td colspan="3" align="right"><a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a></td>
 				</tr>
 				<tr>
 					<td colspan="3"><input type="button" value="로그인"  id="login"/> </br> 

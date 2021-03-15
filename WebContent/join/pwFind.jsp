@@ -71,9 +71,9 @@ lable {
 					<lable>비밀번호 찾기 질문</lable>
 					<br> <select id="pw_q">
 						<!-- <option value="">선택</option> -->
-						<c:forEach items="${questionList}" var="questionList">
+						<c:forEach items="${pwQuestionList}" var="pwQuestionList">
 
-							<option value="${questionList.idx}">${questionList.content}</option>
+							<option value="${pwQuestionList.idx}">${pwQuestionList.content}</option>
 						</c:forEach>
 
 					</select>
@@ -100,7 +100,13 @@ lable {
 				</div>
 			</td>
 		</tr>
-
+		<tr>
+			<td align="right">
+				<div>
+					<a href="index.jsp">로그인 하러 가기</a>
+				</div>
+			</td>
+		</tr>
 
 	</table>
 
@@ -135,6 +141,8 @@ lable {
 					} else {
 						$('#pwFind').val("입력한 정보와 일치하는 회원이 없습니다.");
 					}
+					
+					
 				},
 				error : function(e) {
 					console.log(e);

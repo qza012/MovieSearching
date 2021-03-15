@@ -128,7 +128,8 @@ input {
 					} else {
 						$('#idFind').val("입력한 정보와 일치하는 회원이 없습니다.");
 					}
-
+					
+					
 				},
 				error : function(e) {
 					console.log(e);

@@ -312,7 +312,6 @@ public class MemberService {
 		System.out.println("비밀번호:"+pw);
 		
 		
-		
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		map.put("userPW", pw);
 		Gson gson = new Gson();
@@ -324,6 +323,24 @@ public class MemberService {
 			e.printStackTrace();
 		}finally {
 			dao.resClose();
+		}
+	}
+	
+	public void pwQuestionList() throws ServletException, IOException {
+		MemberDAO dao = new MemberDAO();
+		ArrayList<QuestionDTO> pwQuestionList = null;
+		try {
+			pwQuestionList = dao.questionList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+
+		if (pwQuestionList != null) {
+			req.setAttribute("pwQuestionList", pwQuestionList);
+			RequestDispatcher rd = req.getRequestDispatcher("/join/pwFind.jsp");
+			rd.forward(req, resp);
 		}
 	}
 	
