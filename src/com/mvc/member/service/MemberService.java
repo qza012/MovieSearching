@@ -279,4 +279,25 @@ public class MemberService {
 //		}
 	}
 
+	public void loginForMyPage() throws ServletException, IOException {
+		String id = req.getParameter("userId");
+		String pw = req.getParameter("userPw");
+		System.out.println(id+" / "+pw);
+		
+		MemberDAO dao = new MemberDAO();
+		boolean success = false;
+		try {
+			success = dao. loginForMyPage(id,pw);
+			if(success) {
+				req.getSession().setAttribute("myLoginId", id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("./myPage/main.jsp");
+		dis.forward(req, resp);
+	}
+
 }

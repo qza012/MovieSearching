@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>likeMovie</title>
+		<title>FollowList</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
             h2{
@@ -14,7 +14,7 @@
                 padding: 5px;
                 margin-left: 50%;
             }
-            h3{
+            h1{
                 text-align: center;
             }            
             p{
@@ -49,27 +49,24 @@
             div{
                 float: left;
             }
-            .likeMovie {
+            .followingList {
                 font-family: Verdana;
-                width: 75%;
-                margin-top: 40px;
-                margin-left: 10%;
+                width: 45%;
+                margin-top: 45px;
+                margin-left: 25%;
             } 
             table {
                 text-align: center;
                 width: 100%;
             }
-            th, td{
-                background-color: whitesmoke;
+            th{
+            	color: red;
+            	padding: 3%;
             }
-            th, td{
-                padding: 10px;
-                background-color: whitesmoke;
+            td{
+            	text-decoration: underline;
+            	padding: 3%;
             }
-            #notLikeMovie{
-            	font-size: small;
-            	font-weight: 600;
-            }   
         </style>
     </head>
     <body>
@@ -154,33 +151,16 @@
                </ul>
            </nav>
        </div>
-        <div class="likeMovie">
-            <h3>좋아요한 영화</h3>
+       <h1>팔로잉</h1>
+        <div class="followingList">
             <table>
-                <tr>
-                    <th></th>
-                    <th>영화제목</th>
-                    <th>장르</th>
-                    <th>감독</th>
-                    <th>배우</th>
-                    <th>개봉일</th>
-                    <th></th>
-                </tr>
-                <tr>
-                	<td><img src="https://i.pinimg.com/originals/96/a0/0d/96a00d42b0ff8f80b7cdf2926a211e47.jpg" width="100px"></td>
-                	<td> 영화는 어떻게 만들어 지는가 </td><td> 다큐 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-               	</tr>
-                <tr>
-                    <td><img src="https://i.pinimg.com/736x/30/d5/38/30d53895b7337958e79aff2e974c7a1f.jpg" width="100px"></td>
-                	<td> The Title </td><td> 액션 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-                </tr>
-                <tr>
-                    <td><img src="https://i.pinimg.com/originals/9e/4b/97/9e4b97433364d774a2a4a9c6290e8906.jpg" width="100px"></td>
-                	<td> 영화같은 삶 </td><td> 멜로 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-                </tr>
+                <c:forEach items="${fList}" var="follow">
+                	<tr>
+	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="50px"/></td>
+                		<th>${follow.target_id}</th><td>팔로잉 ${follow.followingNum}</td><td>팔로워 ${follow.followerNum}</td>
+                		<th><button id="notLike" onclick="location.href='./notFollow?idx=${follow.target_id}'">팔로우 취소</button></th>
+                	</tr>
+                </c:forEach>      
             </table>
         </div>
     </body>

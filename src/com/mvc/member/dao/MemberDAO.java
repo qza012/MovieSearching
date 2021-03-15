@@ -371,5 +371,18 @@ public class MemberDAO {
 		}
 		return keyWord_list;
 	}
+
+	public boolean loginForMyPage(String id, String pw) throws SQLException {
+		boolean success = false;
+		String sql="SELECT id FROM member3 WHERE id=? AND pw=?";
+		ps=conn.prepareStatement(sql);
+		ps.setString(1, id);
+		ps.setString(2, pw);
+		rs = ps.executeQuery();
+		if(rs.next()) {
+			success=true;
+		}
+		return success;
+	}
 	
 }

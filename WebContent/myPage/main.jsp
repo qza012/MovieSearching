@@ -157,27 +157,27 @@
            </nav>
        </div>
        <div class="mainData">
-           <h3>데이터</h3>
+           <h3>로그인</h3>
            <span>
            		<button onclick="location.href='./follow?targetId=${targetId}'">팔로우</button>
            </span>
-           <table>
-               <tr>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-               </tr>
-               <tr>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-               </tr>
-           </table>
-       </div>
+           <form action="./loginForMyPage">
+	           <table>
+	               <tr>
+	                   <th>아이디</th>
+	                   <td>
+	                   		<input type="text" id="userId" name="userId"/>
+	                   </td>
+	               </tr>
+	           		<tr>
+	                   <th>비밀번호</th>
+	                   <td>
+	                   		<input type="text" id="userPw" name="userPw"/>
+	                   </td>
+	               </tr>
+	    		</table>
+           </form>
+    	</div>
    </body>
    <script>
    		var showIf = document.getElementById('myPage').style.display;
