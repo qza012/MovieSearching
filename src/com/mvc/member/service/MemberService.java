@@ -253,29 +253,56 @@ public class MemberService {
 	public void getMemberList() throws ServletException, IOException {
 //		String loginId = (String) req.getSession().getAttribute("loginId");
 //		if (loginId != null) {
+		String pageParam = req.getParameter("page");
+		System.out.println("page : "+pageParam);	
+		int group = 1;
+		if(pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}		
 		MemberDAO dao = new MemberDAO();
-			try {
-				String keyWord = req.getParameter("keyWord");
-				System.out.println("검색 요청한 키워드:" + keyWord);
-				ArrayList<MemberDTO> list = dao.getMemberList();
-				ArrayList<ReviewDTO> top_list = dao.top();
-				ArrayList<MemberDTO> keyWord_list = dao.search(keyWord);
-				if (keyWord== null) {
-					req.setAttribute("member_list", list);
-				} else {
-					req.setAttribute("member_list", keyWord_list);
-				}
-				req.setAttribute("top_list", top_list);
-				RequestDispatcher dis = req.getRequestDispatcher("/member/member.jsp");
-				dis.forward(req, resp);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();
+		try {
+			HashMap<String, Object> map = dao.memberList(group);
+			dao = new MemberDAO();
+			ArrayList<ReviewDTO> top_list = dao.top();
+			req.setAttribute("maxPage", map.get("maxPage"));
+			if (req.getAttribute("search_list")== null) {
+				req.setAttribute("member_list", map.get("list"));
+			} else {
+				req.setAttribute("member_list", req.getAttribute("search_list"));
 			}
+			req.setAttribute("currPage", group);
+			req.setAttribute("top_list", top_list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
+		dis.forward(req, resp);
 //		} else {
 //			resp.sendRedirect("index.jsp");
 //		}
+//	}
+	}
+	public void search() throws ServletException, IOException {
+		String search = req.getParameter("search");
+		System.out.println("search값:"+search);
+		String keyWord = req.getParameter("keyWord");
+		System.out.println("검색 요청한 키워드:" + keyWord);
+		MemberDAO dao = new MemberDAO();
+		try {
+			ArrayList<MemberDTO> search_list = dao.searchList(keyWord,search);
+			if(search_list!=null) {
+				req.setAttribute("search_list", search_list);
+				System.out.println(search_list.size());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("member");
+		dis.forward(req, resp);
 	}
 
 	public void  idFind() {
