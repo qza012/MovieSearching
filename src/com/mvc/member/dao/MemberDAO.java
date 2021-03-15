@@ -5,11 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
 import com.mvc.review.dto.ReviewDTO;
@@ -383,6 +385,56 @@ public class MemberDAO {
 			success=true;
 		}
 		return success;
+	}
+
+	public ArrayList<FollowDTO> followingList(String loginId) {
+		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
+		FollowDTO dto = null;
+		String sql=null;
+		try {
+			sql="SELECT target_id FROM follow3 WHERE id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, "user0313");
+			rs = ps.executeQuery();
+			List<String> tarlist = new ArrayList<String>();
+			while(rs.next()) {
+//				System.out.println(rs.getString("target_id"));
+				tarlist.add(rs.getString("target_id"));
+			}
+			for(String tarid : tarlist) {
+				dto = new FollowDTO();
+				dto.setTarget_id(tarid);
+				//팔로잉 수
+				sql="SELECT COUNT(target_id)AS to_num FROM follow3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowingNum(rs.getInt("to_num"));					
+				}
+				//팔로워 수
+				sql="SELECT COUNT(id)AS from_num FROM follow3 WHERE target_id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowerNum(rs.getInt("from_num"));					
+				}
+				//프로필 사진
+				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setOriFileName(rs.getString("oriFileName"));
+					dto.setNewFileName(rs.getString("newFileName"));
+				}
+				follow3List.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return follow3List;
 	}
 	
 }

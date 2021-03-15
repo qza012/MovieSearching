@@ -156,7 +156,7 @@
             <table>
                 <c:forEach items="${fList}" var="follow">
                 	<tr>
-	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="50px"/></td>
+	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></td>
                 		<th>${follow.target_id}</th><td>팔로잉 ${follow.followingNum}</td><td>팔로워 ${follow.followerNum}</td>
                 		<th><button id="notLike" onclick="location.href='./notFollow?idx=${follow.target_id}'">팔로우 취소</button></th>
                 	</tr>

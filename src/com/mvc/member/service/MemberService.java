@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.file.service.FileService;
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
@@ -118,9 +119,9 @@ public class MemberService {
 	}
 	
 	public void follow() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String myId = (String) req.getAttribute("loginId");
+			String myId = (String) req.getSession().getAttribute("myLoginId");
 			String targetId = req.getParameter("targetId");
 			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
 			
@@ -132,10 +133,10 @@ public class MemberService {
 			}
 			dao.resClose();
 			
-			RequestDispatcher dis = req.getRequestDispatcher("/followingList?id=${loginId}");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 	public void idChk() throws IOException {
@@ -299,6 +300,25 @@ public class MemberService {
 		}
 		RequestDispatcher dis = req.getRequestDispatcher("./main.jsp");
 		dis.forward(req, resp);
+	}
+
+	public void followingList() throws IOException, ServletException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			MemberDAO dao = new MemberDAO();
+			ArrayList<FollowDTO> list = dao.followingList(loginId);
+			
+			String page="./";
+			if(list!=null) {
+				page="/myPage/followingList.jsp";
+				req.setAttribute("fList", list);
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
 	}
 
 }
