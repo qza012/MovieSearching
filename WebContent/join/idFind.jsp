@@ -49,7 +49,7 @@ input {
 		
 		<tr>
 			<td align="left"><a href="idFind.jsp" id="Findid">아이디 찾기</a> <a
-				href="pwFind.jsp" id="Findpw">비밀번호 찾기</a></td>
+				href="../pwQuestionList" id="Findpw">비밀번호 찾기</a></td>
 		</tr>
 		<tr>
 			<td align="center">
