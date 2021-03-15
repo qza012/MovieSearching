@@ -97,7 +97,7 @@ public class MemberController extends HttpServlet {
 				
 			case "/myPage/followerList":
 				System.out.println("나를 팔로우 하는 사람들");
-				/*service.followerList();*/
+				service.followerList();
 				break;
 				
 			case "/myPage/followingList":

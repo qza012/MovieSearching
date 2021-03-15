@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>ReviewList</title>
+		<title>FollowList</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
             h2{
@@ -14,7 +14,7 @@
                 padding: 5px;
                 margin-left: 50%;
             }
-            h3{
+            h1{
                 text-align: center;
             }            
             p{
@@ -49,28 +49,23 @@
             div{
                 float: left;
             }
-            .reviewList {
+            .followerList {
                 font-family: Verdana;
-                width: 75%;
-                margin-top: 40px;
-                margin-left: 10%;
-            }    
+                width: 45%;
+                margin-top: 45px;
+                margin-left: 25%;
+            } 
             table {
                 text-align: center;
                 width: 100%;
             }
             th{
-                background-color: lightgrey;
+            	color: red;
+            	padding: 3%;
             }
             td{
-                background-color: whitesmoke;
-            }
-            th, td{
-                padding: 10px;
-                border-bottom: 1px solid darkslategrey;
-            }
-            #delete{
-            	color: red;
+            	text-decoration: underline;
+            	padding: 3%;
             }
         </style>
     </head>
@@ -156,24 +151,16 @@
                </ul>
            </nav>
        </div>
-        <div class="reviewList">
-            <h3>작성한 리뷰</h3>
+       <h1>팔로워</h1>
+        <div class="followerList">
             <table>
-                <tr>
-                    <th>리뷰 번호</th>
-                    <th>제목</th>
-                    <th>영화 제목</th>
-                    <th>평점</th>
-                    <th>좋아요</th>
-                    <th>작성일</th>
-                    <th>삭제</th>
-                </tr>
-                <c:forEach items="${list}" var="review">
+                <c:forEach items="${fList}" var="follow">
                 	<tr>
-                		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteMyReview?idx=${review.idx}">삭제</a> </td>
+	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></td>
+                		<th>${follow.id}</th><td>팔로잉 ${follow.followingNum}</td><td>팔로워 ${follow.followerNum}</td>
+                		<th><button id="notLike" onclick="location.href='./deleteFollower?idx=${follow.id}'">팔로우 취소</button></th>
                 	</tr>
-                </c:forEach>
+                </c:forEach>      
             </table>
         </div>
     </body>
@@ -183,7 +170,7 @@
 		function showMyPage(){
 			if(showIf = 'none'){
 				document.getElementById('myPage').style.display='block';				
-			} 
+			}
 		}
 	</script>
 </html>

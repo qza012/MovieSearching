@@ -308,9 +308,28 @@ public class MemberService {
 			MemberDAO dao = new MemberDAO();
 			ArrayList<FollowDTO> list = dao.followingList(loginId);
 			
-			String page="./";
+			String page="./main.jsp";
 			if(list!=null) {
 				page="/myPage/followingList.jsp";
+				req.setAttribute("fList", list);
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
+
+	public void followerList() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			MemberDAO dao = new MemberDAO();
+			ArrayList<FollowDTO> list = dao.followerList(loginId);
+			
+			String page="./main.jsp";
+			if(list!=null) {
+				page="/myPage/followerList.jsp";
 				req.setAttribute("fList", list);
 			}
 			dao.resClose();

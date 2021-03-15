@@ -394,7 +394,7 @@ public class MemberDAO {
 		try {
 			sql="SELECT target_id FROM follow3 WHERE id=?";
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, "user0313");
+			ps.setString(1, loginId);
 			rs = ps.executeQuery();
 			List<String> tarlist = new ArrayList<String>();
 			while(rs.next()) {
@@ -424,6 +424,56 @@ public class MemberDAO {
 				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setOriFileName(rs.getString("oriFileName"));
+					dto.setNewFileName(rs.getString("newFileName"));
+				}
+				follow3List.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return follow3List;
+	}
+
+	public ArrayList<FollowDTO> followerList(String loginId) {
+		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
+		FollowDTO dto = null;
+		String sql=null;
+		try {
+			sql="SELECT id FROM follow3 WHERE target_id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			List<String> idList = new ArrayList<String>();
+			while(rs.next()) {
+//				System.out.println(rs.getString("target_id"));
+				idList.add(rs.getString("id"));
+			}
+			for(String fId : idList) {
+				dto = new FollowDTO();
+				dto.setId(fId);
+				//팔로잉 수
+				sql="SELECT COUNT(target_id)AS to_num FROM follow3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowingNum(rs.getInt("to_num"));					
+				}
+				//팔로워 수
+				sql="SELECT COUNT(id)AS from_num FROM follow3 WHERE target_id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowerNum(rs.getInt("from_num"));					
+				}
+				//프로필 사진
+				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
 				rs = ps.executeQuery();
 				if(rs.next()) {
 					dto.setOriFileName(rs.getString("oriFileName"));
