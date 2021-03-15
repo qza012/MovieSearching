@@ -192,24 +192,6 @@ public class MemberDAO {
 		return success;
 	}
 	
-	public boolean follow(String myId, String targetId) {
-		boolean success = false;
-		String sql="INSERT INTO follow3(idx,id,target_id) VALUES(follow3_seq.NEXTVAL,?,?)";
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, myId);
-			ps.setString(2, targetId);
-			int count = ps.executeUpdate();
-			if(count>0) {
-				System.out.println(myId+"가 팔로우 신청 ->"+targetId);
-				success = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return success;
-	}
-	
 	public boolean idChk(String id) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=?";
@@ -387,6 +369,24 @@ public class MemberDAO {
 		return success;
 	}
 
+	public boolean follow(String myId, String targetId) {
+		boolean success = false;
+		String sql="INSERT INTO follow3(idx,id,target_id) VALUES(follow3_seq.NEXTVAL,?,?)";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, myId);
+			ps.setString(2, targetId);
+			int count = ps.executeUpdate();
+			if(count>0) {
+				System.out.println(myId+"가 팔로우 신청 ->"+targetId);
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
 	public ArrayList<FollowDTO> followingList(String loginId) {
 		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
 		FollowDTO dto = null;
@@ -485,6 +485,42 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return follow3List;
+	}
+
+	public boolean notFollow(String myId, String targetId) {
+		boolean success = false;
+		String sql="DELETE follow3 WHERE id=? AND target_id=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, myId);
+			ps.setString(2, targetId);
+			int count = ps.executeUpdate();
+			if(count>0) {
+				System.out.println(myId+"가 팔로우 취소 ->"+targetId);
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean deleteFollower(String myId, String targetId) {
+		boolean success = false;
+		String sql="DELETE follow3 WHERE id=? AND target_id=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, targetId);
+			ps.setString(2, myId);
+			int count = ps.executeUpdate();
+			if(count>0) {
+				System.out.println(myId+"의 팔로워 삭제 ->"+targetId);
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
 	}
 	
 }

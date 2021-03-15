@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList"})
+@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update","/myPage/withdraw","/member/member",
+	"/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -103,6 +103,16 @@ public class MemberController extends HttpServlet {
 			case "/myPage/followingList":
 				System.out.println("내가 팔로잉하는 사람들");
 				service.followingList();
+				break;
+				
+			case "/myPage/notFollow":
+				System.out.println("팔로우 취소");
+				service.notFollow();
+				break;
+				
+			case "/myPage/deleteFollower":
+				System.out.println("팔로워 삭제");
+				service.deleteFollower();
 				break;
 		}
 		

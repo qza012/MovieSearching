@@ -86,7 +86,7 @@
         <h2>로고</h2>
         <p>
      		${sessionScope.myLoginId}님,
-           <a href="./logout">[ 로그아웃</a>
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃 ]</a>
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
@@ -95,25 +95,25 @@
            <nav aria-label="naviBar">
                <ul class="navi">
                    <li>
-                       <a href="./"> 영화 홈
+                       <a href="./main.jsp"> 영화 홈
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="moviList.jsp"> 영화 리스트
+                       <a href="#"> 영화 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="reviewBoard.jsp"> 리뷰 게시판
+                       <a href="#"> 리뷰 게시판
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>    
                    <li>
-                       <a href="memberList.jsp"> 회원 리스트
+                       <a href="#"> 회원 리스트
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -124,7 +124,7 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                       <a href="./updateMF?id=${sessionScope.myLoginId}" onclick="showMyPage()">마이페이지</a>
                       	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          <span> > </span>
                        <ul id="myPage">
@@ -155,15 +155,14 @@
                        </ul>
                    </li>
                    <li>
-                       <a href="admin.jsp">
-                           관리자 페이지
+                       <a href="admin.jsp">관리자 페이지
                            &nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>
                </ul>
            </nav>
-       </div>
+       </div>    
        <div class="updateMember">
             <h3>회원정보 수정</h3>
             <form action="./update" method="post" enctype="multipart/form-data" >

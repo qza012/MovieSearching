@@ -118,27 +118,6 @@ public class MemberService {
 		}
 	}
 	
-	public void follow() throws ServletException, IOException {
-		String loginId = (String) req.getSession().getAttribute("myLoginId");
-		if(loginId != null) {
-			String myId = (String) req.getSession().getAttribute("myLoginId");
-			String targetId = req.getParameter("targetId");
-			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
-			
-			MemberDAO dao = new MemberDAO();
-			boolean success = dao.follow(myId,targetId);
-			
-			if(success) {
-				System.out.println("팔로우 신청!");
-			}
-			dao.resClose();
-			
-			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("./main.jsp");
-		}
-	}
 	public void idChk() throws IOException {
 		String id = req.getParameter("id");
 		boolean success = false;
@@ -302,6 +281,29 @@ public class MemberService {
 		dis.forward(req, resp);
 	}
 
+	public void follow() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String targetId = req.getParameter("targetId");
+			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.follow(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로우 신청!");
+			}
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
+	
+	
 	public void followingList() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
@@ -334,6 +336,50 @@ public class MemberService {
 			}
 			dao.resClose();
 			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
+
+	public void notFollow() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String targetId = req.getParameter("target_id");
+			System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.notFollow(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로우 취소!");
+			}
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
+
+	public void deleteFollower() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String targetId = req.getParameter("id");
+			System.out.println(myId+"님을 팔로우 하는, "+targetId+"님 삭제");
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.deleteFollower(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로워 삭제!");
+			}
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followerList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("./main.jsp");
