@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.admin.service.AdminPwFindService;
 
-@WebServlet({"/admin/pwQuestionList"})
+@WebServlet({"/admin/pwQuestionList", "/admin/updatePwQuestion"})
 public class AdminPwFindController extends HttpServlet {
 
 	@Override
@@ -36,7 +36,9 @@ public class AdminPwFindController extends HttpServlet {
 			service.pwQuestionList();
 			break;
 			
-		case "" :
+		case "/admin/updatePwQuestion" :
+			System.out.println("/admin/updatePwQuestion 요청");
+			service.updatePwQuestion();
 			break;
 		}
 	}

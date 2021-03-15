@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
 import com.mvc.admin.util.AdminSql;
+import com.mvc.admin.util.AdminUtil;
 import com.mvc.movie.dto.MovieDTO;
 
 public class AdminMovieService {
@@ -78,7 +79,7 @@ public class AdminMovieService {
 		try {
 			movieDto = dao.getMovie(movieCode);
 			if(movieDto != null) {
-				int result = dao.updateYoutubeUrl(movieCode, req.getParameter("youtubeUrl"));
+				int result = dao.updateYoutubeUrl(req.getParameter("youtubeUrl"), movieCode);
 				movieDto = dao.getMovie(movieCode);	// 바꾼 데이터로 갱신
 			}
 			
@@ -91,6 +92,7 @@ public class AdminMovieService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(movieDto != null) {
+			System.out.println("여기통과해라");
 			map.put("youtubeUrl", movieDto.getYoutubeUrl());
 		}
 		
@@ -103,7 +105,36 @@ public class AdminMovieService {
 		resp.getWriter().print(json);
 	}
 
-	public void updatePosterUrl() {
+	public void updatePosterUrl() throws ServletException, IOException {
+		String movieCode = req.getParameter("movieCode");
 		
+		MovieDTO movieDto = null;
+		AdminDAO dao = new AdminDAO();
+		try {
+			movieDto = dao.getMovie(movieCode);
+			if(movieDto != null) {
+				int result = dao.updatePosterUrl(req.getParameter("posterUrl"), movieCode);
+				movieDto = dao.getMovie(movieCode);	// 바꾼 데이터로 갱신
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(movieDto != null) {
+			map.put("posterUrl", movieDto.getPosterUrl());
+		}
+		
+		Gson gson =  new Gson();
+		String json = gson.toJson(map);
+		//System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*");
+		resp.getWriter().print(json);
 	}
 }

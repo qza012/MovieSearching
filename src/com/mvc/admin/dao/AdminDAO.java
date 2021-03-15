@@ -357,8 +357,8 @@ public class AdminDAO {
 	}
 
 	public MovieDTO getMovie(String movieCode) throws SQLException {
-		String sql = "SELECT " + AdminSql.MOVIE_COLUMNS.getValue() + "FROM " + AdminSql.MOVIE_TABLE.getValue()
-				+ "WHERE movieCode=?";
+		String sql = "SELECT " + AdminSql.MOVIE_COLUMNS.getValue() + " FROM " + AdminSql.MOVIE_TABLE.getValue()
+				+ " WHERE movieCode=?";
 
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, movieCode);
@@ -443,8 +443,20 @@ public class AdminDAO {
 		return list;
 	}
 	
-	public int updateYoutubeUrl(String movieCode, String url) throws SQLException {
-		String sql = "UPDATE " + AdminSql.MOVIE_TABLE + " SET youtubeUrl=? where movieCode=?";
+	public int updateYoutubeUrl(String url, String movieCode) throws SQLException {
+		String sql = "UPDATE " + AdminSql.MOVIE_TABLE.getValue() + " SET youtubeUrl=? where movieCode=?";
+		int result = 0;
+		
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, url);
+		ps.setString(2, movieCode);
+		result = ps.executeUpdate();
+		
+		return result;
+	}
+	
+	public int updatePosterUrl(String url, String movieCode) throws SQLException {
+		String sql = "UPDATE " + AdminSql.MOVIE_TABLE.getValue() + " SET posterUrl=? where movieCode=?";
 		int result = 0;
 		
 		ps = conn.prepareStatement(sql);
@@ -548,12 +560,29 @@ public class AdminDAO {
 		return list;
 	}
 
-	public int insertPwQuestion(String content) throws SQLException {
-		int result = 0;
-		String sql = "INSERT INTO question3(idx, content) VALUES(question3_seq, ?)";
-
+	public QuestionDTO getQuestion(String idx) throws SQLException {
+		String sql = "SELECT " + AdminSql.QUESTION_COLUMNS.getValue() + " FROM " + AdminSql.QUESTION_TABLE.getValue();
+		
 		ps = conn.prepareStatement(sql);
-		ps.setString(1, content);
+		rs = ps.executeQuery();
+
+		QuestionDTO dto = null;
+		if (rs.next()) {
+			dto = new QuestionDTO();
+			dto.setIdx(rs.getInt("idx"));
+			dto.setContent(rs.getString("report_id"));
+		}
+
+		return dto;
+	}
+	
+	public int updatePwQuestion(String idx, String content) throws SQLException {
+		int result = 0;
+		String sql = "UPDATE question3 SET content=? WHERE idx=?";
+					
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, idx);
+		ps.setString(2, content);
 		result = ps.executeUpdate();
 
 		rs.close();

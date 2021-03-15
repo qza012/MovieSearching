@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>youtube URL 수정</title>
+<title>pw question 수정</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 </head>
 	<body>
-		<a>youtube url 입력</a>
-		<input class="urlBox" type="text" name="url"/>
+		<a>변경할 내용 입력</a>
+		<input class="content" type="text" name="url"/>
 		<button onclick="finish()">완료</button>
 	</body>
 	<script>
 		function finish() {
-			opener.parent.updateUrl($(".urlBox").val(), opener.urlBoxSelector);
+			opener.parent.updateContent($(".content").val());
 			self.close();
 		}
 	</script>

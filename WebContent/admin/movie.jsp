@@ -44,8 +44,11 @@
 			<td>${movie.openDate}</td>
 			<td>${movie.director }</td>
 			<td>${movie.rank }</td>
-			<td id="${movie.movieCode} + '_youtute'">${movie.youtubeUrl }</td>
-			<td id="${movie.movieCode} + '_poster'">${movie.posterUrl }</td>
+			<%-- <td id="${movie.movieCode}_youtute">${movie.youtubeUrl }</td> --%>
+			<td>
+				<a id="${movie.movieCode}_youtube">${movie.youtubeUrl }</a>
+			</td>
+			<td id="${movie.movieCode}_poster">${movie.posterUrl }</td>
 			<td>
 				<button id="youtube" value="${movie.movieCode }">예고편 수정</button>
 			</td>
@@ -78,63 +81,79 @@
 		}
 		
 		// 팝업 창으로 전달할 값.
-		var urlBox = "";
-		var standardVar = "";
+		var urlBoxSelector;
+		var IsYoutubeUrl = true;
+		var boxId;
+		var movieCode;
 		
-		$('button').click(function() {
+		$('button').click(function() {		
+			var moveUrl;
+			
 			if(this.id == 'youtube') {
-				urlBox = $("#"+this.value + "_youtube");
-				standardVar = $('.standard').val();
+				boxId = "#"+this.value + "_youtube";
+				urlBoxSelector = $(boxId);
+				IsYoutubeUrl = true;
+				movieCode = this.value;
+				
+				moveUrl = "movieYoutubeUrl.jsp";
 			} else if(this.id == 'poster'){
-				urlBox = $("#"+this.value + "_poster");
-				standardVar = $('.standard').val();
-			}
-
-			window.open("movieYoutubeUrl.jsp", "_blank", "height=300px, width=300px");
-		});
-		
-		function updateYoutubeUrl(url, boxSelector) {
-			console.log("호출 성공");
-			/* var button = $(this);
-			var urlBox = null;
-
-			var strUrl = "";
-
-			if(this.id == 'youtute') {
-				strUrl = 'updateYoutubeUrl';
-				urlBox = $("#"+this.value + "_youtube");
-			} else if(this.id == 'poster'){
-				strUrl = 'updatePosterUrl';
-				urlBox = $("#"+this.value + "_poster");
+				boxId = "#"+this.value + "_poster";
+				urlBoxSelector = $(boxId);
+				IsYoutubeUrl = false;
+				movieCode = this.value;
+				
+				moveUrl = "moviePosterUrl.jsp";
 			}
 			
-			$.ajax({
-				type:'GET'
-				,url: strUrl
-				,data:{'idx' : this.value}
-				,dataType:'JSON'
-				,success:function(data) {
-					if(this.id == 'youbute') {
-						flag
-					} else {
-						
+			window.open(moveUrl, "_blank", "height=300px, width=300px");
+		});
+		
+		function updateUrl(url, boxSelector) {
+			//console.log("호출 성공");
+
+			if(IsYoutubeUrl) {
+
+				$.ajax({
+					type:'GET'
+					,url: 'updateYoutubeUrl'
+					,data:{'movieCode' : movieCode,
+							'youtubeUrl' : url}
+					,dataType:'JSON'
+					,success:function(data) {
+						if(data.youtubeUrl == null) {
+							console.log("널이다");
+							$(boxId).html("");
+						} else {
+							console.log("널 아니다");
+							$(boxId).html(data.youtubeUrl);
+						}				
+					},error:function(e) {
+						console.log("url 버튼 비동기 에러");
 					}
-					
-					
-					if(data.complete == "Y") {
-						flag.html("Y");
-						button.html("처리 중");
-					} else {
-						flag.html("N");
-						button.html("처리 완료");
+				})
+			} else {
+				$.ajax({
+					type:'GET'
+					,url: 'updatePosterUrl'
+					,data:{'movieCode' : movieCode,
+							'posterUrl' : url}
+					,dataType:'JSON'
+					,success:function(data) {
+						if(data.posterUrl == null) {
+							$(boxId).html("");			
+						} else {
+							$(boxId).html(data.posterUrl);
+						}
+					},error:function(e) {
+						console.log("url 버튼 비동기 에러");
 					}
-					
-				},error:function(e) {
-					console.log("url 버튼 비동기 에러");
-				}
-			})  */
+				})
+			}
 		}
 
+		
+		
+		
 		// 셀렉박스 값에 따라 inputBox 교체
 		$('.standard').change(function(){
 			var searchInput = $(".searchInput");
