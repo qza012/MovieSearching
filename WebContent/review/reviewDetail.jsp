@@ -85,7 +85,7 @@
             <!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
             <td colspan="2">
             <c:if test="${sessionScope.loginId ne review.id}">
-            	<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            	<a onclick="reportOpen(${review.idx},2001)" style="cursor: pointer;">신고</a>
             </c:if>
             </td>
             <th>작성일</th>
@@ -102,7 +102,6 @@
     <div class="list">
     <input type="button" value="리스트" onclick="location.href='./reviewList' "/>
     </div>
-
 
     <div style="margin-bottom: 10px;">
     <span>댓글</span>
@@ -131,7 +130,7 @@
             
             <td style="border-top: white; border-bottom: white; ">
             	<c:if test="${sessionScope.loginId ne comment.id}">
-            		<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            		<a onclick="reportOpen(${comment.idx},2002)" style="cursor: pointer;">신고</a>
             	</c:if>
             </td>
             <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
@@ -252,13 +251,13 @@ function reviewLike(review_idx){
 	});
 }
 
-function reportOpen(){
-	window.open("./review/report.jsp", "report", "width=400, height=400, left=100, top=100");
-}
-
+function reportOpen(idx, type_idx){
+	window.open("./reviewReportForm?idx="+idx+"&type_idx="+type_idx, "report", "width=600, height=300, left=200, top=100");
+	}
+	
 var msg="${msg}";
-if(msg!=""){
-	alert(msg);
-}
+	if(msg!=""){
+		alert(msg);
+	}
 </script>
 </html>

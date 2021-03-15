@@ -39,15 +39,15 @@
             <td><input type="text" id="subject" style="width: 97%;"/></td>
             
             <th>작성자</th>
-            <td>세션아이디에서 가져오기</td>
+            <td>${sessionScope.loginId}</td>
         </tr>
         
         <tr>
         <th>영화제목</th>
         <td>
-        	<input type="hidden" id="movieCode" value="19398001"/>
-            <input type="text" id="movieName" value="오즈의 마법사" style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+        	<input type="hidden" id="movieCode" value=""/>
+            <input type="text" id="subName" value="" style="width: 80%;"/>
+            <input type="button" value="검색" onclick="movieSearchOpen()"/>
         </td>
         
         <th>평점</th>
@@ -112,7 +112,13 @@ $("#save").click(function(){
 			console.log(e);
 		}
 	});
-	
 });
+
+function movieSearchOpen(){
+	var subName = $("#subName").val();
+	
+	window.open("../reviewMovieSearch?page=1&subName="+subName, "report", "width=1000, height=600, left=300, top=100");
+	}
+
 </script>
 </html>

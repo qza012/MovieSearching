@@ -12,6 +12,8 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.mvc.comment.dto.CommentDTO;
+import com.mvc.movie.dto.MovieDTO;
+import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class ReviewDAO {
@@ -33,11 +35,11 @@ public class ReviewDAO {
 	
 	public void resClose() {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (rs != null) {
+				rs.close();
 			}
-			if (conn != null) {
-				conn.close();
+			if (ps != null) {
+				ps.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -513,5 +515,136 @@ public class ReviewDAO {
 			e.printStackTrace();
 		}
 		return success;
+	}
+	
+	public boolean reportCheck(String loginId, int idx, int type_idx) {
+		boolean success = false;
+		String sql = "SELECT * FROM report3 WHERE report_id=? AND report_idx=? AND type_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, idx);
+			ps.setInt(3, type_idx);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public int getReviewIdx(int idx) {
+		int review_idx = 0;
+		String sql = "SELECT review_idx FROM comment3 WHERE idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, idx);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				review_idx = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return review_idx;
+	}
+
+	public boolean report(ReportDTO dto) {
+		boolean success = false;
+		String sql = "INSERT INTO report3(idx, report_id, report_idx, content, type_idx, complete) VALUES(report3_seq.NEXTVAL,?,?,?,?,'N')";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getReport_id());
+			ps.setInt(2, dto.getReport_idx());
+			ps.setString(3, dto.getContent());
+			ps.setInt(4, dto.getType_idx());
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public HashMap<String, Object> reviewMovieSearch(String subName, int group) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
+		int pagePerCnt = 10; //한페이지에 몇개를 보여줄지
+		int end = group*pagePerCnt; //페이지의 끝 rnum
+		int start = end-(pagePerCnt-1); //페이지의 시작 rnum
+		
+		String sql = "SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
+				+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?) WHERE rnum BETWEEN ? AND ?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, "%"+subName+"%");
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				MovieDTO dto = new MovieDTO();
+				dto.setMovieCode(rs.getString(2));
+				dto.setMovieName(rs.getString(3));
+				dto.setOpenDate(rs.getDate(4));
+				dto.setGenre(rs.getString(5));
+				dto.setDirector(rs.getString(6));
+				dto.setCountry(rs.getString(7));
+				list.add(dto);
+			}
+			int maxPage= getSearchMovieMaxPage(pagePerCnt, subName);
+
+			map.put("list",list);
+			map.put("maxPage", maxPage);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return map;
+	}
+	
+	private int getSearchMovieMaxPage(int pagePerCnt, String subName) {
+		String sql= "SELECT COUNT(movieCode) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
+				+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?)";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, "%"+subName+"%");
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
+	}
+
+	public String reviewMovieChoice(String movieCode) {
+		String movieName = null;
+		String sql = "SELECT movieName FROM movie3 WHERE movieCode=?";
+		
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				movieName = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return movieName;
 	}
 }
