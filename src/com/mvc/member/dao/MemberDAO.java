@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.Context;
@@ -259,7 +260,6 @@ public class MemberDAO {
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-
 		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -273,7 +273,6 @@ public class MemberDAO {
 
 			list.add(dto);
 		}
-
 		rs.close();
 		ps.close();
 		return list;
@@ -352,13 +351,22 @@ public class MemberDAO {
 	/***
 	 * 
 	 * @param keyWord
+	 * @param search 
 	 * @return 입력받은 id가 포함된 memberDTO들.
 	 * @throws SQLException
 	 */
-	public ArrayList<MemberDTO> search(String keyWord) throws SQLException {
-		String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
-		ArrayList<MemberDTO> keyWord_list = new ArrayList<MemberDTO>();
-		ps = conn.prepareStatement(sql);
+	public ArrayList<MemberDTO> searchList(String keyWord, String search) throws SQLException {
+		ArrayList<MemberDTO> search_list = new ArrayList<MemberDTO>();
+		if(search.equals("id")) {
+			String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
+			ps = conn.prepareStatement(sql);	
+		}else if(search.equals("name")) {
+			String nameSql = "SELECT id,name,age,gender,genre FROM member3 WHERE name LIKE ?";
+			ps = conn.prepareStatement(nameSql);	
+		}else if(search.equals("age")) {
+			String ageSql = "SELECT id,name,age,gender,genre FROM member3 WHERE age LIKE ?";
+			ps = conn.prepareStatement(ageSql);	
+		}
 		ps.setString(1, "%" + keyWord + "%");
 		rs = ps.executeQuery();
 		while (rs.next()) {
@@ -368,9 +376,55 @@ public class MemberDAO {
 			dto.setAge(rs.getInt("age"));
 			dto.setGender(rs.getString("gender"));
 			dto.setGenre(rs.getString("genre"));
-			keyWord_list.add(dto);
+			search_list.add(dto);
 		}
-		return keyWord_list;
+		return search_list;
+	}
+
+	public HashMap<String, Object> memberList(int page) throws SQLException {
+		int pagePerCnt = 10;
+		int end = page * pagePerCnt;	
+		int start = end-(pagePerCnt-1);
+		String sql = "SELECT id, name, age, gender, genre,reg_date FROM "
+				+ "(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id, name, age, gender, genre,reg_date FROM member3)"
+				+ " WHERE rnum BETWEEN ? AND ?";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();				
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				MemberDTO dto = new MemberDTO();
+				dto.setId(rs.getString("id"));
+				dto.setName(rs.getString("name"));
+				dto.setAge(rs.getInt("age"));
+				dto.setGender(rs.getString("gender"));
+				dto.setGenre(rs.getString("genre"));
+				list.add(dto);
+			}
+			System.out.println("list size : "+list.size());			
+			int maxPage = getMaxPage(pagePerCnt);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("max page : "+maxPage);			
+		return map;		
+	}
+	
+	private int getMaxPage(int pagePerCnt) {		
+		String sql="SELECT COUNT(id) FROM member3";		
+		int max = 0;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return max;
 	}
 
 
@@ -395,9 +449,8 @@ public class MemberDAO {
 	
 	public String pwFind(String id, String question_idx, String pw_answer) {
 		String pw = null;
-		System.out.println(pw);
 		String sql ="SELECT pw FROM member3 WHERE id=? AND question_idx=? AND pw_answer=?";
-		System.out.println(sql);
+		
 		
 		
 		try {
@@ -406,9 +459,9 @@ public class MemberDAO {
 			ps.setString(2, question_idx);
 			ps.setString(3, pw_answer);
 			rs=ps.executeQuery();
-			System.out.println(rs.next());
 			if(rs.next()) {
 				pw=rs.getString("pw");
+				System.out.println("PW : "+pw);
 			}
 		} catch (SQLException e) {
 
@@ -532,5 +585,8 @@ public class MemberDAO {
 		}
 		return follow3List;
 	}
+
+
 	
+
 }

@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 
-@WebServlet({"/idChk","/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/join/idFind","/join/pwFind"})
+
+@WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
+	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -91,13 +93,20 @@ public class MemberController extends HttpServlet {
 				service.getMemberList();
 				break;
 				
+			case "/member/search":
+				System.out.println("검색 요청");
+				service.search();
+				break;
+				
+			case "/follow":
+				System.out.println("팔로우 하기");
 
 			case "/join/idFind":
 				System.out.println("아이디 찾기 요청");
 				service.idFind();
 				break;
 				
-			case "/join/pwFind":
+			case "/pwFind":
 				System.out.println("비밀번호 찾기 요청");
 				service.pwFind();
 				break;
@@ -115,6 +124,11 @@ public class MemberController extends HttpServlet {
 			case "/myPage/followingList":
 				System.out.println("내가 팔로잉하는 사람들");
 				service.followingList();
+				break;
+				
+			case "/pwQuestionList":
+				System.out.println("비밀번호 질문지 요청");
+				service.pwQuestionList();
 				break;
 		}
 		

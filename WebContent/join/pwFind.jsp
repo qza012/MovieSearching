@@ -14,21 +14,22 @@ table {
 	margin-top : 100px;
 }
 
-div {
-	text-align: left;
+input {
+	width: 300px;
+	margin: 5px;
 }
 
 a:link {
 	color: black;
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
 a:visited {
 	color: rgb(58, 55, 55);
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
@@ -38,6 +39,11 @@ a:hover {
 
 lable {
 	text-align: left;
+}
+
+select{
+	width: 300px;
+	margin: 5px;
 }
 
 #Findpw {
@@ -50,13 +56,16 @@ lable {
 	margin-top: 20px;
 	border: solid 2px #212529;
 }
+:focus{
+    	outline-color: black;
+    }
 </style>
 </head>
 <body>
 	<table>
 		<tr>
-			<td align="left"><a href="idFind.jsp" id="idFind">아이디 찾기</a> <a href=""
-				id="Findpw">비밀번호 찾기</a></td>
+			<td align="left"><a href="join/idFind.jsp" id="Findid">아이디 찾기</a> <a
+				href="" id="Findpw">비밀번호 찾기</a></td>
 		</tr>
 		<tr>
 			<td>
@@ -69,11 +78,11 @@ lable {
 			<td>
 				<div>
 					<lable>비밀번호 찾기 질문</lable>
-					<br> <select id="pw_q">
+					<br> <select id="pw_q" >
 						<!-- <option value="">선택</option> -->
-						<c:forEach items="${questionList}" var="questionList">
+						<c:forEach items="${pwQuestionList}" var="pwQuestionList">
 
-							<option value="${questionList.idx}">${questionList.content}</option>
+							<option value="${pwQuestionList.idx}">${pwQuestionList.content}</option>
 						</c:forEach>
 
 					</select>
@@ -100,7 +109,13 @@ lable {
 				</div>
 			</td>
 		</tr>
-
+		<tr>
+			<td align="right">
+				<div>
+					<a href="join/index.jsp">로그인 하러 가기</a>
+				</div>
+			</td>
+		</tr>
 
 	</table>
 
@@ -135,6 +150,8 @@ lable {
 					} else {
 						$('#pwFind').val("입력한 정보와 일치하는 회원이 없습니다.");
 					}
+					
+					
 				},
 				error : function(e) {
 					console.log(e);

@@ -9,22 +9,22 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
 table {
-	width: 300px;
 	margin: auto;
 	margin-top : 100px;
 }
 
+
 a:link {
 	color: black;
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
 a:visited {
 	color: rgb(58, 55, 55);
 	text-decoration: none;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 600;
 }
 
@@ -38,18 +38,28 @@ input {
 }
 
 #Findid {
-	width: 100px;
+	border: none;
+	border-radius: 4px;
+	dispalay: inline;
 	background: #212529;
 	color: #fff;
+	width: 300px;
+	border: solid 2px #212529;
 }
+
+:focus{
+    	outline-color: black;
+    }
+
 </style>
 </head>
 <body>
 	<table>
 		
 		<tr>
-			<td align="left"><a href="idFind.jsp" id="Findid">아이디 찾기</a> <a
-				href="pwFind.jsp" id="Findpw">비밀번호 찾기</a></td>
+			
+			<td align="left" ><a href="idFind.jsp" id="Findid">아이디 찾기</a> <a
+				href="../pwQuestionList" id="Findpw">비밀번호 찾기</a></td>
 		</tr>
 		<tr>
 			<td align="center">
@@ -128,7 +138,8 @@ input {
 					} else {
 						$('#idFind').val("입력한 정보와 일치하는 회원이 없습니다.");
 					}
-
+					
+					
 				},
 				error : function(e) {
 					console.log(e);

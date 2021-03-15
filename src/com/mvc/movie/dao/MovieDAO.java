@@ -199,5 +199,10 @@ public class MovieDAO {
 
 		return keyWord_list;
 	}
+
+	public ArrayList<MovieDTO> likeMovie(String id) {
+		
+		return null;
+	}
 	
 }

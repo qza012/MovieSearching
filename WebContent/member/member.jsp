@@ -119,12 +119,32 @@
     .submenuLink:hover {
         background-color: #dddddd;
     }
+    .pageArea{
+		width:800px;
+		text-align: center;
+		margin: 10px;
+		margin-top: 50px;
+		position: relative;
+		float: left;
+		left: 30%
+	}
+	.pageArea span{
+		font-size: 18px;
+		border : 1px solid lightgray;
+		padding: 2px 10px;		
+		margin: 5px;		
+		color : gray;
+	}
+	#page{
+		font-weight: 600;
+		color: red;
+	}
 </style>
 <body>
     <div id="top">
         <a href="logout">로그아웃</a>
         &nbsp;&nbsp;
-        <a href="#">알람</a>
+        <a href="alarm.jsp">알람</a>
     </div>
     <hr>
     <h3>인기 리뷰</h3>
@@ -142,7 +162,8 @@
         </c:forEach>
     </div>
     <div id="search">
-        <form action="member" method="GET">
+        <form action="search" method="GET">
+        <button><a href="member">회원목록 돌아가기</a></button>
             <select id="select" name="search">
                 <option value="id">ID</option>
                 <option value="name">이름</option>
@@ -163,7 +184,7 @@
             </tr>
             <c:forEach items="${member_list}" var="member3">
 	            <tr>
-	                <td><a href="memReviewList?id=${member3.id}">${member3.id}</a></td>
+	                <td><a href="review?id=${member3.id}">${member3.id}</a></td>
 	                <td>${member3.name}</td>
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
@@ -172,6 +193,21 @@
             </c:forEach>
         </table>
     </div>
+   <div class="pageArea">
+			<span>
+				<c:if test="${currPage == 1}">이전</c:if>
+				<c:if test="${currPage > 1}">
+					<a href="member?page=${currPage-1}">이전</a>
+				</c:if>				
+			</span>
+			<span id="page">${currPage}</span>
+			<span>
+				<c:if test="${currPage == maxPage}">다음</c:if>
+				<c:if test="${currPage < maxPage}">
+					<a href="member?page=${currPage+1}">다음</a>
+				</c:if>				
+			</span>
+		</div>
 </body>
 <script>
 </script>
