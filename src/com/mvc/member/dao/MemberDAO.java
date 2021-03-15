@@ -259,7 +259,6 @@ public class MemberDAO {
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-
 		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -273,7 +272,6 @@ public class MemberDAO {
 
 			list.add(dto);
 		}
-
 		rs.close();
 		ps.close();
 		return list;
@@ -352,13 +350,22 @@ public class MemberDAO {
 	/***
 	 * 
 	 * @param keyWord
+	 * @param search 
 	 * @return 입력받은 id가 포함된 memberDTO들.
 	 * @throws SQLException
 	 */
-	public ArrayList<MemberDTO> search(String keyWord) throws SQLException {
-		String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
-		ArrayList<MemberDTO> keyWord_list = new ArrayList<MemberDTO>();
-		ps = conn.prepareStatement(sql);
+	public ArrayList<MemberDTO> searchList(String keyWord, String search) throws SQLException {
+		ArrayList<MemberDTO> search_list = new ArrayList<MemberDTO>();
+		if(search.equals("id")) {
+			String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
+			ps = conn.prepareStatement(sql);	
+		}else if(search.equals("name")) {
+			String nameSql = "SELECT id,name,age,gender,genre FROM member3 WHERE name LIKE ?";
+			ps = conn.prepareStatement(nameSql);	
+		}else if(search.equals("age")) {
+			String ageSql = "SELECT id,name,age,gender,genre FROM member3 WHERE age LIKE ?";
+			ps = conn.prepareStatement(ageSql);	
+		}
 		ps.setString(1, "%" + keyWord + "%");
 		rs = ps.executeQuery();
 		while (rs.next()) {
@@ -368,9 +375,29 @@ public class MemberDAO {
 			dto.setAge(rs.getInt("age"));
 			dto.setGender(rs.getString("gender"));
 			dto.setGenre(rs.getString("genre"));
-			keyWord_list.add(dto);
+			search_list.add(dto);
 		}
-		return keyWord_list;
+		return search_list;
+	}
+
+	public ArrayList<MemberDTO> memberList() throws SQLException {
+		String sql = "SELECT id, name, age, gender, genre,reg_date FROM "
+				+ "(SELECT id, name, age, gender, genre,reg_date FROM member3 ORDER BY reg_date DESC)"
+				+ " WHERE ROWNUM <= 10";
+		ArrayList<MemberDTO> member_list = new ArrayList<MemberDTO>();
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			MemberDTO dto = new MemberDTO();
+			dto.setId(rs.getString("id"));
+			dto.setName(rs.getString("name"));
+			dto.setAge(rs.getInt("age"));
+			dto.setGender(rs.getString("gender"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setReg_date(rs.getDate("reg_date"));
+			member_list.add(dto);
+		}
+		return member_list;
 	}
 
 

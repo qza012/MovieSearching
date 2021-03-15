@@ -52,7 +52,7 @@ public class MovieController extends HttpServlet {
 
 		case "/likeMovie":
 			System.out.println("회원이 좋아요한 영화 요청");
-			service.detail();
+			service.likeMovie();
 			break;
 			
 		}

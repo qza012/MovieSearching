@@ -103,15 +103,21 @@ public class MovieService {
 		 */
 //		String loginId = (String) req.getSession().getAttribute("loginId");
 //		if(loginId!=null) {
-//			String id = req.getParameter("id");
-//			System.out.println("영화보기 할 id"+id);
-//			MovieDAO dao = new MovieDAO();
-//			ArrayList<MovieDTO> movie_list = dao.detail(id);
-//			if(movie_list!=null) {
-//				req.setAttribute("movie_list", movie_list);
-//			}
-//			dis = req.getRequestDispatcher("movie.jsp");
-//			dis.forward(req, resp);
+			String id = req.getParameter("id");
+			System.out.println("영화보기 할 id"+id);
+			MovieDAO dao = new MovieDAO();
+			try {
+				ArrayList<MovieDTO> movie_list = dao.likeMovie(id);
+				if(movie_list!=null) {
+					req.setAttribute("movie_list", movie_list);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				dao.resClose();
+			}
+			dis = req.getRequestDispatcher("movie.jsp");
+			dis.forward(req, resp);
 //		}else {
 //			resp.sendRedirect("index.jsp");
 //		}

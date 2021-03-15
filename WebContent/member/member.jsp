@@ -124,7 +124,7 @@
     <div id="top">
         <a href="logout">로그아웃</a>
         &nbsp;&nbsp;
-        <a href="#">알람</a>
+        <a href="member/alarm.jsp">알람</a>
     </div>
     <hr>
     <h3>인기 리뷰</h3>
@@ -142,7 +142,8 @@
         </c:forEach>
     </div>
     <div id="search">
-        <form action="member" method="GET">
+        <form action="search" method="GET">
+        <button><a href="member">회원목록 돌아가기</a></button>
             <select id="select" name="search">
                 <option value="id">ID</option>
                 <option value="name">이름</option>
@@ -163,7 +164,7 @@
             </tr>
             <c:forEach items="${member_list}" var="member3">
 	            <tr>
-	                <td><a href="memReviewList?id=${member3.id}">${member3.id}</a></td>
+	                <td><a href="review?id=${member3.id}">${member3.id}</a></td>
 	                <td>${member3.name}</td>
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
