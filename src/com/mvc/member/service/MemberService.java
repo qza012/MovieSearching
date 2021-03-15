@@ -147,7 +147,6 @@ public class MemberService {
 		dto.setGenre(genre);
 		dto.setEmail(email);
 		dto.setQuestion_idx(Integer.parseInt(question_idx));
-
 		int success = 0;
 		try {
 			success = dao.join(dto);
@@ -168,17 +167,17 @@ public class MemberService {
 
 	public void questionList() throws ServletException, IOException {
 		MemberDAO dao = new MemberDAO();
-		ArrayList<QuestionDTO> QuestionList = null;
+		ArrayList<QuestionDTO> questionList = null;
 		try {
-			QuestionList = dao.getQuestionlist();
+			questionList = dao.questionList();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dao.resClose();
 		}
 
-		if (QuestionList != null) {
-			req.setAttribute("Qlist", QuestionList);
+		if (questionList != null) {
+			req.setAttribute("questionList", questionList);
 			RequestDispatcher rd = req.getRequestDispatcher("/join/joinForm.jsp");
 			rd.forward(req, resp);
 		}
@@ -199,10 +198,8 @@ public class MemberService {
 		} finally {
 			dao.resClose();
 		}
+		
 
-		if(result) {
-			req.getSession().setAttribute("id", id);
-		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("use", result);
@@ -239,6 +236,55 @@ public class MemberService {
 //		} else {
 //			resp.sendRedirect("index.jsp");
 //		}
+	}
+
+	public void  idFind() {
+		String name = req.getParameter("name");
+		String email = req.getParameter("email");
+		System.out.println(name+"/"+email);
+		MemberDAO dao = new MemberDAO();
+		String id = dao.idFind(name,email);
+		System.out.println("아이디:"+id);
+		
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		map.put("userID", id);
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		System.out.println(json);
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		
+	}
+
+	public void pwFind() {
+		MemberDAO dao = new MemberDAO();
+		
+		String id = req.getParameter("id");
+		String pw_answer = req.getParameter("pw_answer");
+		String question_idx = req.getParameter("question_idx");
+		System.out.println(id+"/"+pw_answer+"/"+question_idx);
+		String pw = dao.pwFind(id, question_idx, pw_answer);
+		System.out.println("비밀번호:"+pw);
+		
+		
+		
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		map.put("userPW", pw);
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		System.out.println(json);
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
 	}
 
 }

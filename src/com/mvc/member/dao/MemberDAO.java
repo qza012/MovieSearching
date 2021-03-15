@@ -159,7 +159,6 @@ public class MemberDAO {
 	public boolean login(String id, String pw) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
-
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, id);
 		ps.setString(2, pw);
@@ -169,21 +168,21 @@ public class MemberDAO {
 		return success;
 	}
 
-	public ArrayList<QuestionDTO> getQuestionlist() throws SQLException {
+	public ArrayList<QuestionDTO> questionList() throws SQLException {
 		String sql = "SELECT *FROM question3";
-		ArrayList<QuestionDTO> Qlist = null;
+		ArrayList<QuestionDTO> questionList = null;
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-		Qlist = new ArrayList<QuestionDTO>();
+		questionList = new ArrayList<QuestionDTO>();
 		while (rs.next()) {
 			QuestionDTO dto = new QuestionDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setContent(rs.getString("content"));
-			Qlist.add(dto);
+			questionList.add(dto);
 		}
 
-		return Qlist;
+		return questionList;
 
 	}
 
@@ -306,6 +305,53 @@ public class MemberDAO {
 			keyWord_list.add(dto);
 		}
 		return keyWord_list;
+	}
+
+	public String idFind(String name,String email) {
+		String id = null;
+		String sql="SELECT id FROM member3 WHERE name=? AND email=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setString(2, email);
+			rs=ps.executeQuery();
+			
+			if(rs.next()) {
+				id = rs.getString("id");
+				System.out.println("if in "+id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("if out"+id);
+		return id;
+		
+	}
+	
+	
+	public String pwFind(String id, String question_idx, String pw_answer) {
+		String pw = null;
+		System.out.println(pw);
+		String sql ="SELECT pw FROM member3 WHERE id=? AND question_idx=? AND pw_answer=?";
+		System.out.println(sql);
+		
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,id);
+			ps.setString(2, question_idx);
+			ps.setString(3, pw_answer);
+			rs=ps.executeQuery();
+			System.out.println(rs.next());
+			if(rs.next()) {
+				pw=rs.getString("pw");
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		
+		return pw;
 	}
 	
 }
