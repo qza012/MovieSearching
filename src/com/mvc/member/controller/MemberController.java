@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update","/withdrawForm",
-	"/withdraw","/member/member","/follow","/myPage/loginForMyPage"})
+@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update",
+	"/myPage/withdraw","/member/member","/follow","/myPage/loginForMyPage"})
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -80,13 +80,7 @@ public class MemberController extends HttpServlet {
 				service.update();
 				break;
 				
-			case "/withdrawForm":
-				System.out.println("회원 탈퇴 폼으로");
-				RequestDispatcher dis = req.getRequestDispatcher("withdraw.jsp");
-				dis.forward(req, resp);
-				break;
-				
-			case "/withdraw":
+			case "/myPage/withdraw":
 				System.out.println("회원 탈퇴 요청");
 				service.withdraw();
 				break;

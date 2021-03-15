@@ -91,9 +91,9 @@ public class MemberService {
 	}
 
 	public void withdraw() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String id = (String) req.getAttribute("loginId");
+			String id = (String) req.getSession().getAttribute("myLoginId");
 			String pw = req.getParameter("userPw");
 			System.out.println(id+" / "+pw);
 			
@@ -101,18 +101,19 @@ public class MemberService {
 			boolean success = dao.withdraw(id, pw);
 			
 			String msg = "비밀번호를 다시 확인해주세요!";
-			String page="withdraw.jsp";
+			String page="/myPage/withdraw.jsp";
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="/";
+				page="./main.jsp";
+				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
 			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 	

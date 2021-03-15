@@ -124,7 +124,7 @@
                                <a href="./updateMF?id=${sessionScope.myLoginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${sessionScope.myLoginId}">회원 탈퇴</a>
+                               <a href="./withdraw.jsp">회원 탈퇴</a>
                            </li>
                            <li>
                                <a href="./myReviewList?id=${sessionScope.myLoginId}">작성한 리뷰</a>
