@@ -111,7 +111,7 @@ public class MovieService {
 				if(movie_list!=null) {
 					req.setAttribute("movie_list", movie_list);
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
 				dao.resClose();
