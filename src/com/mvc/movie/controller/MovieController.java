@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.movie.service.MovieService;
 import com.mvc.review.service.ReviewService;
 
-@WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", 
-	"/likeMovie"})
+@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/likeMovie", "/movie/movieSearch" })
 public class MovieController extends HttpServlet {
 
 	@Override
@@ -40,9 +39,9 @@ public class MovieController extends HttpServlet {
 			service.main();
 			break;
 
-		case "/movie/movielist":
+		case "/movie/movieList":
 			System.out.println("영화 리스트 불러오기");
-			service.list();
+			service.movieList();
 			break;
 
 		case "/movie/moviedetail":
@@ -54,7 +53,12 @@ public class MovieController extends HttpServlet {
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.likeMovie();
 			break;
-			
+
+		case "/movie/movieSearch":
+			System.out.println("검색 요청");
+			service.movieSearch();;
+			break;
+
 		}
 	}
 
