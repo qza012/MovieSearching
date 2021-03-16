@@ -43,7 +43,6 @@ input {
 	dispalay: inline;
 	background: #212529;
 	color: #fff;
-	width: 300px;
 	border: solid 2px #212529;
 }
 
@@ -120,6 +119,9 @@ input {
 
 		} else if (email.value == "") {
 			alert("이메일을 입력하세요.");
+			email.focus();
+		}else if (email.value.indexOf('@')<0 || email.value.indexOf('.')<0) {
+			alert("이메일 형식이 올바르지 않습니다.");
 			email.focus();
 		} else {
 			$.ajax({
