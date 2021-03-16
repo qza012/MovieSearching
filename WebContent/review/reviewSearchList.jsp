@@ -49,10 +49,10 @@
         .searchBar{
             height: 40%;
         }
-        .paging>a:link,
-        .paing>a:hover,
-        .paging>a:visited,
-        .paging>a:active{
+        a:link,
+        a:hover,
+        a:visited,
+        a:active{
             color: black;
             text-decoration: none;
         }
@@ -66,11 +66,19 @@
 		        <option value="id">사용자 아이디</option>
 		        <option value="subject">리뷰 제목</option>
    		 	</select>
-	    <input class="searchForm" id="keyword" name="keyword" type="text"/>
+	    <input class="searchForm" id="keyword" name="keyword" value="${keyword}" type="text"/>
 	    <input type="button" id="searchButton" value="검색" onclick="keywordCheck()"/>
     	</div>
 	</form>
-    <h2>전체 리뷰</h2>
+	<div>
+	
+	</div>
+	
+    <h2>리뷰 검색 결과</h2>
+    <div style="text-align: right; padding-bottom: 10px;">
+    	<a href="./reviewList">전체 리뷰 리스트</a>
+    </div>
+    
     <table>
         <tr>
             <th>순번</th>
@@ -98,7 +106,7 @@
     <div class="paging">
 		<span>
 			<c:if test="${currPage>1}">
-				<a href="reviewList?page=${currPage-1}">이전</a>
+				<a href="reviewSearchList?page=${currPage-1}&search=${search}&keyword=${keyword}">이전</a>
 			</c:if>
 			<c:if test="${currPage == 1}">
 				<a style="cursor: pointer;" onclick="alert('첫페이지 입니다.')">이전</a>
@@ -109,7 +117,7 @@
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
-				<a href="reviewList?page=${currPage+1}">다음</a>
+				<a href="reviewSearchList?page=${currPage+1}&search=${search}&keyword=${keyword}">다음</a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
 				<a style="cursor: pointer;" onclick="alert('마지막페이지 입니다.')">다음</a>
@@ -130,7 +138,7 @@
 			$("#searchButton").attr('type','submit');
 		}
 	}
-	
+
 	var msg="${msg}";
 	
 	if(msg!=""){

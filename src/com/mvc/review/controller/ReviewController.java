@@ -13,7 +13,7 @@ import com.mvc.review.service.ReviewService;
 @WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/memReviewList","/reviewUpdateForm","/reviewUpdate","/reviewDel",
 	"/myPage/myReviewList","/myPage/deleteMyReview","/myPage/iLikeReview","/myPage/iDonotLike","/commentWrite",
 	"/commentUpdateForm","/commentUpdate","/commentDel","/reviewLike","/reviewReportForm","/reviewReport",
-	"/reviewMovieSearch","/reviewMovieChoice"})
+	"/reviewMovieSearch","/reviewMovieChoice","/reviewSearchList"})
 public class ReviewController extends HttpServlet {
 
 	@Override
@@ -136,6 +136,11 @@ public class ReviewController extends HttpServlet {
 		case "/reviewMovieChoice":
 			System.out.println("리뷰쓸 영화 선택");
 			service.reviewMovieChoice();
+			break;
+			
+		case "/reviewSearchList":
+			System.out.println("리뷰 검색");
+			service.reviewSearchList();
 			break;
 		}
 	}
