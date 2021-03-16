@@ -103,7 +103,7 @@
 	            <tr>
 	                <td>${review3.idx}</td>
 	                <td><a href="#">${review3.subject}</a></td>
-	                <td>${review3.moviecode}</td>
+	                <td>${review3.movieCode}</td>
 	                <td>${review3.score}</td>
 	                <td></td>
 	                <td>${review3.reg_date}</td>
