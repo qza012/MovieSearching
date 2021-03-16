@@ -73,6 +73,17 @@ public class ReviewService {
 
 	public void list() throws ServletException, IOException {
 		String pageParam = req.getParameter("page");
+		String search = req.getParameter("search");
+		String keyword = req.getParameter("keyword");
+		
+		if(search == null) {
+			search = "movieName";
+		}
+		if(keyword == null) {
+			keyword = "";
+		}
+		
+		System.out.println(search + keyword);
 		
 		//1페이지 그룹 -> 1~10번
 		int group = 1;
@@ -81,14 +92,15 @@ public class ReviewService {
 		}
 		
 		ReviewDAO dao = new ReviewDAO();
-		HashMap<String, Object> map = dao.list(group);
+		HashMap<String, Object> map = dao.list(group,search,keyword);
 		dao.resClose();
 		
 		String page="review/reviewList.jsp";
-		
 		req.setAttribute("maxPage", map.get("maxPage"));
 		req.setAttribute("review", map.get("list"));
 		req.setAttribute("currPage", group);
+		req.setAttribute("search", search);
+		req.setAttribute("keyword", keyword);
 		
 		//특정 페이지로 보내기
 		RequestDispatcher dis = req.getRequestDispatcher(page);
@@ -596,4 +608,5 @@ public class ReviewService {
 		PrintWriter out = resp.getWriter();
 		out.println(json);
 	}
+
 }

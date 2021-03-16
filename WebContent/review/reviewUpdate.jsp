@@ -47,8 +47,7 @@
         <th>영화제목</th>
         <td>
         	<input type="hidden" id="movieCode" value="${review.movieCode}"/>
-            <input type="text" id="movieName" value="${review.movieName}" readonly style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+            <input type="text" id="movieName" value="${review.movieName}" readonly style="width: 97%;" readonly/>
         </td>
         
         <th>평점</th>

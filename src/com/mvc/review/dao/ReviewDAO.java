@@ -71,7 +71,7 @@ public class ReviewDAO {
 		return success;
 	}
 
-	public HashMap<String, Object> list(int group) {
+	public HashMap<String, Object> list(int group, String search, String keyword) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
@@ -79,16 +79,33 @@ public class ReviewDAO {
 		int end = group*pagePerCnt; //페이지의 끝 rnum
 		int start = end-(pagePerCnt-1); //페이지의 시작 rnum
 		
-		String sql = "SELECT RNUM, IDX,ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
-				+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
-				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " + 
-				"JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
-				+ "ON r.IDX = l.IDX WHERE del_type='N' ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		String sql = null;
+		
+		if(search.equals("movieName")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND movieName LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}else if(search.equals("id")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND id LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}else if(search.equals("subject")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND subject LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}
 		
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, start);
-			ps.setInt(2, end);
+			ps.setString(1, "%"+keyword+"%");
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				ReviewDTO dto = new ReviewDTO();
@@ -102,8 +119,7 @@ public class ReviewDAO {
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
 			}
-			int maxPage= getMaxPage(pagePerCnt);
-			System.out.println(maxPage);
+			int maxPage= getMaxPage(pagePerCnt, search, keyword);
 			map.put("list",list);
 			map.put("maxPage", maxPage);
 		} catch (SQLException e) {
@@ -113,15 +129,25 @@ public class ReviewDAO {
 		return map;
 	}
 	
-	private int getMaxPage(int pagePerCnt) {
-		String sql= "SELECT COUNT(idx) FROM review3 WHERE del_type='N'";
+	private int getMaxPage(int pagePerCnt, String search, String keyword) {
+		String sql = null;
+		
+		if(search.equals("movieName")) {
+			sql = "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND m.movieName LIKE ?";
+		}else if(search.equals("id")) {
+			sql = "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND r.id LIKE ?";
+		}else if(search.equals("subject")) {
+			sql =  "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND r.subject LIKE ?";
+		}
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
+			ps.setString(1, "%"+keyword+"%");
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				int cnt = rs.getInt(1);//첫번째 컬럼 가져오기
-				max = (int) Math.ceil(cnt/(double)pagePerCnt); //올림 (Math.ceil은 double타입을 받아야해서 pagePerCnt를 double로 변경) -> max는 int임
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+				System.out.println(max);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

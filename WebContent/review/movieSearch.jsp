@@ -106,22 +106,9 @@ function movieChoice(movieCode){
 		,success: function(data){
 			console.log(data);
 			if(data.success == 1){
-				
-				$.ajax({
-					type:'post' 
-					,url:'./reviewWrite.jsp' 
-					,data:{
-						'movieCode':data.movieCode,
-						'movieName':data.movieName
-					}
-					,dataType: 'json' 
-					,success: function(data){
-						console.log(data);
-					}
-					,error: function(e){
-						console.log(e);
-					}
-				});
+				opener.document.getElementById("movieCode").value=data.moiveCode;
+				opener.document.getElementById("movieName").value=data.movieName;
+				window.close();
 			}
 		}
 		,error: function(e){
