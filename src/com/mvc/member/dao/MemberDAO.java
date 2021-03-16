@@ -484,14 +484,22 @@ public class MemberDAO {
 		return success;
 	}
 
-	public ArrayList<FollowDTO> followingList(String loginId) {
+	public HashMap<String, Object> followingList(String loginId, int group) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
 		FollowDTO dto = null;
 		String sql=null;
+		
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		
 		try {
-			sql="SELECT target_id FROM follow3 WHERE id=?";
+			sql="SELECT idx, target_id FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, idx, target_id FROM follow3 WHERE id=?) WHERE rnum BETWEEN ? AND ?";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
 			List<String> tarlist = new ArrayList<String>();
 			while(rs.next()) {
@@ -527,13 +535,16 @@ public class MemberDAO {
 					dto.setNewFileName(rs.getString("newFileName"));
 				}
 				follow3List.add(dto);
-
+			}	
+				System.out.println("listSize : "+follow3List.size());
+				int maxPage = getMaxPage(pagePerCnt);
+				map.put("list", follow3List);
+				map.put("maxPage", maxPage);
+				System.out.println("maxPage : "+maxPage);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return follow3List;
+			return map;
 	}
 
 	public HashMap<String, Object> followerList(String loginId, int group) {

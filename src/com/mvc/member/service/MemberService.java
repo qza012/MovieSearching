@@ -397,13 +397,22 @@ public class MemberService {
 	public void followingList() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
 			MemberDAO dao = new MemberDAO();
-			ArrayList<FollowDTO> list = dao.followingList(loginId);
+			HashMap<String, Object> map = dao.followingList(loginId,group);
 			
 			String page="./main.jsp";
-			if(list!=null) {
+			if(map!=null) {
 				page="/myPage/followingList.jsp";
-				req.setAttribute("fList", list);
+				req.setAttribute("fList", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
 			}
 			dao.resClose();
 			RequestDispatcher dis = req.getRequestDispatcher(page);
