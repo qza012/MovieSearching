@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
         table{
             width: 100%;
@@ -73,14 +74,14 @@
         	<!-- 작성자와 다른데 좋아요 이미 눌렀으면? -->
         	<!-- 작성자와 다른데 좋아요 안눌렀으면? -->
         	<c:if test="${sessionScope.loginId eq review.id}">
-        		<th>좋아요</th>
+        		<th><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
         	</c:if>
         	<c:if test="${sessionScope.loginId ne review.id}">
         		<c:if test="${reviewLike eq 1}">
-        			<th class="like" style="cursor: pointer;  color: red;" onclick="reviewLike(${review.idx})">좋아요 취소</th>
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="fas fa-heart"></i></th>
         		</c:if>
         		<c:if test="${reviewLike eq 0}">
-        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})">좋아요</th>
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
         		</c:if>
         	</c:if>
             <td id="reviewCntLike">${review.cntLike}</td>
@@ -259,7 +260,12 @@ function reviewLike(review_idx){
 		,success: function(data){
 			console.log(data);
 			if(data.success == 1){
-				location.href = "./reviewDetail?Idx="+review_idx;
+				var reviewLike ="${reviewLike}";
+				if(reviewLike == 0){ //좋아요 안한 경우
+					$('.like').html(' <i style="color: red; font-size: 23px;" class="fas fa-heart"></i> ');
+				}else{ //좋아요 한경우
+					$('.like').html(' <i style="color: red; font-size: 23px;" class="far fa-heart"></i> ');
+				}
 			}
 		}
 		,error: function(e){
