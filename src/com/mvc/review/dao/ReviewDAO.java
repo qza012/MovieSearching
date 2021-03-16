@@ -208,7 +208,7 @@ public class ReviewDAO {
 	}
 	
 	public ArrayList<ReviewDTO> memReviewList(String id) throws SQLException {
-		String sql = "SELECT idx,subject,moviecode,score,reg_date FROM review3 WHERE id=? ORDER BY reg_date DESC";
+		String sql = "SELECT idx,subject,movieCode,score,reg_date FROM review3 WHERE id=? ORDER BY reg_date DESC";
 		ArrayList<ReviewDTO> review_list = new ArrayList<ReviewDTO>();
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
@@ -217,7 +217,7 @@ public class ReviewDAO {
 				ReviewDTO dto = new ReviewDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setMovieCode(rs.getString("moviecode"));
+				dto.setMovieCode(rs.getString("movieCode"));
 				dto.setScore(rs.getInt("score"));
 				dto.setReg_date(rs.getDate("reg_date"));
 				review_list.add(dto);

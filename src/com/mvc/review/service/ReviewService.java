@@ -155,8 +155,10 @@ public class ReviewService {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}finally {
+				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("member/review.jsp");
+			RequestDispatcher dis = req.getRequestDispatcher("review.jsp");
 			dis.forward(req, resp);
 //		}else {
 //			resp.sendRedirect("index.jsp");

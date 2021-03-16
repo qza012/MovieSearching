@@ -184,7 +184,7 @@
             </tr>
             <c:forEach items="${member_list}" var="member3">
 	            <tr>
-	                <td><a href="review?id=${member3.id}">${member3.id}</a></td>
+	                <td><a href="memReviewList?id=${member3.id}">${member3.id}</a></td>
 	                <td>${member3.name}</td>
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>

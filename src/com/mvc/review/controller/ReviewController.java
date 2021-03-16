@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.review.service.ReviewService;
 
-@WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/memReviewList","/reviewUpdateForm","/reviewUpdate","/reviewDel",
+@WebServlet({"/reviewList","/reviewDetail","/reviewWrite","/member/memReviewList","/reviewUpdateForm","/reviewUpdate","/reviewDel",
 	"/myPage/myReviewList","/myPage/deleteMyReview","/myPage/iLikeReview","/myPage/iDonotLike","/commentWrite",
 	"/commentUpdateForm","/commentUpdate","/commentDel","/reviewLike","/reviewReportForm","/reviewReport",
 	"/reviewMovieSearch","/reviewMovieChoice"})
@@ -53,7 +53,7 @@ public class ReviewController extends HttpServlet {
 			service.write();
 			break;
 			
-		case "/memReviewList":
+		case "/member/memReviewList":
 			System.out.println("회원이 작성한 리뷰 요청");
 			service.memReviewList();
 			break;
