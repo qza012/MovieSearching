@@ -9,7 +9,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,th,td{
             border-top: 1px solid lightgray;
@@ -21,11 +21,11 @@
             padding: 10px;
         }
         div.paging{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
         div.button{
-            width: 70%;
+            width: 100%;
             text-align: right;
         }
         .reviewDetail{
@@ -38,7 +38,7 @@
             cursor: pointer;
         }
         div.search{
-            width: 70%;
+            width: 100%;
             height: 70px;
             text-align: center;
         }

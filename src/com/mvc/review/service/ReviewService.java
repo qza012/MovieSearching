@@ -583,12 +583,16 @@ public class ReviewService {
 
 	public void reviewMovieChoice() throws ServletException, IOException {
 		String movieCode = req.getParameter("movieCode");
+		String loginId = (String) req.getSession().getAttribute("loginId");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		int success = 0;
+		int haveReview = 0;
 		
 		ReviewDAO dao = new ReviewDAO();
+		haveReview = dao.reviewMovieCheck(movieCode, loginId);
 		String movieName = dao.reviewMovieChoice(movieCode);
+		
 		dao.resClose();
 		
 		if(movieName != null) {
@@ -596,6 +600,7 @@ public class ReviewService {
 		}
 		System.out.println(movieCode + movieName);
 		
+		map.put("haveReview", haveReview);
 		map.put("moiveCode",movieCode);
 		map.put("movieName", movieName);
 		map.put("success", success);

@@ -673,4 +673,23 @@ public class ReviewDAO {
 		
 		return movieName;
 	}
+
+	public int reviewMovieCheck(String movieCode, String loginId) {
+		int haveReview = 0;
+		String sql = "SELECT * FROM review3 WHERE movieCode=? AND id=?";
+		
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			ps.setString(2, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				haveReview = 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return haveReview;
+	}
 }
