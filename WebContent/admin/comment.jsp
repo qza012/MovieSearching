@@ -40,7 +40,7 @@
 		<tr>
 			<td>${comment.idx }</td>
 			<td>${comment.review_idx }</td>
-			<td>${comment.content }</td>
+			<td><a href="#">${comment.content }</a></td>
 			<td>${comment.id }</td>
 			<td>${comment.reg_date }</td>
 			<td id="${comment.idx }">${comment.del_type }</td>

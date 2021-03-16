@@ -12,21 +12,36 @@
 <title>영화</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <style>
-td {
-	width: 320px;
-}
-
 th {
-	width: 450px;
-	height: 500px;
+	width: 790px;
+	height: 360px;
 }
 
 table, th, td {
 	border: 1px solid black;
 	border-collapse: collapse;
 	padding: 5px 10px;
-	text-align: left;
+	text-align: center;
 	color: white;
+}
+
+.review>ul li table tr td {
+	width: 182px;
+	height: 50px;
+}
+
+.review_Write {
+	padding: 30px 40px;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: right;
+}
+
+.movie_Like {
+	padding-right: 30px;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: right;
 }
 </style>
 </head>
@@ -36,13 +51,14 @@ table, th, td {
 		<div id="container">
 			<div id="content">
 				<div class="movie_main">
-					<a class="like">좋아요</a>
-					<ul
-						style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
+					<div class="movie_Like"><input type="button" class="like" value="좋아요"></div>
+					<ul style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
 						<li>
 							<table>
 								<tr>
-									<th rowspan="5">${movie.youtubeUrl}</th>
+									<th>${movie.youtubeUrl}</th>
+								</tr>
+								<tr>
 									<td>제목 : ${movie.movieName}</td>
 								</tr>
 								<tr>
@@ -70,15 +86,12 @@ table, th, td {
 									<tr>
 										<td>${review.idx}</td>
 										<td class="reviewDetail" onclick="location.href='./reviewDetail?Idx=${review.idx}'">${review.subject}</td>
-										<td class="movieDetail" onclick="location.href='#' ">${review.movieName}</td>
-										<td>${review.score}</td>
 										<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
-										<td>${review.cntLike}</td>
 										<td>${review.reg_date}</td>
 									</tr>
 								</c:forEach>
 							</table>
-							<div class="button">
+							<div class="review_Write">
 								<input type="button" value="리뷰 작성" onclick="location.href='./reviewWrite.jsp'">
 							</div>
 						</li>

@@ -54,10 +54,13 @@ public class AdminReportCommentService {
 			
 			if(keyWord == null || keyWord.equals("")) {
 				reportList = dao.getReportList(curPage, rowsPerPage);
+				System.out.println(reportList.size());
 				// 타입 번호가 2001인 것만 추출.
 				filteredReportList = reportList.stream()
 									.filter(dto -> dto.getType_idx() == 2002)
 									.collect(Collectors.toList());
+				
+				System.out.println(filteredReportList.size());
 				
 				req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE)/rowsPerPage + 1);
 				req.removeAttribute("keyWord");
@@ -85,7 +88,7 @@ public class AdminReportCommentService {
 			
 			req.setAttribute("curPage", curPage);
 			req.setAttribute("standard", standard);
-			req.setAttribute("reportList", reportList);
+			req.setAttribute("reportList", filteredReportList);
 			req.setAttribute("commentList", commentList);
 			
 //			reportList = reportDao.getReportList();

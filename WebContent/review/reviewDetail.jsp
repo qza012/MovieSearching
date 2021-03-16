@@ -158,30 +158,35 @@ $("#save").click(function(){
 	var review_idx = $("#review_idx").val();
 	
 	console.log(content + " / " + id + " / " + review_idx);
-
-	$.ajax({ 
-		type:'post' 
-		,url:'./commentWrite' 
-		,data:{ 
-			'content':content,
-			'id':id,
-			'review_idx':review_idx,
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			console.log('data.success');
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "./reviewDetail?Idx="+review_idx;
-			}else{
-				alert('댓글 작성에 실패했습니다.');
+	
+	if(content==""){
+		alert("내용을 입력해주세요.");
+		$("#content").focus();
+	}else{
+		$.ajax({ 
+			type:'post' 
+			,url:'./commentWrite' 
+			,data:{ 
+				'content':content,
+				'id':id,
+				'review_idx':review_idx,
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				console.log('data.success');
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "./reviewDetail?Idx="+review_idx;
+				}else{
+					alert('댓글 작성에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 
 function update(comment_idx){
@@ -211,28 +216,33 @@ $("#update").click(function(){
 	var content = $("#comment_content").val();
 	var review_idx = $("#review_idx").val();
 	console.log(content + " / "+ comment_idx);
-
-	$.ajax({
-		type:'post' 
-		,url:'./commentUpdate' 
-		,data:{
-			'content':content,
-			'comment_idx':comment_idx,
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "./reviewDetail?Idx="+review_idx;
-			}else{
-				alert('댓글 수정에 실패했습니다.');
+	
+	if(content==""){
+		alert("내용을 입력해주세요.");
+		$("#content").focus();
+	}else{
+		$.ajax({
+			type:'post' 
+			,url:'./commentUpdate' 
+			,data:{
+				'content':content,
+				'comment_idx':comment_idx,
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "./reviewDetail?Idx="+review_idx;
+				}else{
+					alert('댓글 수정에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 
 function reviewLike(review_idx){

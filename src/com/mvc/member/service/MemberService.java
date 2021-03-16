@@ -264,13 +264,13 @@ public class MemberService {
 			HashMap<String, Object> map = dao.memberList(group);
 			dao = new MemberDAO();
 			ArrayList<ReviewDTO> top_list = dao.top();
-			req.setAttribute("maxPage", map.get("maxPage"));
 			if (req.getAttribute("search_list")== null) {
+				req.setAttribute("maxPage", map.get("maxPage"));
 				req.setAttribute("member_list", map.get("list"));
+				req.setAttribute("currPage", group);
 			} else {
 				req.setAttribute("member_list", req.getAttribute("search_list"));
 			}
-			req.setAttribute("currPage", group);
 			req.setAttribute("top_list", top_list);
 		} catch (SQLException e) {
 			e.printStackTrace();

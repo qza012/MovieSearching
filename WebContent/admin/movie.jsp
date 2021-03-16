@@ -8,18 +8,70 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 			<style>
-				table, th, td{
-					border: 1px solid black;
-					border-collapse: collapse;
-					padding: 5px 10px;
+				table{
+					margin : auto;
 				}
+				select{
+					width : 100px;
+					height : 26px;
+					margin-right: 8px ;
+				}
+				.searchInput{
+					width : 320px;
+					height : 20px;
+				}
+				input[type='submit']{
+					width : 80px;
+					height : 26px;
+					margin-top :10px;
+					margin-left: 8px;
+				}
+				#back, #next, #page {
+		            display: inline-block;
+		            width: 30px;
+		            height: 25px;
+		            border: 1px solid #cdcdcd;
+		            color: #000000;
+		            font-size: 11px;
+		            border-collapse: collapse;
+		            line-height:25px;
+		            margin-top : 50px;
+       		 	}
+       		 	#back{
+       		 		border-bottom-left-radius: 4px;
+            		border-top-left-radius: 4px;
+       		 	}
+       		 	#page{
+					border-radius: 0px;	
+					font-weight: bold;
+					margin-right:-5px;
+					margin-left:-5px;
+				}
+       		 	#next{
+       		 		border-bottom-right-radius: 4px;
+            		border-top-right-radius: 4px;
+       		 	}
+				
+				a:visited,a:link{
+					color: #000000;
+       			}
+				h3{
+					padding: 40px 180px 0px;
+				}
+				/* tr>th{
+					border-right: 1px solid #cdcdcd;
+				} */
+				th,td{
+					padding :2px 5px 1px;
+					border-right: 1px solid #cdcdcd;
+				}
+				
 			</style>
 	</head>
 	<body>
 	<!-- 영화코드  | 영화이름 | 장르 |    개봉일    | 감독명 | 순위 | 예고편 | 포스터 -->
 		<h3>영화 관리</h3>
-		<hr/>
-		<div>
+		<div align="center">
 			<form action="movieList" method="GET">
 			    <select class="standard" name="standard">
 			    	<option value="all">전체</option>
@@ -31,7 +83,7 @@
 				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
 			    <input type="submit" value="검색"/>
 			</form>
-		</div>
+		</div><hr/>
 		<table>
 		<tr>
 			<th>영화코드</th><th>영화이름</th><th>장르</th><th>개봉일</th><th>감독명</th><th>순위</th><th>예고편</th><th>포스터</th>
@@ -58,15 +110,15 @@
 		</tr>
 		</c:forEach>
 		</table>
-		<div>
-			<span>
+		<div align="center">
+			<span id="back">
 				<c:if test="${curPage == 1 }">이전</c:if>
 				<c:if test="${curPage > 1 }">
 					<a href="javascript:prevFunc();">이전</a>
 				</c:if>
 			</span>
 			<span id="page">${curPage }</span>
-			<span>
+			<span id="next">
 				<c:if test="${curPage == maxPage }">다음</c:if>
 				<c:if test="${curPage < maxPage }">
 					<a href="javascript:nextFunc();">다음</a>

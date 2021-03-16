@@ -40,7 +40,7 @@
 			</tr>
 			<c:forEach items="${list }" var="member">
 			<tr>
-				<td>${member.id }</td>
+				<td><a href="#?id=${member.id }">${member.id }</a></td>
 				<td>${member.name }</td>
 				<td>${member.age }</td>
 				<td>${member.gender}</td>
