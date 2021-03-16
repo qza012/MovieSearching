@@ -2,7 +2,6 @@ package com.mvc.admin.service;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
 import com.mvc.admin.util.AdminSql;
-import com.mvc.admin.util.AdminUtil;
 import com.mvc.comment.dto.CommentDTO;
-import com.mvc.member.dto.MemberDTO;
 
 public class AdminCommentService{
 

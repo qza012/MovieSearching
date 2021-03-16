@@ -75,18 +75,18 @@
    </head>
    <body>
        <h2>로고</h2>
-       <p>
+        <p>
      		${sessionScope.myLoginId}님,
-           <a href="./logout">[ 로그아웃</a>
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
-       <hr/>
-       <div class="naviBar">
+        <hr/>
+        <div class="naviBar">
            <nav aria-label="naviBar">
                <ul class="navi">
                    <li>
-                       <a href="./"> 영화 홈
+                       <a href="./main.jsp"> 영화 홈
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -115,7 +115,7 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                       <a href="./updateMF?id=${sessionScope.myLoginId}" onclick="showMyPage()">마이페이지</a>
                       	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          <span> > </span>
                        <ul id="myPage">
@@ -140,21 +140,20 @@
                            <li>
                                <a href="./followingList?id=${sessionScope.myLoginId}">팔로잉</a>
                            </li>
-                           <li>
+                            <li>
                                <a href="alram.jsp">알람</a>
                            </li>
                        </ul>
                    </li>
                    <li>
-                       <a href="admin.jsp">
-                           관리자 페이지
+                       <a href="admin.jsp">관리자 페이지
                            &nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>
                </ul>
            </nav>
-       </div>
+       </div>    
        <form action="./withdraw">
         	<div class="withdraw">
             	<h3>회원 탈퇴</h3>

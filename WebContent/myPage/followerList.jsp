@@ -73,7 +73,7 @@
         <h2>로고</h2>
         <p>
      		${sessionScope.myLoginId}님,
-           <a href="./logout">[ 로그아웃</a>
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
@@ -82,7 +82,7 @@
            <nav aria-label="naviBar">
                <ul class="navi">
                    <li>
-                       <a href="./"> 영화 홈
+                       <a href="./main.jsp"> 영화 홈
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -111,46 +111,45 @@
                        	</a>
                    </li>    
                    <li>    
-                       <a href="./updateMF?id=${loginId}" onclick="showMyPage()">마이페이지</a>
+                       <a href="./updateMF?id=${sessionScope.myLoginId}" onclick="showMyPage()">마이페이지</a>
                       	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          <span> > </span>
                        <ul id="myPage">
                            <li>
-                               <a href="./updateMF?id=${loginId}">회원 정보 수정</a>
+                               <a href="./updateMF?id=${sessionScope.myLoginId}">회원 정보 수정</a>
                            </li>
                            <li>
-                               <a href="./withdrawForm?id=${loginId}">회원 탈퇴</a>
+                               <a href="./withdraw.jsp">회원 탈퇴</a>
                            </li>
                            <li>
-                               <a href="./myReviewList?id=${loginId}">작성한 리뷰</a>
+                               <a href="./myReviewList?id=${sessionScope.myLoginId}">작성한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./iLikeMovie?id=${loginId}">좋아요한 영화</a>
+                               <a href="./iLikeMovie?id=${sessionScope.myLoginId}">좋아요한 영화</a>
                            </li>
                            <li>
-                               <a href="./iLikeReview?id=${loginId}">좋아요한 리뷰</a>
+                               <a href="./iLikeReview?id=${sessionScope.myLoginId}">좋아요한 리뷰</a>
                            </li>
                            <li>
-                               <a href="./followerList?id=${loginId}">팔로워</a>
+                               <a href="./followerList?id=${sessionScope.myLoginId}">팔로워</a>
                            </li>
                            <li>
-                               <a href="./followingList?id=${loginId}">팔로잉</a>
+                               <a href="./followingList?id=${sessionScope.myLoginId}">팔로잉</a>
                            </li>
-                           <li>
+                             <li>
                                <a href="alram.jsp">알람</a>
                            </li>
                        </ul>
                    </li>
                    <li>
-                       <a href="admin.jsp">
-                           관리자 페이지
+                       <a href="admin.jsp">관리자 페이지
                            &nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>
                </ul>
            </nav>
-       </div>
+       </div>    
        <h1>팔로워</h1>
         <div class="followerList">
             <table>
@@ -158,11 +157,26 @@
                 	<tr>
 	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></td>
                 		<th>${follow.id}</th><td>팔로잉 ${follow.followingNum}</td><td>팔로워 ${follow.followerNum}</td>
-                		<th><button id="notLike" onclick="location.href='./deleteFollower?idx=${follow.id}'">팔로우 취소</button></th>
+                		<th><button id="notLike" onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></th>
                 	</tr>
                 </c:forEach>      
             </table>
         </div>
+        <div class="pageArea">
+			<span>
+				<c:if test="${currPage == 1}">이전</c:if>
+				<c:if test="${currPage > 1}">
+					<a href="./?page=${currPage-1}">이전</a>
+				</c:if>				
+			</span>
+			<span id="page">${currPage}</span>
+			<span>
+				<c:if test="${currPage == maxPage}">다음</c:if>
+				<c:if test="${currPage < maxPage}">
+					<a href="./?page=${currPage+1}">다음</a>	
+				</c:if>	
+			</span>
+		</div>
     </body>
 	<script>
 		var showIf = document.getElementById('myPage').style.display;

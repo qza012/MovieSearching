@@ -14,7 +14,7 @@ import com.mvc.member.service.MemberService;
 
 
 @WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
 
 public class MemberController extends HttpServlet {
 
@@ -125,6 +125,16 @@ public class MemberController extends HttpServlet {
 				System.out.println("내가 팔로잉하는 사람들");
 				service.followingList();
 				break;
+				
+			case "/myPage/notFollow":
+				System.out.println("팔로우 취소");
+				service.notFollow();
+				break;
+				
+			case "/myPage/deleteFollower":
+				System.out.println("팔로워 삭제");
+				service.deleteFollower();
+				break;	
 				
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");

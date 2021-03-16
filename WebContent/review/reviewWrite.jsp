@@ -53,6 +53,7 @@
         <th>평점</th>
         <td>
             <select id="score" class="star">
+            	<option value="0"></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -64,7 +65,7 @@
         
         <tr>
             <td colspan="4">
-                <textarea id="content" rows="0" cols="0"></textarea>
+                <textarea id="content"></textarea>
             </td>
         </tr>
         
@@ -86,32 +87,50 @@ $("#save").click(function(){
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	$.ajax({ 
-		type:'post' 
-		,url:'../reviewWrite' 
-		,data:{
-			'subject':subject,
-			'id':id,
-			'movieCode':movieCode,
-			'movieName':movieName,
-			'score':score,
-			'content':content
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			console.log('data.success');
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "../reviewList";
-			}else{
-				alert('리뷰 작성에 실패했습니다.');
+	
+	if(subject==""){
+		alert("제목을 입력해주세요.");
+		$("#subject").focus();
+	}else if(id==""){
+		alert("로그인을 해주세요.");
+	}else if(movieCode=="" || movieName==""){
+		alert("적합한 영화를 선택해주세요.");
+		$("#movieName").focus();
+	}else if(score==0){
+		alert('평점을 선택해주세요.');
+		$("#score").focus();
+	}else if(content==""){
+		alert('내용을 입력해주세요.');
+		$("#content").focus();
+	}else{
+		$.ajax({ 
+			type:'post' 
+			,url:'../reviewWrite' 
+			,data:{
+				'subject':subject,
+				'id':id,
+				'movieCode':movieCode,
+				'movieName':movieName,
+				'score':score,
+				'content':content
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				console.log('data.success');
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "../reviewList";
+				}else{
+					alert('리뷰 작성에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
+	
 });
 
 function movieSearchOpen(){

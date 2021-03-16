@@ -53,7 +53,7 @@
         <th>평점</th>
         <td>
             <select id="score" class="star">
-            
+            <option value="0"></option>
              <c:forEach begin="1" end="5" var="i">
              	<c:if test="${review.score eq i}">
              		<option value="${review.score}" selected>${review.score}</option>
@@ -62,7 +62,6 @@
              		<option value="${i}">${i}</option>
              	</c:if>
              </c:forEach>
-             
             </select>
         </td>
         </tr>
@@ -91,31 +90,43 @@ $("#save").click(function(){
 	var content = $('#content').val(); 
 	
 	console.log(idx + " / " + subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
-
-	$.ajax({ 
-		type:'post'
-		,url:'./reviewUpdate' 
-		,data:{
-			'idx':idx,
-			'subject':subject,
-			'id':id,
-			'movieCode':movieCode,
-			'movieName':movieName,
-			'score':score,
-			'content':content
-		}
-		,dataType: 'json'
-		,success: function(data){
-			console.log(data);
-		
-			alert(data.msg);
-			location.href = "./reviewDetail?Idx="+idx;
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
 	
+	if(subject==""){
+		alert("제목을 입력해주세요.");
+		$("#subject").focus();
+	}else if(id==""){
+		alert("로그인을 해주세요.");
+	}else if(score==0){
+		alert('평점을 선택해주세요.');
+		$("#score").focus();
+	}else if(content==""){
+		alert('내용을 입력해주세요.');
+		$("#content").focus();
+	}else{ 
+		$.ajax({ 
+			type:'post'
+			,url:'./reviewUpdate' 
+			,data:{
+				'idx':idx,
+				'subject':subject,
+				'id':id,
+				'movieCode':movieCode,
+				'movieName':movieName,
+				'score':score,
+				'content':content
+			}
+			,dataType: 'json'
+			,success: function(data){
+				console.log(data);
+			
+				alert(data.msg);
+				location.href = "./reviewDetail?Idx="+idx;
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 </script>
 </html>
