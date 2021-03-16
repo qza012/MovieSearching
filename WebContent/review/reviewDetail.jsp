@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,td,th{
             border-top: 1px solid lightgray;
@@ -20,7 +21,7 @@
             padding: 10px;
         }
         div{
-            width: 70%;
+            width: 100%;
         }
         .aTag{
             text-align: right;
@@ -34,10 +35,6 @@
         }
         .list{
             text-align: center;
-        }
-        .comment{
-            margin-bottom: 10px;
-
         }
 
     </style>
@@ -64,7 +61,9 @@
             <td>${review.id}</td>
         </tr>
         <tr>
-            <td colspan="6">${review.content}</td>
+            <td colspan="6">
+            ${fn:replace(review.content, cn, br)}
+            </td>
         </tr>
         <tr>
         	<!-- 세션아이디 가져와서 작성자와 같으면 그냥 냅두고 -->
@@ -106,15 +105,20 @@
     <div style="margin-bottom: 10px;">
     <span>댓글</span>
     </div>
-
-    <div class="comment">
-        <div>
-        <input type="hidden" id="comment_idx"/>
-        <input type="text" id="comment_content" style="width: 90%; height: 50px;"/>
-        <input type="button" id="save" value="등록"  style="width:7%; height: 50px;"/>
-        <input type="hidden" id="update" value="수정" style="width:7%; height: 50px;"/>
-        </div>
-    </div>
+	
+	<table>
+		<tr>
+			<td>
+	        	<input type="hidden" id="comment_idx"/>
+	        	<textarea id="comment_content" style="width: 100%; height: 50px; resize: none;"></textarea>
+	        </td>
+	        <td>
+	        	<input type="button" id="save" value="등록"  style="width:20%; height: 50px;"/>
+	        	<input type="hidden" id="update" value="수정" style="width:20%; height: 50px;"/>
+	        </td>
+		</tr> 
+	</table>
+   
 
     <table>
         <tr>
@@ -124,7 +128,7 @@
         </tr>
         <c:forEach items="${comment}" var="comment">
         <tr>
-            <td>${comment.content}</td>
+            <td> ${fn:replace(comment.content, cn, br)}</td>
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
             
