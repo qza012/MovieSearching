@@ -6,12 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.mvc.comment.dto.CommentDTO;
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.movie.dto.MovieDTO;
 import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
@@ -330,17 +332,27 @@ public class ReviewDAO {
 		return success;
 	}
 	
-	public ArrayList<ReviewDTO> myReviewList(String loginId) { //내가 쓴 리뷰 리스트 얻기
+	public HashMap<String, Object> myReviewList(String loginId, int group) { //내가 쓴 리뷰 리스트 얻기
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
-		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName FROM review3 r INNER JOIN movie3 m "
-				+ "ON r.moviecode = m.moviecode AND r.id = ?)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r "
-				+ "LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l ON r.IDX = l.IDX WHERE del_type='N' ORDER BY R.IDX DESC";
+		ReviewDTO dto = null;
+		
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		
+		String sql="SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode AND r.id = ?)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
+				+ "FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l ON r.IDX = l.IDX "
+				+ "WHERE del_type='N' AND rnum BETWEEN ? AND ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
 			while(rs.next()) {
-				ReviewDTO dto = new ReviewDTO();
+				dto = new ReviewDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setId(rs.getString("id"));
 				dto.setSubject(rs.getString("subject"));
@@ -350,18 +362,44 @@ public class ReviewDAO {
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
 			}
+			System.out.println("listSize : "+list.size());
+			int maxPage = getMaxPageMP(pagePerCnt);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : "+maxPage);	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return map;
 	}
 
-	public void likeMovie() {
-		
+	private int getMaxPageMP(int pagePerCnt) {
+		String sql="SELECT COUNT(idx) FROM review3";		
+		int max = 0;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return max;
 	}
 
-	public ArrayList<ReviewDTO> myLikeReview(String loginId) { //좋아요한 리뷰 리스트 얻기
+
+	public HashMap<String, Object> myLikeReview(String loginId, int group) { //좋아요한 리뷰 리스트 얻기
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
+		ReviewDTO dto = null;
+		
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		int num = 0;
+		
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
 				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
 				+ "FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r RIGHT OUTER JOIN review_like3 l ON r.idx = l.review_idx AND l.id = ?) "
@@ -370,8 +408,9 @@ public class ReviewDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
 			rs = ps.executeQuery();
+			ArrayList<Object> mapToList = new ArrayList<Object>();
 			while(rs.next()) {
-				ReviewDTO dto = new ReviewDTO();
+				dto = new ReviewDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setId(rs.getString("id"));
 				dto.setSubject(rs.getString("subject"));
@@ -380,11 +419,21 @@ public class ReviewDAO {
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
+				//++num;
+				//map.put(String.valueOf(num), list);
 			}
+			//for(int i=start; i<=end; i++) {
+				//mapToList.add(map.get(String.valueOf(i)));
+			//}
+			System.out.println("listSize : "+list.size());
+			int maxPage = getMaxPageMP(pagePerCnt);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : "+maxPage);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return map;
 	}
 
 	public boolean iDonotLike(String id, String idx) {

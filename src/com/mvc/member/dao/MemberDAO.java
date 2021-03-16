@@ -558,7 +558,8 @@ public class MemberDAO {
 		int start = end-(pagePerCnt-1);
 		
 		try {
-			sql="SELECT idx, id FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, idx, id FROM follow3 WHERE target_id=?) WHERE rnum BETWEEN ? AND ?";
+			sql="SELECT idx, id FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, idx, id FROM follow3 WHERE target_id=?) "
+					+ "WHERE rnum BETWEEN ? AND ?";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
 			ps.setInt(2, start);

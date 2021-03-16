@@ -249,16 +249,25 @@ public class ReviewService {
 	public void myReviewList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
 			ReviewDAO dao = new ReviewDAO();
-			ArrayList<ReviewDTO> list = dao.myReviewList(loginId);
+			HashMap<String, Object> map = dao.myReviewList(loginId,group);
 			
 			String page="./main.jsp";
 			
-			if(list!=null) {
-				page="./reviewList.jsp";
+			if(map!=null) {
+				page="/myPage/reviewList.jsp";
+				req.setAttribute("list", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
 			}
 			dao.resClose();
-			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
@@ -269,16 +278,24 @@ public class ReviewService {
 	public void iLikeReview() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			ReviewDAO dao = new ReviewDAO();
-			ArrayList<ReviewDTO> list = dao.myLikeReview(loginId);
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
 			
+			ReviewDAO dao = new ReviewDAO();
+			HashMap<String, Object> map = dao.myLikeReview(loginId,group);
 			String page="./main.jsp";
 			
-			if(list!=null) {
-				page="./likeReview.jsp";
+			if(map != null) {
+				page="/myPage/likeReview.jsp";
+				req.setAttribute("list", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
 			}
 			dao.resClose();
-			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {

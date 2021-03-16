@@ -12,7 +12,7 @@ import com.mvc.movie.service.MovieService;
 import com.mvc.review.service.ReviewService;
 
 @WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", 
-	"/likeMovie"})
+	"/likeMovie","/myPage/iLikeMovie"})
 public class MovieController extends HttpServlet {
 
 	@Override
@@ -55,6 +55,10 @@ public class MovieController extends HttpServlet {
 			service.likeMovie();
 			break;
 			
+		case "/myPage/iLikeMovie":
+			System.out.println("임시 url");
+			resp.sendRedirect("./likeMovie.jsp");
+			break;
 		}
 	}
 
