@@ -328,7 +328,7 @@ public class MemberService {
 		
 	}
 
-	public void pwFind() {
+	public void pwFind() throws ServletException, IOException {
 		MemberDAO dao = new MemberDAO();
 		
 		String id = req.getParameter("id");
@@ -351,6 +351,8 @@ public class MemberService {
 		}finally {
 			dao.resClose();
 		}
+		RequestDispatcher dis = req.getRequestDispatcher("./pwFind.jsp");
+		dis.forward(req, resp);
 	}
 	
 	public void pwQuestionList() throws ServletException, IOException {

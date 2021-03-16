@@ -59,6 +59,21 @@
 		</tr>
 		</c:forEach>
 		</table>
+		<div>
+			<span>
+				<c:if test="${curPage == 1 }">이전</c:if>
+				<c:if test="${curPage > 1 }">
+					<a href="javascript:prevFunc();">이전</a>
+				</c:if>
+			</span>
+			<span id="page">${curPage }</span>
+			<span>
+				<c:if test="${curPage == maxPage }">다음</c:if>
+				<c:if test="${curPage < maxPage }">
+					<a href="javascript:nextFunc();">다음</a>
+				</c:if>
+			</span>
+		</div>
 	</body>
 	<script>
 		var msg = "${msg}";

@@ -36,18 +36,18 @@
     <table>
         <tr>
             <th>제목</th>
-            <td><input type="text" id="subject" style="width: 97%;"/></td>
+            <td><input type="text" id="subject" style="width: 80%;"/></td>
             
             <th>작성자</th>
-            <td>세션아이디에서 가져오기</td>
+            <td><input type="text" id="id" value="${sessionScope.loginId}" style="width: 80%;" readonly/></td>
         </tr>
         
         <tr>
         <th>영화제목</th>
         <td>
-        	<input type="hidden" id="movieCode" value="19398001"/>
-            <input type="text" id="movieName" value="오즈의 마법사" style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+        	<input type="hidden" id="movieCode" />
+            <input type="text" id="movieName" style="width: 80%;"/>
+            <input type="button" value="검색" onclick="movieSearchOpen()"/>
         </td>
         
         <th>평점</th>
@@ -78,7 +78,7 @@
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = "juju"; //아이디 세션에서 가져오기
+	var id = $("#id").val(); //아이디 세션에서 가져오기
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
@@ -112,7 +112,13 @@ $("#save").click(function(){
 			console.log(e);
 		}
 	});
-	
 });
+
+function movieSearchOpen(){
+	var movieName = $("#movieName").val();
+	
+	window.open("../reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
+	}
+
 </script>
 </html>

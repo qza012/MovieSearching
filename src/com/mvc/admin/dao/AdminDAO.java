@@ -25,7 +25,7 @@ public class AdminDAO {
 	private Connection conn = null;
 	private PreparedStatement ps = null;
 	private ResultSet rs = null;
-	
+
 	public AdminDAO() {
 		try {
 			Context ctx = new InitialContext();
@@ -35,12 +35,13 @@ public class AdminDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getRowCount(AdminSql table) throws SQLException {
-		String sql = "SELECT COUNT(*) FROM " + table.getValue();;
+		String sql = "SELECT COUNT(*) FROM " + table.getValue();
+		;
 
 		int result = 0;
-		
+
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		if (rs.next()) {
@@ -49,12 +50,12 @@ public class AdminDAO {
 
 		return result;
 	}
-	
+
 	public int getRowCount(AdminSql table, String whereStandard, String keyWord) throws SQLException {
 		String sql = "SELECT COUNT(*) FROM " + table.getValue() + " WHERE " + whereStandard + " LIKE ?";
 
 		int result = 0;
-		
+
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, "%" + keyWord + "%");
 		rs = ps.executeQuery();
@@ -64,13 +65,13 @@ public class AdminDAO {
 
 		return result;
 	}
-	
+
 	public List<MemberDTO> getMemberList() throws SQLException {
 		setRs(AdminSql.MEMBER_COLUMNS, AdminSql.MEMBER_TABLE);
-		
+
 		List<MemberDTO> list = new ArrayList<MemberDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -85,31 +86,30 @@ public class AdminDAO {
 			dto.setDisable(rs.getString("disable"));
 			dto.setType(rs.getString("type"));
 			dto.setQuestion_idx(rs.getInt("question_Idx"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
-	
+
 	/***
 	 * 그냥 페이지 처리.
+	 * 
 	 * @param curPage
 	 * @param rowsPerPage
 	 * @return
 	 * @throws SQLException
 	 */
 	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-					.rnumSortColumn("id")
-					.build();
-		
+		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id").build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<MemberDTO> list = new ArrayList<MemberDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -124,26 +124,23 @@ public class AdminDAO {
 			dto.setDisable(rs.getString("disable"));
 			dto.setType(rs.getString("type"));
 			dto.setQuestion_idx(rs.getInt("question_Idx"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
-	
-	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage, String standard, String keyWord) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-					.rnumSortColumn("id")
-					.whereStandardColumn(standard)
-					.likeQuery(keyWord)
-					.build();
-		
+
+	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage, String standard, String keyWord)
+			throws SQLException {
+		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id").whereStandardColumn(standard).likeQuery(keyWord).build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<MemberDTO> list = new ArrayList<MemberDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -158,13 +155,12 @@ public class AdminDAO {
 			dto.setDisable(rs.getString("disable"));
 			dto.setType(rs.getString("type"));
 			dto.setQuestion_idx(rs.getInt("question_Idx"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
-	
 
 	public ArrayList<QuestionDTO> getQuestionList() throws SQLException {
 		setRs(AdminSql.QUESTION_COLUMNS, AdminSql.QUESTION_TABLE);
@@ -222,13 +218,11 @@ public class AdminDAO {
 
 		return dto;
 	}
-	
-	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage) throws SQLException {	
-		AdminQuery query = new AdminQuery
-				.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-				.rnumSortColumn("idx")					
-				.build();
-		
+
+	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage) throws SQLException {
+		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx").build();
+
 		setRsPaging(curPage, rowsPerPage, query);
 
 		List<ReviewDTO> list = new ArrayList<ReviewDTO>();
@@ -242,26 +236,23 @@ public class AdminDAO {
 			dto.setContent(rs.getString("content"));
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setDel_type(rs.getString("del_Type"));
-			
+
 			list.add(dto);
 		}
 
 		return list;
 	}
-	
-	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage, String standard, String keyWord) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-					.rnumSortColumn("idx")
-					.whereStandardColumn(standard)
-					.likeQuery(keyWord)
-					.build();
-		
+
+	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage, String standard, String keyWord)
+			throws SQLException {
+		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<ReviewDTO> list = new ArrayList<ReviewDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			ReviewDTO dto = new ReviewDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setId(rs.getString("id"));
@@ -270,10 +261,10 @@ public class AdminDAO {
 			dto.setContent(rs.getString("content"));
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setDel_type(rs.getString("del_Type"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
 
@@ -295,18 +286,16 @@ public class AdminDAO {
 
 		return list;
 	}
-	
+
 	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
-					.rnumSortColumn("idx")
-					.build();
-		
+		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
+				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<CommentDTO> list = new ArrayList<CommentDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			CommentDTO dto = new CommentDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setId(rs.getString("id"));
@@ -314,26 +303,24 @@ public class AdminDAO {
 			dto.setContent(rs.getString("content"));
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setDel_type(rs.getString("del_Type"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
-	
-	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage, String standard, String keyWord) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
-					.rnumSortColumn("idx")
-					.whereStandardColumn(standard)
-					.likeQuery(keyWord)
-					.build();
-		
+
+	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage, String standard, String keyWord)
+			throws SQLException {
+		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
+				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").whereStandardColumn(standard)
+						.likeQuery(keyWord).build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<CommentDTO> list = new ArrayList<CommentDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			CommentDTO dto = new CommentDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setId(rs.getString("id"));
@@ -341,10 +328,10 @@ public class AdminDAO {
 			dto.setContent(rs.getString("content"));
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setDel_type(rs.getString("del_Type"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
 	}
 
@@ -370,8 +357,8 @@ public class AdminDAO {
 	}
 
 	public MovieDTO getMovie(String movieCode) throws SQLException {
-		String sql = "SELECT movieCode, movieName, openDate, genre, director, country, actors, grade, youtubeUrl, posterUrl "
-				+ "FROM movie3 WHERE movieCode=?";
+		String sql = "SELECT " + AdminSql.MOVIE_COLUMNS.getValue() + " FROM " + AdminSql.MOVIE_TABLE.getValue()
+				+ " WHERE movieCode=?";
 
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, movieCode);
@@ -393,6 +380,91 @@ public class AdminDAO {
 		}
 
 		return dto;
+	}
+	
+	public List<MovieDTO> getMovieList(int curPage, int rowsPerPage) throws SQLException {
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MOVIE_COLUMNS.getValue(), AdminSql.MOVIE_TABLE.getValue())
+				.rnumSortColumn("movieCode")
+				.build();
+
+		setRsPaging(curPage, rowsPerPage, query);
+
+		List<MovieDTO> list = new ArrayList<MovieDTO>();
+
+		while (rs.next()) {
+			MovieDTO dto = new MovieDTO();
+			dto.setMovieCode(rs.getString("movieCode"));
+			dto.setMovieName(rs.getString("movieName"));
+			dto.setOpenDate(rs.getDate("openDate"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setDirector(rs.getString("director"));
+			dto.setCountry(rs.getString("country"));
+			dto.setActors(rs.getString("actors"));
+			dto.setGrade(rs.getString("grade"));
+			dto.setYoutubeUrl(rs.getString("youtubeUrl"));
+			dto.setPosterUrl(rs.getString("posterUrl"));
+
+			list.add(dto);
+		}
+
+		return list;
+	}
+
+	public List<MovieDTO> getMovieList(int curPage, int rowsPerPage, String standard, String keyWord)
+			throws SQLException {
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MOVIE_COLUMNS.getValue(), AdminSql.MOVIE_TABLE.getValue())
+				.rnumSortColumn("movieCode")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord)
+				.build();
+
+		setRsPaging(curPage, rowsPerPage, query);
+
+		List<MovieDTO> list = new ArrayList<MovieDTO>();
+
+		while (rs.next()) {
+			MovieDTO dto = new MovieDTO();
+			dto.setMovieCode(rs.getString("movieCode"));
+			dto.setMovieName(rs.getString("movieName"));
+			dto.setOpenDate(rs.getDate("openDate"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setDirector(rs.getString("director"));
+			dto.setCountry(rs.getString("country"));
+			dto.setActors(rs.getString("actors"));
+			dto.setGrade(rs.getString("grade"));
+			dto.setYoutubeUrl(rs.getString("youtubeUrl"));
+			dto.setPosterUrl(rs.getString("posterUrl"));
+
+			list.add(dto);
+		}
+
+		return list;
+	}
+	
+	public int updateYoutubeUrl(String url, String movieCode) throws SQLException {
+		String sql = "UPDATE " + AdminSql.MOVIE_TABLE.getValue() + " SET youtubeUrl=? where movieCode=?";
+		int result = 0;
+		
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, url);
+		ps.setString(2, movieCode);
+		result = ps.executeUpdate();
+		
+		return result;
+	}
+	
+	public int updatePosterUrl(String url, String movieCode) throws SQLException {
+		String sql = "UPDATE " + AdminSql.MOVIE_TABLE.getValue() + " SET posterUrl=? where movieCode=?";
+		int result = 0;
+		
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, url);
+		ps.setString(2, movieCode);
+		result = ps.executeUpdate();
+		
+		return result;
 	}
 
 	public ReportDTO getReport(int idx) throws SQLException {
@@ -417,7 +489,7 @@ public class AdminDAO {
 
 		return dto;
 	}
-	
+
 	public List<ReportDTO> getReportList() throws SQLException {
 		setRs(AdminSql.REPORT_COLUMNS, AdminSql.REPORT_TABLE);
 
@@ -438,18 +510,16 @@ public class AdminDAO {
 
 		return list;
 	}
-	
+
 	public List<ReportDTO> getReportList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-					.rnumSortColumn("idx")
-					.build();
-		
+		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx").build();
+
 		setRsPaging(curPage, rowsPerPage, query);
-		
+
 		List<ReportDTO> list = new ArrayList<ReportDTO>();
-		
-		while(rs.next()) {
+
+		while (rs.next()) {
 			ReportDTO dto = new ReportDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setReport_id(rs.getString("report_id"));
@@ -458,47 +528,63 @@ public class AdminDAO {
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setType_idx(rs.getInt("type_idx"));
 			dto.setComplete(rs.getString("complete"));
-			
+
 			list.add(dto);
 		}
-		
+
 		return list;
+	}
+
+	public List<ReportDTO> getReportList(int curPage, int rowsPerPage, String standard, String keyWord)
+			throws SQLException {
+		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+
+		setRsPaging(curPage, rowsPerPage, query);
+
+		List<ReportDTO> list = new ArrayList<ReportDTO>();
+
+		while (rs.next()) {
+			ReportDTO dto = new ReportDTO();
+			dto.setIdx(rs.getInt("idx"));
+			dto.setReport_id(rs.getString("report_id"));
+			dto.setReport_idx(rs.getInt("report_idx"));
+			dto.setContent(rs.getString("content"));
+			dto.setReg_date(rs.getDate("reg_date"));
+			dto.setType_idx(rs.getInt("type_idx"));
+			dto.setComplete(rs.getString("complete"));
+
+			list.add(dto);
+		}
+
+		return list;
+	}
+
+	public QuestionDTO getQuestion(String idx) throws SQLException {
+		String sql = "SELECT " + AdminSql.QUESTION_COLUMNS.getValue() + " FROM " + AdminSql.QUESTION_TABLE.getValue()
+					+ " WHERE idx=?";
+		
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, idx);
+		rs = ps.executeQuery();
+
+		QuestionDTO dto = null;
+		if (rs.next()) {
+			dto = new QuestionDTO();
+			dto.setIdx(rs.getInt("idx"));
+			dto.setContent(rs.getString("content"));
+		}
+
+		return dto;
 	}
 	
-	public List<ReportDTO> getReportList(int curPage, int rowsPerPage, String standard, String keyWord) throws SQLException {
-		AdminQuery query = new AdminQuery
-					.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-					.rnumSortColumn("idx")
-					.whereStandardColumn(standard)
-					.likeQuery(keyWord)
-					.build();
-		
-		setRsPaging(curPage, rowsPerPage, query);
-		
-		List<ReportDTO> list = new ArrayList<ReportDTO>();
-		
-		while(rs.next()) {
-			ReportDTO dto = new ReportDTO();
-			dto.setIdx(rs.getInt("idx"));
-			dto.setReport_id(rs.getString("report_id"));
-			dto.setReport_idx(rs.getInt("report_idx"));
-			dto.setContent(rs.getString("content"));
-			dto.setReg_date(rs.getDate("reg_date"));
-			dto.setType_idx(rs.getInt("type_idx"));
-			dto.setComplete(rs.getString("complete"));
-			
-			list.add(dto);
-		}
-		
-		return list;
-	}
-
-	public int insertPwQuestion(String content) throws SQLException {
+	public int updatePwQuestion(String idx, String content) throws SQLException {
 		int result = 0;
-		String sql = "INSERT INTO question3(idx, content) VALUES(question3_seq, ?)";
-
+		String sql = "UPDATE question3 SET content=? WHERE idx=?";
+					
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, content);
+		ps.setString(2, idx);
 		result = ps.executeUpdate();
 
 		rs.close();
@@ -610,38 +696,38 @@ public class AdminDAO {
 
 	private void setRs(AdminSql columns, AdminSql table) throws SQLException {
 		String sql = "SELECT " + columns.getValue() + " FROM " + table.getValue();
-		
+
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 	}
-	
+
 	/***
-	 * 조건 없는 페이징 처리.
-	 * @param curPage
-	 * @param rowsPerPage
-	 * @param query
+	 * 
+	 * @param curPage  현재 페이지
+	 * @param rowsPerPage 페이지당 보여줄 행 수
+	 * @param query 조건들
 	 * @throws SQLException
 	 */
 	private void setRsPaging(int curPage, int rowsPerPage, AdminQuery query) throws SQLException {
 		String sql = null;
 		boolean condition = query.getLikeQuery() == null ? false : true;
-		
-		if(condition) {
-			sql = "SELECT " + query.getColumns() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY " + query.getRnumSortColumn() + " DESC) AS rnum "
-					+ ", " + query.getColumns() + " FROM " + query.getTable() + " WHERE " + query.getWhereStandardColumn() + " LIKE ?) "
-					+ "WHERE rnum BETWEEN ? AND ?";			
-		} else {
-			sql = "SELECT " + query.getColumns() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY " + query.getRnumSortColumn() + " DESC) AS rnum "
-					+ ", " + query.getColumns() + " FROM " + query.getTable() + ") "
+
+		if (condition) {
+			sql = "SELECT " + query.getColumns() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY "
+					+ query.getRnumSortColumn() + " DESC) AS rnum " + ", " + query.getColumns() + " FROM "
+					+ query.getTable() + " WHERE " + query.getWhereStandardColumn() + " LIKE ?) "
 					+ "WHERE rnum BETWEEN ? AND ?";
+		} else {
+			sql = "SELECT " + query.getColumns() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY "
+					+ query.getRnumSortColumn() + " DESC) AS rnum " + ", " + query.getColumns() + " FROM "
+					+ query.getTable() + ") " + "WHERE rnum BETWEEN ? AND ?";
 		}
-		
-		
+
 		int start = (curPage - 1) * rowsPerPage;
 		int end = curPage * rowsPerPage - 1;
-		
+
 		ps = conn.prepareStatement(sql);
-		if(condition) {
+		if (condition) {
 			ps.setString(1, "%" + query.getLikeQuery() + "%");
 			ps.setInt(2, start);
 			ps.setInt(3, end);
@@ -649,10 +735,10 @@ public class AdminDAO {
 			ps.setInt(1, start);
 			ps.setInt(2, end);
 		}
-		
+
 		rs = ps.executeQuery();
 	}
-	
+
 	private int disable(String id, boolean disable) throws SQLException {
 		int result = 0;
 		String sql = "UPDATE member3 SET disable=? WHERE id=?";
