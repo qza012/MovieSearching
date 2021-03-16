@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
 import com.mvc.review.dto.ReviewDTO;
@@ -223,7 +226,6 @@ public class MemberDAO {
 	public boolean login(String id, String pw) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
-
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, id);
 		ps.setString(2, pw);
@@ -233,21 +235,21 @@ public class MemberDAO {
 		return success;
 	}
 
-	public ArrayList<QuestionDTO> getQuestionlist() throws SQLException {
+	public ArrayList<QuestionDTO> questionList() throws SQLException {
 		String sql = "SELECT *FROM question3";
-		ArrayList<QuestionDTO> Qlist = null;
+		ArrayList<QuestionDTO> questionList = null;
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-		Qlist = new ArrayList<QuestionDTO>();
+		questionList = new ArrayList<QuestionDTO>();
 		while (rs.next()) {
 			QuestionDTO dto = new QuestionDTO();
 			dto.setIdx(rs.getInt("idx"));
 			dto.setContent(rs.getString("content"));
-			Qlist.add(dto);
+			questionList.add(dto);
 		}
 
-		return Qlist;
+		return questionList;
 
 	}
 
@@ -258,7 +260,6 @@ public class MemberDAO {
 
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
-
 		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -272,7 +273,6 @@ public class MemberDAO {
 
 			list.add(dto);
 		}
-
 		rs.close();
 		ps.close();
 		return list;
@@ -351,13 +351,22 @@ public class MemberDAO {
 	/***
 	 * 
 	 * @param keyWord
+	 * @param search 
 	 * @return 입력받은 id가 포함된 memberDTO들.
 	 * @throws SQLException
 	 */
-	public ArrayList<MemberDTO> search(String keyWord) throws SQLException {
-		String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
-		ArrayList<MemberDTO> keyWord_list = new ArrayList<MemberDTO>();
-		ps = conn.prepareStatement(sql);
+	public ArrayList<MemberDTO> searchList(String keyWord, String search) throws SQLException {
+		ArrayList<MemberDTO> search_list = new ArrayList<MemberDTO>();
+		if(search.equals("id")) {
+			String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
+			ps = conn.prepareStatement(sql);	
+		}else if(search.equals("name")) {
+			String nameSql = "SELECT id,name,age,gender,genre FROM member3 WHERE name LIKE ?";
+			ps = conn.prepareStatement(nameSql);	
+		}else if(search.equals("age")) {
+			String ageSql = "SELECT id,name,age,gender,genre FROM member3 WHERE age LIKE ?";
+			ps = conn.prepareStatement(ageSql);	
+		}
 		ps.setString(1, "%" + keyWord + "%");
 		rs = ps.executeQuery();
 		while (rs.next()) {
@@ -367,9 +376,217 @@ public class MemberDAO {
 			dto.setAge(rs.getInt("age"));
 			dto.setGender(rs.getString("gender"));
 			dto.setGenre(rs.getString("genre"));
-			keyWord_list.add(dto);
+			search_list.add(dto);
 		}
-		return keyWord_list;
+		return search_list;
+	}
+
+	public HashMap<String, Object> memberList(int page) throws SQLException {
+		int pagePerCnt = 10;
+		int end = page * pagePerCnt;	
+		int start = end-(pagePerCnt-1);
+		String sql = "SELECT id, name, age, gender, genre,reg_date FROM "
+				+ "(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id, name, age, gender, genre,reg_date FROM member3)"
+				+ " WHERE rnum BETWEEN ? AND ?";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();				
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, start);
+			ps.setInt(2, end);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				MemberDTO dto = new MemberDTO();
+				dto.setId(rs.getString("id"));
+				dto.setName(rs.getString("name"));
+				dto.setAge(rs.getInt("age"));
+				dto.setGender(rs.getString("gender"));
+				dto.setGenre(rs.getString("genre"));
+				list.add(dto);
+			}
+			System.out.println("list size : "+list.size());			
+			int maxPage = getMaxPage(pagePerCnt);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("max page : "+maxPage);			
+		return map;		
 	}
 	
+	private int getMaxPage(int pagePerCnt) {		
+		String sql="SELECT COUNT(id) FROM member3";		
+		int max = 0;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return max;
+	}
+
+
+	public String idFind(String name,String email) {
+		String id = null;
+		String sql="SELECT id FROM member3 WHERE name=? AND email=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setString(2, email);
+			rs=ps.executeQuery();
+			
+			if(rs.next()) {
+				id = rs.getString("id");
+				System.out.println("if in "+id);
+			}
+		} catch(SQLException e){
+			 e.printStackTrace();
+		}
+		return id;
+	}
+	
+	public String pwFind(String id, String question_idx, String pw_answer) {
+		String pw = null;
+		String sql ="SELECT pw FROM member3 WHERE id=? AND question_idx=? AND pw_answer=?";
+		
+		
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,id);
+			ps.setString(2, question_idx);
+			ps.setString(3, pw_answer);
+			rs=ps.executeQuery();
+			if(rs.next()) {
+				pw=rs.getString("pw");
+				System.out.println("PW : "+pw);
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		
+		return pw;
+	}
+	
+	public boolean loginForMyPage(String id, String pw) throws SQLException {
+		boolean success = false;
+		String sql="SELECT id FROM member3 WHERE id=? AND pw=?";
+		ps=conn.prepareStatement(sql);
+		ps.setString(1, id);
+		ps.setString(2, pw);
+		rs = ps.executeQuery();
+		if(rs.next()) {
+			success=true;
+		}
+		return success;
+	}
+
+	public ArrayList<FollowDTO> followingList(String loginId) {
+		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
+		FollowDTO dto = null;
+		String sql=null;
+		try {
+			sql="SELECT target_id FROM follow3 WHERE id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			List<String> tarlist = new ArrayList<String>();
+			while(rs.next()) {
+//				System.out.println(rs.getString("target_id"));
+				tarlist.add(rs.getString("target_id"));
+			}
+			for(String tarid : tarlist) {
+				dto = new FollowDTO();
+				dto.setTarget_id(tarid);
+				//팔로잉 수
+				sql="SELECT COUNT(target_id)AS to_num FROM follow3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowingNum(rs.getInt("to_num"));					
+				}
+				//팔로워 수
+				sql="SELECT COUNT(id)AS from_num FROM follow3 WHERE target_id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowerNum(rs.getInt("from_num"));					
+				}
+				//프로필 사진
+				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, tarid);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setOriFileName(rs.getString("oriFileName"));
+					dto.setNewFileName(rs.getString("newFileName"));
+				}
+				follow3List.add(dto);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return follow3List;
+	}
+
+	public ArrayList<FollowDTO> followerList(String loginId) {
+		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
+		FollowDTO dto = null;
+		String sql=null;
+		try {
+			sql="SELECT id FROM follow3 WHERE target_id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			List<String> idList = new ArrayList<String>();
+			while(rs.next()) {
+//				System.out.println(rs.getString("target_id"));
+				idList.add(rs.getString("id"));
+			}
+			for(String fId : idList) {
+				dto = new FollowDTO();
+				dto.setId(fId);
+				//팔로잉 수
+				sql="SELECT COUNT(target_id)AS to_num FROM follow3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowingNum(rs.getInt("to_num"));					
+				}
+				//팔로워 수
+				sql="SELECT COUNT(id)AS from_num FROM follow3 WHERE target_id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setFollowerNum(rs.getInt("from_num"));					
+				}
+				//프로필 사진
+				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, fId);
+				rs = ps.executeQuery();
+				if(rs.next()) {
+					dto.setOriFileName(rs.getString("oriFileName"));
+					dto.setNewFileName(rs.getString("newFileName"));
+				}
+				follow3List.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return follow3List;
+	}
+
+
+	
+
 }

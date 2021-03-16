@@ -2,8 +2,8 @@ package com.mvc.admin.service;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
+import com.mvc.admin.util.AdminSql;
 import com.mvc.comment.dto.CommentDTO;
 
 public class AdminCommentService{
@@ -25,38 +26,47 @@ public class AdminCommentService{
 		this.resp = resp;
 	}
 	
-	public void list() throws ServletException, IOException {
-		String page = "admin/comment.jsp";
-		ArrayList<CommentDTO> list = null;
+	public void commentList() throws ServletException, IOException {
+		String nextPage = "list";
+		// 최종 도착 페이지 설정.
+		String finalPage = "comment.jsp";
+		req.setAttribute("finalPage", finalPage);
 		
+		String standard = req.getParameter("standard");
+		String keyWord = req.getParameter("keyWord");
+		String strCurPage = req.getParameter("curPage");
+		String strRowsPerPage = req.getParameter("rowsPerPage");
+		//AdminUtil.log(keyWord);
+		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
+		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
+		
+		List<CommentDTO> commentList = null;
+
 		AdminDAO dao = new AdminDAO();
 		try {
-			list = dao.getCommentList();
-			
-//			CommentDTO dto = new CommentDTO();
-//			dto.setIdx(3);
-//			dto.setId("www");
-//			dto.setReviewIdx(5);
-//			dto.setContent("content");
-//			dto.setRegDate("111111");
-//			dto.setDelType("Y");
-//			list.add(dto);
-					
-			if(list != null) {
-				req.setAttribute("list", list);
+
+			if(keyWord == null || keyWord.equals("")) {
+				commentList = dao.getCommentList(curPage, rowsPerPage);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE)/rowsPerPage + 1);
+				req.removeAttribute("keyWord");
+			} else {
+				commentList = dao.getCommentList(curPage, rowsPerPage, standard, keyWord);
+				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE, standard, keyWord)/rowsPerPage + 1);
+				req.setAttribute("keyWord", keyWord);
 			}
+			
+			
+			req.setAttribute("curPage", curPage);
+			req.setAttribute("standard", standard);
+			req.setAttribute("list", commentList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dao.resClose();
 		}
 		
-		String finalPage = (String)req.getAttribute("finalPage");
-		if(finalPage != null) {
-			page = finalPage;
-		}
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
+		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
 		dis.forward(req, resp);	
 	}
 	
@@ -72,7 +82,8 @@ public class AdminCommentService{
 		try {
 			comDto = comDao.getComment(idx);
 			if(comDto != null) {
-				int result = comDao.toggleDelType(comDto);				
+				int result = comDao.toggleDelType(comDto);
+				comDto = comDao.getComment(idx);	// 토글한 데이터로 갱신
 			}
 			
 		} catch (SQLException e) {
@@ -84,7 +95,7 @@ public class AdminCommentService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(comDto != null) {
-			map.put("delType", comDto.getDel_type());
+			map.put("del_type", comDto.getDel_type());
 		}
 		
 		Gson gson =  new Gson();

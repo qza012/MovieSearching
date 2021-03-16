@@ -36,18 +36,18 @@
     <table>
         <tr>
             <th>제목</th>
-            <td><input type="text" id="subject" style="width: 97%;"/></td>
+            <td><input type="text" id="subject" style="width: 80%;"/></td>
             
             <th>작성자</th>
-            <td>세션아이디에서 가져오기</td>
+            <td><input type="text" id="id" value="${sessionScope.loginId}" style="width: 80%;" readonly/></td>
         </tr>
         
         <tr>
         <th>영화제목</th>
         <td>
-        	<input type="hidden" id="movieCode" value="19398001"/>
-            <input type="text" id="movieName" value="오즈의 마법사" style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+        	<input type="hidden" id="movieCode" />
+            <input type="text" id="movieName" style="width: 80%;"/>
+            <input type="button" value="검색" onclick="movieSearchOpen()"/>
         </td>
         
         <th>평점</th>
@@ -78,7 +78,7 @@
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = "juju";
+	var id = $("#id").val(); //아이디 세션에서 가져오기
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
@@ -86,10 +86,10 @@ $("#save").click(function(){
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	$.ajax({ //jquery로 ajax사용
-		type:'post' //[GET|POST] 전송방식
-		,url:'../reviewWrite' //action 어디에 요청할 건지
-		,data:{ //parameter , 보낼 데이터 object 형태로 보냄
+	$.ajax({ 
+		type:'post' 
+		,url:'../reviewWrite' 
+		,data:{
 			'subject':subject,
 			'id':id,
 			'movieCode':movieCode,
@@ -97,8 +97,8 @@ $("#save").click(function(){
 			'score':score,
 			'content':content
 		}
-		,dataType: 'json' //주고 받을 테이터 타입
-		,success: function(data){//성공한 내용은 data로 들어옴
+		,dataType: 'json' 
+		,success: function(data){
 			console.log(data);
 			console.log('data.success');
 			if(data.success == 1){
@@ -108,11 +108,17 @@ $("#save").click(function(){
 				alert('리뷰 작성에 실패했습니다.');
 			}
 		}
-		,error: function(e){//실패할 경우 해당 내용이 e로 들어옴
+		,error: function(e){
 			console.log(e);
 		}
 	});
-	
 });
+
+function movieSearchOpen(){
+	var movieName = $("#movieName").val();
+	
+	window.open("../reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
+	}
+
 </script>
 </html>

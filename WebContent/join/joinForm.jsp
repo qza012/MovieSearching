@@ -8,16 +8,36 @@
 <title>회원가입</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
-table, td, th {
-	padding: 5px 40px;
+
+div{
+	margin : 5px;
 }
+h2{
+	text-align : center;
+	
+}
+table{
+		margin : auto;
+		margin-top : 100px;
+		
+	}
+label{
+	text-align : center;
+}
+:focus{
+    	outline-color: black;
+    }
 </style>
 </head>
 
 
 <body>
-	<h2>회원가입</h2>
 		<table>
+			<tr>
+				<td>
+					<h2>회원가입</h2>
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<div>
@@ -28,7 +48,7 @@ table, td, th {
 
 					<div>
 						<label>비밀번호</label><br>
-						<input type="password" name="pw" id="pw" onchange="check_pw()" />
+						<input type="password" name="pw" id="pw" onchange="check_pw()" width="400px"/>
 
 					</div>
 					<div>
@@ -42,9 +62,9 @@ table, td, th {
 						<lable>비밀번호 찾기 질문</lable>
 						<br> <select id="pw_q">
 							<!-- <option value="">선택</option> -->
-						<c:forEach items="${Qlist}" var="Qlist" >
+						<c:forEach items="${questionList}" var="questionList" >
 							
-							<option value="${Qlist.idx}">${Qlist.content}</option>
+							<option value="${questionList.idx}">${questionList.content}</option>
 						</c:forEach>
 							
 						</select>
@@ -67,11 +87,12 @@ table, td, th {
 							id="female" /> 여
 					</div>
 					<div>
-						<label>이메일<input type="text" name="email" id="email_id" />@
-						</label> 
+						<label>이메일</label><br>
+						<input type="text" name="email" id="email_id" size="10px"/>@
+						
 						<span id="email_span"></span>
 						 <select
-							name="email_sel" id="email_sel" onchange="change_email()">
+							name="email_sel" id="email_sel" onchange="change_email()" ">
 							<option value="선택" >선택</option>
 							<option value="직접 입력" >직접 입력</option>
 							<option value="naver.com">naver.com</option>
@@ -115,7 +136,6 @@ $("#idChk").click(function(){
 			console.log(obj);
 			if(obj.use){
 				alert('사용할 수 있는 아이디 입니다.');
-				$("#id").css({backgroundColor:'yellowgreen'});
 				idChk= true;
 			}else{
 				alert('이미 사용중인 아이디 입니다.');
@@ -175,7 +195,7 @@ $("#idChk").click(function(){
 			} else {
 				alert("올바른 도메인을 입력해주세요.");
 				email_add.focus();
-			};
+			}
 		}else{
 			$.ajax({
 				type:'post'
@@ -196,7 +216,7 @@ $("#idChk").click(function(){
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj.use);
-					location.href="./index.jsp";
+					location.href="join/index.jsp";
 				}
 				,error:function(e){
 					console.log(e);

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.file.service.FileService;
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
@@ -28,7 +29,7 @@ public class MemberService {
 	}
 
 	public void updateMemberForm() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			String id = req.getParameter("id");
 			System.out.println(id+"님의 회원정보");
@@ -41,14 +42,14 @@ public class MemberService {
 			
 			
 			String msg = "현재 이용이 불가합니다.";
-			String page="./";
+			String page="./main.jsp";
 			
 			if(dto != null) {
 				System.out.println("데이터 보내주기");
 				req.setAttribute("mDto", dto);
 				req.setAttribute("qList", list);
 				msg = "";
-				page="updateMember.jsp";
+				page="./updateMember.jsp";
 			}
 			dao.resClose();
 			
@@ -56,12 +57,12 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");			
+			resp.sendRedirect("./main.jsp");			
 		}
 	}
 
 	public void update() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			FileService file = new FileService(req);
 			MemberDTO dto = file.regist();
@@ -83,17 +84,17 @@ public class MemberService {
 				req.setAttribute("photoPath", dto.getNewFileName());
 			}
 			dao.resClose();
-			RequestDispatcher dis = req.getRequestDispatcher("/updateMF?id="+req.getAttribute("loginId"));
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 
 	public void withdraw() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String id = (String) req.getAttribute("loginId");
+			String id = (String) req.getSession().getAttribute("myLoginId");
 			String pw = req.getParameter("userPw");
 			System.out.println(id+" / "+pw);
 			
@@ -101,25 +102,26 @@ public class MemberService {
 			boolean success = dao.withdraw(id, pw);
 			
 			String msg = "비밀번호를 다시 확인해주세요!";
-			String page="withdraw.jsp";
+			String page="/myPage/withdraw.jsp";
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="/";
+				page="./main.jsp";
+				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
 			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 	
 	public void follow() throws ServletException, IOException {
-		String loginId = (String) req.getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String myId = (String) req.getAttribute("loginId");
+			String myId = (String) req.getSession().getAttribute("myLoginId");
 			String targetId = req.getParameter("targetId");
 			System.out.println(myId+"님이, "+targetId+"님을 팔로우");
 			
@@ -131,10 +133,10 @@ public class MemberService {
 			}
 			dao.resClose();
 			
-			RequestDispatcher dis = req.getRequestDispatcher("/followingList?id=${loginId}");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./");
+			resp.sendRedirect("./main.jsp");
 		}
 	}
 	public void idChk() throws IOException {
@@ -185,7 +187,6 @@ public class MemberService {
 		dto.setGenre(genre);
 		dto.setEmail(email);
 		dto.setQuestion_idx(Integer.parseInt(question_idx));
-
 		int success = 0;
 		try {
 			success = dao.join(dto);
@@ -206,18 +207,18 @@ public class MemberService {
 
 	public void questionList() throws ServletException, IOException {
 		MemberDAO dao = new MemberDAO();
-		ArrayList<QuestionDTO> QuestionList = null;
+		ArrayList<QuestionDTO> questionList = null;
 		try {
-			QuestionList = dao.getQuestionlist();
+			questionList = dao.questionList();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dao.resClose();
 		}
 
-		if (QuestionList != null) {
-			req.setAttribute("Qlist", QuestionList);
-			RequestDispatcher rd = req.getRequestDispatcher("joinForm.jsp");
+		if (questionList != null) {
+			req.setAttribute("questionList", questionList);
+			RequestDispatcher rd = req.getRequestDispatcher("/join/joinForm.jsp");
 			rd.forward(req, resp);
 		}
 	}
@@ -237,10 +238,8 @@ public class MemberService {
 		} finally {
 			dao.resClose();
 		}
+		
 
-		if(result) {
-			req.getSession().setAttribute("id", id);
-		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("use", result);
@@ -254,29 +253,183 @@ public class MemberService {
 	public void getMemberList() throws ServletException, IOException {
 //		String loginId = (String) req.getSession().getAttribute("loginId");
 //		if (loginId != null) {
+		String pageParam = req.getParameter("page");
+		System.out.println("page : "+pageParam);	
+		int group = 1;
+		if(pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}		
 		MemberDAO dao = new MemberDAO();
-			try {
-				String keyWord = req.getParameter("keyWord");
-				System.out.println("검색 요청한 키워드:" + keyWord);
-				ArrayList<MemberDTO> list = dao.getMemberList();
-				ArrayList<ReviewDTO> top_list = dao.top();
-				ArrayList<MemberDTO> keyWord_list = dao.search(keyWord);
-				if (keyWord== null) {
-					req.setAttribute("member_list", list);
-				} else {
-					req.setAttribute("member_list", keyWord_list);
-				}
-				req.setAttribute("top_list", top_list);
-				RequestDispatcher dis = req.getRequestDispatcher("/member/member.jsp");
-				dis.forward(req, resp);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();
+		try {
+			HashMap<String, Object> map = dao.memberList(group);
+			dao = new MemberDAO();
+			ArrayList<ReviewDTO> top_list = dao.top();
+			req.setAttribute("maxPage", map.get("maxPage"));
+			if (req.getAttribute("search_list")== null) {
+				req.setAttribute("member_list", map.get("list"));
+			} else {
+				req.setAttribute("member_list", req.getAttribute("search_list"));
 			}
+			req.setAttribute("currPage", group);
+			req.setAttribute("top_list", top_list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
+		dis.forward(req, resp);
 //		} else {
 //			resp.sendRedirect("index.jsp");
 //		}
+//	}
+	}
+	public void search() throws ServletException, IOException {
+		String search = req.getParameter("search");
+		System.out.println("search값:"+search);
+		String keyWord = req.getParameter("keyWord");
+		System.out.println("검색 요청한 키워드:" + keyWord);
+		MemberDAO dao = new MemberDAO();
+		try {
+			ArrayList<MemberDTO> search_list = dao.searchList(keyWord,search);
+			if(search_list!=null) {
+				req.setAttribute("search_list", search_list);
+				System.out.println(search_list.size());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("member");
+		dis.forward(req, resp);
+	}
+
+	public void  idFind() {
+		String name = req.getParameter("name");
+		String email = req.getParameter("email");
+		System.out.println(name+"/"+email);
+		MemberDAO dao = new MemberDAO();
+		String id = dao.idFind(name,email);
+		System.out.println("아이디:"+id);
+		
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		map.put("userID", id);
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		System.out.println(json);
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		
+	}
+
+	public void pwFind() throws ServletException, IOException {
+		MemberDAO dao = new MemberDAO();
+		
+		String id = req.getParameter("id");
+		String pw_answer = req.getParameter("pw_answer");
+		String question_idx = req.getParameter("question_idx");
+		System.out.println(id+"/"+pw_answer+"/"+question_idx);
+		String pw = dao.pwFind(id, question_idx, pw_answer);
+		System.out.println("비밀번호:"+pw);
+		
+		
+		HashMap<Object, Object> map = new HashMap<Object, Object>();
+		map.put("userPW", pw);
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
+		System.out.println(json);
+		try {
+			resp.getWriter().print(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("./pwFind.jsp");
+		dis.forward(req, resp);
+	}
+	
+	public void pwQuestionList() throws ServletException, IOException {
+		MemberDAO dao = new MemberDAO();
+		ArrayList<QuestionDTO> pwQuestionList = null;
+		try {
+			pwQuestionList = dao.questionList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+
+		if (pwQuestionList != null) {
+			req.setAttribute("pwQuestionList", pwQuestionList);
+			RequestDispatcher rd = req.getRequestDispatcher("/join/pwFind.jsp");
+			rd.forward(req, resp);
+		}
+	}
+	
+	public void loginForMyPage() throws ServletException, IOException {
+		String id = req.getParameter("userId");
+		String pw = req.getParameter("userPw");
+		System.out.println(id+" / "+pw);
+		
+		MemberDAO dao = new MemberDAO();
+		boolean success = false;
+		try {
+			success = dao. loginForMyPage(id,pw);
+			if(success) {
+				req.getSession().setAttribute("myLoginId", id);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		RequestDispatcher dis = req.getRequestDispatcher("./main.jsp");
+		dis.forward(req, resp);
+	}
+
+	public void followingList() throws IOException, ServletException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			MemberDAO dao = new MemberDAO();
+			ArrayList<FollowDTO> list = dao.followingList(loginId);
+			
+			String page="./main.jsp";
+			if(list!=null) {
+				page="/myPage/followingList.jsp";
+				req.setAttribute("fList", list);
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
+
+	public void followerList() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			MemberDAO dao = new MemberDAO();
+			ArrayList<FollowDTO> list = dao.followerList(loginId);
+			
+			String page="./main.jsp";
+			if(list!=null) {
+				page="/myPage/followerList.jsp";
+				req.setAttribute("fList", list);
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
 	}
 
 }

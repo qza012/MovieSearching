@@ -12,6 +12,8 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.mvc.comment.dto.CommentDTO;
+import com.mvc.movie.dto.MovieDTO;
+import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class ReviewDAO {
@@ -33,11 +35,11 @@ public class ReviewDAO {
 	
 	public void resClose() {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (rs != null) {
+				rs.close();
 			}
-			if (conn != null) {
-				conn.close();
+			if (ps != null) {
+				ps.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -69,7 +71,7 @@ public class ReviewDAO {
 		return success;
 	}
 
-	public HashMap<String, Object> list(int group) {
+	public HashMap<String, Object> list(int group, String search, String keyword) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
@@ -77,16 +79,33 @@ public class ReviewDAO {
 		int end = group*pagePerCnt; //페이지의 끝 rnum
 		int start = end-(pagePerCnt-1); //페이지의 시작 rnum
 		
-		String sql = "SELECT RNUM, IDX,ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
-				+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
-				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " + 
-				"JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
-				+ "ON r.IDX = l.IDX WHERE del_type='N' ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		String sql = null;
+		
+		if(search.equals("movieName")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND movieName LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}else if(search.equals("id")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND id LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}else if(search.equals("subject")) {
+			sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
+					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+					+ "ON r.IDX = l.IDX WHERE del_type='N' AND subject LIKE ? ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
+		}
 		
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, start);
-			ps.setInt(2, end);
+			ps.setString(1, "%"+keyword+"%");
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				ReviewDTO dto = new ReviewDTO();
@@ -100,8 +119,7 @@ public class ReviewDAO {
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
 			}
-			int maxPage= getMaxPage(pagePerCnt);
-			System.out.println(maxPage);
+			int maxPage= getMaxPage(pagePerCnt, search, keyword);
 			map.put("list",list);
 			map.put("maxPage", maxPage);
 		} catch (SQLException e) {
@@ -111,15 +129,25 @@ public class ReviewDAO {
 		return map;
 	}
 	
-	private int getMaxPage(int pagePerCnt) {
-		String sql= "SELECT COUNT(idx) FROM review3 WHERE del_type='N'";
+	private int getMaxPage(int pagePerCnt, String search, String keyword) {
+		String sql = null;
+		
+		if(search.equals("movieName")) {
+			sql = "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND m.movieName LIKE ?";
+		}else if(search.equals("id")) {
+			sql = "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND r.id LIKE ?";
+		}else if(search.equals("subject")) {
+			sql =  "SELECT COUNT(idx) FROM review3 r INNER JOIN movie3 m ON r.movieCode = m.movieCode WHERE del_type='N' AND r.subject LIKE ?";
+		}
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
+			ps.setString(1, "%"+keyword+"%");
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				int cnt = rs.getInt(1);//첫번째 컬럼 가져오기
-				max = (int) Math.ceil(cnt/(double)pagePerCnt); //올림 (Math.ceil은 double타입을 받아야해서 pagePerCnt를 double로 변경) -> max는 int임
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+				System.out.println(max);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -127,7 +155,7 @@ public class ReviewDAO {
 		return max;
 	}
 
-	public ReviewDTO dtail(int idx) {
+	public ReviewDTO detail(int idx) {
 		ReviewDTO dto = new ReviewDTO();
 		
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.content, r.score, r.reg_date, r.del_type, m.movieName, m.posterurl FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike   " + 
@@ -271,9 +299,7 @@ public class ReviewDAO {
 
 	private int getCommentCnt(int reviewIdx) {
 		int commentCnt = 0;
-		
 		String sql="SELECT COUNT(idx) FROM comment3 WHERE del_type='N' AND review_idx=?";
-		
 		try {
 			ps= conn.prepareStatement(sql);
 			ps.setInt(1, reviewIdx);
@@ -334,7 +360,7 @@ public class ReviewDAO {
 		
 	}
 
-	public ArrayList<ReviewDTO> likeReview(String loginId) { //좋아요한 리뷰 리스트 얻기
+	public ArrayList<ReviewDTO> myLikeReview(String loginId) { //좋아요한 리뷰 리스트 얻기
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
 				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
@@ -361,7 +387,7 @@ public class ReviewDAO {
 		return list;
 	}
 
-	public boolean notLike(String id, String idx) {
+	public boolean iDonotLike(String id, String idx) {
 		boolean success = false;
 		String sql = "DELETE review_like3 WHERE id=? AND review_idx=?";
 		try {
@@ -395,5 +421,256 @@ public class ReviewDAO {
 			e.printStackTrace();
 		}
 		return success;
+	}
+
+	public boolean commentWrite(CommentDTO dto) {
+		boolean success = false;
+		String sql="INSERT INTO comment3(idx, id, review_idx, content, del_type) "
+				+ "VALUES(comment3_seq.NEXTVAL, ? , ? , ?, 'N')";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getId());
+			ps.setInt(2, dto.getReview_idx());
+			ps.setString(3, dto.getContent());
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public String commentUpdateForm(int comment_idx) {
+		String content = null;
+		String sql="SELECT content FROM comment3 WHERE idx=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, comment_idx);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				content = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return content;
+	}
+
+	public boolean commentUpdate(int comment_idx, String content) {
+		boolean success = false;
+		String sql="UPDATE comment3 SET content=? WHERE idx=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, content);
+			ps.setInt(2, comment_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
+	public boolean commentDel(int comment_idx) {
+		boolean success= false;
+		String sql="UPDATE comment3 SET del_type='Y' WHERE idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, comment_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
+	public boolean reviewLikeCheck(int reviewIdx, String loginId) {
+		boolean success= false;
+		String sql="SELECT * FROM review_like3 WHERE review_idx=? AND id=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			ps.setString(2, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return success;
+	}
+
+	public boolean reviewLikeUp(int review_idx, String loginId) {
+		boolean success= false;
+		String sql = "INSERT INTO review_like3(idx, id, review_idx) VALUES(review_like3_seq.NEXTVAL,?,?)";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, review_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean reviewLikeDown(int review_idx, String loginId) {
+		boolean success= false;
+		String sql = "DELETE FROM review_like3 WHERE id=? AND review_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, review_idx);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
+	public boolean reportCheck(String loginId, int idx, int type_idx) {
+		boolean success = false;
+		String sql = "SELECT * FROM report3 WHERE report_id=? AND report_idx=? AND type_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, idx);
+			ps.setInt(3, type_idx);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public int getReviewIdx(int idx) {
+		int review_idx = 0;
+		String sql = "SELECT review_idx FROM comment3 WHERE idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, idx);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				review_idx = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return review_idx;
+	}
+
+	public boolean report(ReportDTO dto) {
+		boolean success = false;
+		String sql = "INSERT INTO report3(idx, report_id, report_idx, content, type_idx, complete) VALUES(report3_seq.NEXTVAL,?,?,?,?,'N')";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, dto.getReport_id());
+			ps.setInt(2, dto.getReport_idx());
+			ps.setString(3, dto.getContent());
+			ps.setInt(4, dto.getType_idx());
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public HashMap<String, Object> reviewMovieSearch(String subName, int group) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
+		int pagePerCnt = 10; //한페이지에 몇개를 보여줄지
+		int end = group*pagePerCnt; //페이지의 끝 rnum
+		int start = end-(pagePerCnt-1); //페이지의 시작 rnum
+		
+		String sql = "SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
+				+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?) WHERE rnum BETWEEN ? AND ?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, "%"+subName+"%");
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				MovieDTO dto = new MovieDTO();
+				dto.setMovieCode(rs.getString(2));
+				dto.setMovieName(rs.getString(3));
+				dto.setOpenDate(rs.getDate(4));
+				dto.setGenre(rs.getString(5));
+				dto.setDirector(rs.getString(6));
+				dto.setCountry(rs.getString(7));
+				list.add(dto);
+			}
+			int maxPage= getSearchMovieMaxPage(pagePerCnt, subName);
+
+			map.put("list",list);
+			map.put("maxPage", maxPage);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return map;
+	}
+	
+	private int getSearchMovieMaxPage(int pagePerCnt, String subName) {
+		String sql= "SELECT COUNT(movieCode) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
+				+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?)";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, "%"+subName+"%");
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
+	}
+
+	public String reviewMovieChoice(String movieCode) {
+		String movieName = null;
+		String sql = "SELECT movieName FROM movie3 WHERE movieCode=?";
+		
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				movieName = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return movieName;
 	}
 }

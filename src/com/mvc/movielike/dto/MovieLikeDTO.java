@@ -4,7 +4,7 @@ public class MovieLikeDTO {
 	private int idx;
 	private String id;
 	private String movieCode;
-	private String regDate;
+	private String reg_Date;
 	
 	public int getIdx() {
 		return idx;
@@ -24,11 +24,10 @@ public class MovieLikeDTO {
 	public void setMovieCode(String movieCode) {
 		this.movieCode = movieCode;
 	}
-	public String getRegDate() {
-		return regDate;
+	public String getReg_Date() {
+		return reg_Date;
 	}
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setReg_Date(String reg_Date) {
+		this.reg_Date = reg_Date;
 	}
-
 }

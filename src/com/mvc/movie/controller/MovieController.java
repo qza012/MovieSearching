@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.service.MovieService;
+import com.mvc.review.service.ReviewService;
 
-@WebServlet({ "/home", "/list", "/detail","/likeMovie" })
+@WebServlet({ "/movie/home", "/movie/movielist", "/movie/moviedetail", 
+	"/likeMovie"})
 public class MovieController extends HttpServlet {
 
 	@Override
@@ -24,36 +26,35 @@ public class MovieController extends HttpServlet {
 	}
 
 	private void dual(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8"); // 한글깨짐 방지
+		req.setCharacterEncoding("UTF-8");
 		System.out.println("요청 확인");
-		// 요청 URL 추출
-		String uri = req.getRequestURI();
-		String ctx = req.getContextPath();
-		String subAddr = uri.substring(ctx.length());
-		System.out.println("subAdde : " + subAddr); // 요청 URL 확인
+
+		String sub = req.getRequestURI().substring(req.getContextPath().length());
+		System.out.println("sub : " + sub);
 
 		MovieService service = new MovieService(req, resp);
 
-		switch (subAddr) {
-		case "/home":
-			System.out.println("TOP10 불러오기");
-			service.top();
+		switch (sub) {
+		case "/movie/home":
+			System.out.println("홈으로");
+			service.main();
 			break;
 
-		case "/list":
-			System.out.println("리스트 불러오기");
+		case "/movie/movielist":
+			System.out.println("영화 리스트 불러오기");
 			service.list();
 			break;
 
-		case "/detail":
-			System.out.println("상세보기 요청");
+		case "/movie/moviedetail":
+			System.out.println("영화 상세보기 요청");
 			service.detail();
 			break;
-			
+
 		case "/likeMovie":
 			System.out.println("회원이 좋아요한 영화 요청");
-			service.detail();
+			service.likeMovie();
 			break;
+			
 		}
 	}
 
