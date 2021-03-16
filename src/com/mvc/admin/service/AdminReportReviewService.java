@@ -84,7 +84,7 @@ public class AdminReportReviewService{
 			
 			req.setAttribute("curPage", curPage);
 			req.setAttribute("standard", standard);
-			req.setAttribute("reportList", reportList);
+			req.setAttribute("reportList", filteredReportList);
 			req.setAttribute("reviewList", reviewList);
 			
 			

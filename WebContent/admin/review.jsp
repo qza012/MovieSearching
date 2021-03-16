@@ -39,7 +39,7 @@
 		<tr>
 			<td>${review.idx }</td>
 			<td>${review.subject }</td>
-			<td>${movieList[status.index].movieName }</td>
+			<td><a href="#?idx=${review.idx }">${movieList[status.index].movieName }</a></td>
 			<td>${review.id}</td>
 			<td>${review.reg_date }</td>
 			<td id="${review.idx }">${review.del_type }</td>
