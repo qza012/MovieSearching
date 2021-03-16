@@ -139,6 +139,8 @@ public class ReviewService {
 				req.setAttribute("comment", list);
 			}
 		}
+		req.setAttribute("br", "<br/>");
+		req.setAttribute("cn", "\n");
 		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 	
