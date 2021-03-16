@@ -36,17 +36,20 @@
         .list{
             text-align: center;
         }
-
-    </style>
+</style>
 </head>
 <body>
 	<input type="hidden" id="review_idx" value="${review.idx}"/>
+	
 	<table>
         <tr>
-            <td colspan="6">
-                <div>
+        	<th>리뷰 영화</th>
+            <td colspan="5">
+            	<c:if test="${review.posterURL ne null}">
+            		<div>
                     <img src="${review.posterURL}"/>
-                </div>
+                	</div>
+            	</c:if>
                 <div>
                     ${review.movieName}
                 </div>
@@ -94,7 +97,7 @@
     <div class="aTag">
 	  	<c:if test="${sessionScope.loginId eq review.id}">
 	   		<a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
-	    	<a href="reviewDel?Idx=${review.idx}">삭제</a>
+	    	<a onclick="return confirm('정말 삭제하시겠습니까?')" href="reviewDel?Idx=${review.idx}">삭제</a>
 	    </c:if>
     </div>
 
@@ -102,8 +105,8 @@
     <input type="button" value="리스트" onclick="location.href='./reviewList' "/>
     </div>
 
-    <div style="margin-bottom: 10px;">
-    <span>댓글</span>
+    <div style="margin: 30px 10px;">
+    <h3>댓글</h3>
     </div>
 	
 	<table>
@@ -127,7 +130,7 @@
             <th>작성일</th>
         </tr>
         <c:forEach items="${comment}" var="comment">
-        <tr>
+        <tr style="text-align: center;">
             <td> ${fn:replace(comment.content, cn, br)}</td>
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
@@ -144,7 +147,7 @@
             </td>
             <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
             	<c:if test="${sessionScope.loginId eq comment.id}">
-            		<a href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
+            		<a onclick="return confirm('정말 삭제하시겠습니까?')" href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
             	</c:if>
             </td>
         </tr>

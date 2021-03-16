@@ -29,7 +29,7 @@
             text-align: center;
             margin-top: 10px;
         }
-    </style>
+</style>
 </head>
 <body>
 		<table>
@@ -61,7 +61,7 @@
 	
     <div class="button">
         <input type="submit" id="report" value="신고"/>
-        <input type="button" value="취소" onclick="window.close()"/>
+        <input type="button" value="취소" onclick="cancel()"/>
     </div>
 </body>
 <script>
@@ -101,5 +101,12 @@ $("#report").click(function(){
 		}
 	});
 });
+
+function cancel(){
+	var check = confirm('작성한 내용은 저장되지 않습니다. 취소하시겠습니까?');
+	if(check){
+		window.close()
+	}
+}
 </script>
 </html>

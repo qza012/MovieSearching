@@ -9,7 +9,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,td,th{
             border-top: 1px solid lightgray;
@@ -17,7 +17,7 @@
             border-collapse: collapse;
         }
         .button{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
         textarea{
@@ -26,10 +26,10 @@
             resize: none;
         }
         .title{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
-    </style>
+</style>
 </head>
 <body>
     <h3 class="title">리뷰 수정하기</h3>
@@ -71,14 +71,14 @@
                 <textarea id="content">${review.content}</textarea>
             </td>
         </tr>
-        
     </table>
+    
     <div class="button">
         <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="location.href='./reviewList' "/>
+        <input type="button" value="취소" onclick="cancel()"/>
     </div>
-   </body>
-   <script>
+</body>
+<script>
 $("#save").click(function(){
 	
 	var idx = $('#idx').val();
@@ -128,5 +128,12 @@ $("#save").click(function(){
 		});
 	}
 });
+
+function cancel(){
+	var check = confirm('수정을 취소하시겠습니까?');
+	if(check){
+		location.href='./reviewList' 
+	}
+}
 </script>
 </html>

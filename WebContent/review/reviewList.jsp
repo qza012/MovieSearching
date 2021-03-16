@@ -49,10 +49,10 @@
         .searchBar{
             height: 40%;
         }
-        .paging>a:link,
-        .paing>a:hover,
-        .paging>a:visited,
-        .paging>a:active{
+        a:link,
+        a:hover,
+        a:visited,
+        a:active{
             color: black;
             text-decoration: none;
         }
@@ -101,7 +101,7 @@
 				<a href="reviewList?page=${currPage-1}">이전</a>
 			</c:if>
 			<c:if test="${currPage == 1}">
-				<a style="cursor: pointer;" onclick="alert('첫페이지 입니다.')">이전</a>
+				<a style="color: gray;">이전</a>
 			</c:if>
 		</span>
 		
@@ -112,11 +112,10 @@
 				<a href="reviewList?page=${currPage+1}">다음</a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
-				<a style="cursor: pointer;" onclick="alert('마지막페이지 입니다.')">다음</a>
+				<a style="color: gray;">다음</a>
 			</c:if>
 		</span>
     </div>
-
     <div class="button">
     <input type="button" value="리뷰 작성" onclick="location.href='./review/reviewWrite.jsp' ">
     </div>
@@ -132,7 +131,6 @@
 	}
 	
 	var msg="${msg}";
-	
 	if(msg!=""){
 		alert(msg);
 	}

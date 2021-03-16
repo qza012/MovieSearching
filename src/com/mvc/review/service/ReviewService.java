@@ -64,7 +64,6 @@ public class ReviewService {
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
-		
 		resp.setHeader("Access-Control-Allow", "*"); 
 		
 		PrintWriter out = resp.getWriter();
@@ -74,7 +73,6 @@ public class ReviewService {
 	public void list() throws ServletException, IOException {
 		String pageParam = req.getParameter("page");
 		
-		//1페이지 그룹 -> 1~10번
 		int group = 1;
 		if(pageParam !=null) {
 			group = Integer.parseInt(pageParam);
@@ -89,7 +87,6 @@ public class ReviewService {
 		req.setAttribute("review", map.get("list"));
 		req.setAttribute("currPage", group);
 
-		//특정 페이지로 보내기
 		RequestDispatcher dis = req.getRequestDispatcher(page);
 		dis.forward(req, resp);
 	}
@@ -106,7 +103,6 @@ public class ReviewService {
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		ReviewDAO dao = new ReviewDAO();
 		
-		//리뷰 상세 가져오기
 		dto = dao.detail(reviewIdx);
 		
 		//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
@@ -210,7 +206,6 @@ public class ReviewService {
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
-		
 		resp.setHeader("Access-Control-Allow", "*"); 
 		
 		PrintWriter out = resp.getWriter();
@@ -360,12 +355,11 @@ public class ReviewService {
 		}
 		dao.resClose();
 		
-		//map에 msg와 success 담기
 		map.put("msg", msg);
 		map.put("success",success);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -394,8 +388,8 @@ public class ReviewService {
 		map.put("success",success);
 		map.put("content", content);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -425,8 +419,8 @@ public class ReviewService {
 		map.put("success",success);
 		map.put("msg", msg);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -482,8 +476,8 @@ public class ReviewService {
 		
 		map.put("success",success);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -562,8 +556,6 @@ public class ReviewService {
 		String pageParam = req.getParameter("page");
 		String subName = req.getParameter("subName");
 		
-		
-		//1페이지 그룹 -> 1~10번
 		int group = 1;
 		if(pageParam !=null) {
 			group = Integer.parseInt(pageParam);
@@ -582,7 +574,6 @@ public class ReviewService {
 		req.setAttribute("movie", map.get("list"));
 		req.setAttribute("currPage", group);
 		
-		//특정 페이지로 보내기
 		RequestDispatcher dis = req.getRequestDispatcher(page);
 		dis.forward(req, resp);
 	}
@@ -635,7 +626,6 @@ public class ReviewService {
 		}
 		System.out.println(search + keyword);
 		
-		//1페이지 그룹 -> 1~10번
 		int group = 1;
 		if(pageParam !=null) {
 			group = Integer.parseInt(pageParam);
@@ -652,7 +642,6 @@ public class ReviewService {
 		req.setAttribute("search", search);
 		req.setAttribute("keyword", keyword);
 		
-		//특정 페이지로 보내기
 		RequestDispatcher dis = req.getRequestDispatcher(page);
 		dis.forward(req, resp);
 	}

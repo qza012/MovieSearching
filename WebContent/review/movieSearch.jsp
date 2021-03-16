@@ -95,7 +95,6 @@
 </body>
 <script>
 function movieChoice(movieCode){
-	 
 	$.ajax({
 		type:'post' 
 		,url:'./reviewMovieChoice' 
@@ -119,8 +118,6 @@ function movieChoice(movieCode){
 			console.log(e);
 		}
 	});
-
 }
-
 </script>
 </html>

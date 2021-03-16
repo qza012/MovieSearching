@@ -56,23 +56,20 @@
             color: black;
             text-decoration: none;
         }
-    </style>
+</style>
 </head>
 <body>
 	<form action="reviewSearchList" method="POST">
 		<div class="search">
 			<select name="search" class="searchBar">
-		        <option value="movieName" selected>영화 제목</option>
-		        <option value="id">사용자 아이디</option>
-		        <option value="subject">리뷰 제목</option>
+		        <option ${(search == "movieName")? "selected" : ""} value="movieName" selected>영화 제목</option>
+		        <option ${(search == "id")? "selected" : ""} value="id">사용자 아이디</option>
+		        <option ${(search == "subject")? "selected" : ""} value="subject">리뷰 제목</option>
    		 	</select>
 	    <input class="searchForm" id="keyword" name="keyword" value="${keyword}" type="text"/>
 	    <input type="button" id="searchButton" value="검색" onclick="keywordCheck()"/>
     	</div>
 	</form>
-	<div>
-	
-	</div>
 	
     <h2>리뷰 검색 결과</h2>
     <div style="text-align: right; padding-bottom: 10px;">
@@ -109,7 +106,7 @@
 				<a href="reviewSearchList?page=${currPage-1}&search=${search}&keyword=${keyword}">이전</a>
 			</c:if>
 			<c:if test="${currPage == 1}">
-				<a style="cursor: pointer;" onclick="alert('첫페이지 입니다.')">이전</a>
+				<a style="color: gray;">이전</a>
 			</c:if>
 		</span>
 		
@@ -120,7 +117,7 @@
 				<a href="reviewSearchList?page=${currPage+1}&search=${search}&keyword=${keyword}">다음</a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
-				<a style="cursor: pointer;" onclick="alert('마지막페이지 입니다.')">다음</a>
+				<a style="color: gray;">다음</a>
 			</c:if>
 		</span>
     </div>

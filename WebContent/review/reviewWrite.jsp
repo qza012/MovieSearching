@@ -29,7 +29,7 @@
             width: 70%;
             text-align: center;
         }
-    </style>
+</style>
 </head>
 <body>
     <h3 class="title">리뷰 작성하기</h3>
@@ -37,7 +37,6 @@
         <tr>
             <th>제목</th>
             <td><input type="text" id="subject" style="width: 80%;"/></td>
-            
             <th>작성자</th>
             <td><input type="text" id="id" value="${sessionScope.loginId}" style="width: 80%;" readonly/></td>
         </tr>
@@ -72,7 +71,7 @@
     </table>
     <div class="button">
         <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="location.href='../reviewList' "/>
+        <input type="button" value="취소" onclick="cancel()"/>
     </div>
 </body>
 <script>
@@ -87,7 +86,6 @@ $("#save").click(function(){
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	
 	if(subject==""){
 		alert("제목을 입력해주세요.");
 		$("#subject").focus();
@@ -130,14 +128,18 @@ $("#save").click(function(){
 			}
 		});
 	}
-	
 });
 
 function movieSearchOpen(){
 	var movieName = $("#movieName").val();
-	
 	window.open("../reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
-	}
+}
 
+function cancel(){
+	var check = confirm('이미 작성한 내용은 모두 지워집니다. 취소하시겠습니까?');
+	if(check){
+		location.href='../reviewList' 
+	}
+}
 </script>
 </html>
