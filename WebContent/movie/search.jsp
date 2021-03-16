@@ -1,15 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>영화</title>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<head>
+		<meta charset="UTF-8">
+		<title>회원 목록</title>
+		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+	</head>
 <style>
 .search {
 	text-align: center;
@@ -46,9 +43,8 @@ select, input[type=submit] {
 	color: red;
 }
 </style>
-</head>
 <body>
-	<jsp:include page="include.jsp" />
+    <jsp:include page="include.jsp" />
 	<div id="basic" class="basic">
 		<div id="container">
 			<div id="content">
@@ -62,25 +58,21 @@ select, input[type=submit] {
 					<input type="submit" value="검색">
 				</form>
 				<div class="movie_main">
-					<ul style="position: absolute; width: 825px; height: 560px; left: 0%; display: block;">
-						<li>
-							<c:forEach items="${movie_list}" var="movie">
-								<a href="moviedetail?movieCode=${movie.movieCode}">
-									<img src="${movie.posterUrl}" style="width: 159px; height: 280px;" alt="${movie.movieName}">
-								</a>
-							</c:forEach>
-						</li>
-					</ul>
+					<c:forEach items="${search_list}" var="movie">
+						<a href="moviedetail?movieCode=${movie.movieCode}">
+							<img src="${movie.posterUrl}" style="width: 159px; height: 280px;" alt="${movie.movieName}">
+						</a>
+					</c:forEach>
 				</div>
 				<div class="pageArea">
 					<span>
 						<c:if test="${currPage == 1}">이전</c:if>
-						<c:if test="${currPage > 1}"><a href="movieList?page=${currPage-1}">이전</a></c:if>
+						<c:if test="${currPage > 1}"><a href="movieSearch?search=${search}&keyWord=${keyWord}&page=${currPage-1}">이전</a></c:if>
 					</span>
 					<span id="page">${currPage}</span>
 					<span>
 						<c:if test="${currPage == maxPage}">다음</c:if>
-						<c:if test="${currPage < maxPage}"><a href="movieList?page=${currPage+1}">다음</a></c:if>
+						<c:if test="${currPage < maxPage}"><a href="movieSearch?search=${search}&keyWord=${keyWord}&page=${currPage+1}">다음</a></c:if>
 					</span>
 				</div>
 			</div>
@@ -88,6 +80,5 @@ select, input[type=submit] {
 	</div>
 </body>
 <script>
-	
 </script>
 </html>
