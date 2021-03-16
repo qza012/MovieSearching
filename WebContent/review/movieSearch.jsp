@@ -105,24 +105,15 @@ function movieChoice(movieCode){
 		,dataType: 'json' 
 		,success: function(data){
 			console.log(data);
-			if(data.success == 1){
-				
-				$.ajax({
-					type:'post' 
-					,url:'./reviewWrite.jsp' 
-					,data:{
-						'movieCode':data.movieCode,
-						'movieName':data.movieName
-					}
-					,dataType: 'json' 
-					,success: function(data){
-						console.log(data);
-					}
-					,error: function(e){
-						console.log(e);
-					}
-				});
-			}
+			if(data.haveReview == 1){
+				alert("이미 리뷰를 작성한 영화입니다.");
+			}else{
+				if(data.success == 1){
+					opener.document.getElementById("movieCode").value=data.moiveCode;
+					opener.document.getElementById("movieName").value=data.movieName;
+					window.close();
+				}
+			}	
 		}
 		,error: function(e){
 			console.log(e);

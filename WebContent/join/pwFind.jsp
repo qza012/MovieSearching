@@ -148,7 +148,7 @@ select{
 					if (obj.userPW != null) {
 						$('#pwFind').val(obj.userPW);
 					} else {
-						$('#pwFind').val("입력한 정보와 일치하는 회원이 없습니다.");
+						alert("입력한 정보와 일치하는 회원이 없습니다.");
 					}
 					
 					

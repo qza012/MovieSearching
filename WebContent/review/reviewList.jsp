@@ -9,7 +9,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,th,td{
             border-top: 1px solid lightgray;
@@ -21,11 +21,11 @@
             padding: 10px;
         }
         div.paging{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
         div.button{
-            width: 70%;
+            width: 100%;
             text-align: right;
         }
         .reviewDetail{
@@ -38,7 +38,7 @@
             cursor: pointer;
         }
         div.search{
-            width: 70%;
+            width: 100%;
             height: 70px;
             text-align: center;
         }
@@ -59,15 +59,17 @@
     </style>
 </head>
 <body>
-	<div class="search">
-    <select class="searchBar">
-        <option value="moveieTitle">영화 제목</option>
-        <option value="writerId">사용자 아이디</option>
-        <option value="reviewTitle">리뷰 제목</option>
-    </select>
-    <input class="searchForm" type="text"/>
-    <input type="button" value="검색"/>
-    </div>
+	<form action="reviewList" method="POST">
+		<div class="search">
+			<select name="search" class="searchBar">
+		        <option value="movieName" selected>영화 제목</option>
+		        <option value="id">사용자 아이디</option>
+		        <option value="subject">리뷰 제목</option>
+   		 	</select>
+	    <input class="searchForm" name="keyword" value="${keyword}" type="text"/>
+	    <input type="submit" value="검색"/>
+    	</div>
+	</form>
     
     <table>
         <tr>
@@ -96,7 +98,7 @@
     <div class="paging">
 		<span>
 			<c:if test="${currPage>1}">
-				<a href="reviewList?page=${currPage-1}">이전</a>
+				<a href="reviewList?page=${currPage-1}&search=${search}&keyword=${keyword}">이전</a>
 			</c:if>
 			<c:if test="${currPage == 1}">
 			이전
@@ -107,7 +109,7 @@
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
-				<a href="reviewList?page=${currPage+1}">다음</a>
+				<a href="reviewList?page=${currPage+1}&search=${search}&keyword=${keyword}">다음</a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
 			다음

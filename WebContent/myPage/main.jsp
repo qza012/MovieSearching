@@ -75,19 +75,19 @@
        </style>
    </head>
    <body>
-       <h2>로고</h2>
-       <p>
+        <h2>로고</h2>
+        <p>
      		${sessionScope.myLoginId}님,
-           <a href="./logout">[ 로그아웃</a>
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
-       <hr/>
-       <div class="naviBar">
+        <hr/>
+        <div class="naviBar">
            <nav aria-label="naviBar">
                <ul class="navi">
                    <li>
-                       <a href="./"> 영화 홈
+                       <a href="./main.jsp"> 영화 홈
                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
@@ -147,15 +147,14 @@
                        </ul>
                    </li>
                    <li>
-                       <a href="admin.jsp">
-                           관리자 페이지
+                       <a href="admin.jsp">관리자 페이지
                            &nbsp;&nbsp;&nbsp;&nbsp;
                            <span> > </span>
                        </a>
                    </li>
                </ul>
            </nav>
-       </div>
+       </div>    
        <div class="mainData">
            <h3>로그인</h3>
            <span>

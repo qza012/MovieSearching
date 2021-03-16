@@ -84,12 +84,12 @@ public class ReviewController extends HttpServlet {
 			break;
 		
 		case "/myPage/iLikeReview":
-			System.out.println("좋아요한 리뷰 리스트로");
+			System.out.println("내가 좋아요한 리뷰 리스트로");
 			service.iLikeReview();
 			break;
 			
 		case "/myPage/iDonotLike":
-			System.out.println("좋아요 취소하기");
+			System.out.println("좋아요 취소하기_마이페이지");
 			service.iDonotLike();
 			break;
 			
