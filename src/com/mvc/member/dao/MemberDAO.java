@@ -537,7 +537,7 @@ public class MemberDAO {
 				follow3List.add(dto);
 			}	
 				System.out.println("listSize : "+follow3List.size());
-				int maxPage = getMaxPage(pagePerCnt);
+				int maxPage = (int) Math.ceil(follow3List.size()/(double)pagePerCnt);
 				map.put("list", follow3List);
 				map.put("maxPage", maxPage);
 				System.out.println("maxPage : "+maxPage);
@@ -601,7 +601,7 @@ public class MemberDAO {
 				follow3List.add(dto);
 			}
 			System.out.println("listSize : "+follow3List.size());
-			int maxPage = getMaxPage(pagePerCnt);
+			int maxPage = (int) Math.ceil(follow3List.size()/(double)pagePerCnt);
 			map.put("list", follow3List);
 			map.put("maxPage", maxPage);
 			System.out.println("maxPage : "+maxPage);

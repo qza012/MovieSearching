@@ -73,7 +73,7 @@
             	font-size: small;
             	font-weight: 600;
             }   
-             .pageArea{
+            .pageArea{
 				width:700px;
 				text-align: center;
 				margin-top: 25px;

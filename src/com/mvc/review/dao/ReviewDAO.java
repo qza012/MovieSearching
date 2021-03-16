@@ -338,7 +338,7 @@ public class ReviewDAO {
 				list.add(dto);
 			}
 			System.out.println("listSize : "+list.size());
-			int maxPage = getMaxPageMP(pagePerCnt);
+			int maxPage = (int) Math.ceil(list.size()/(double)pagePerCnt);
 			map.put("list", list);
 			map.put("maxPage", maxPage);
 			System.out.println("maxPage : "+maxPage);	
@@ -348,23 +348,6 @@ public class ReviewDAO {
 		return map;
 	}
 
-	private int getMaxPageMP(int pagePerCnt) {
-		String sql="SELECT COUNT(idx) FROM review3";		
-		int max = 0;
-		try {
-			ps = conn.prepareStatement(sql);
-			rs = ps.executeQuery();
-			if(rs.next()) {
-				int cnt = rs.getInt(1);
-				max = (int) Math.ceil(cnt/(double)pagePerCnt);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-		return max;
-	}
-
-
 	public HashMap<String, Object> myLikeReview(String loginId, int group) { //좋아요한 리뷰 리스트 얻기
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
@@ -373,7 +356,6 @@ public class ReviewDAO {
 		int pagePerCnt = 10;
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
-		int num = 0;
 		
 		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
 				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
@@ -383,7 +365,7 @@ public class ReviewDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
 			rs = ps.executeQuery();
-			ArrayList<Object> mapToList = new ArrayList<Object>();
+			ArrayList<Object> listToList = new ArrayList<Object>();
 			while(rs.next()) {
 				dto = new ReviewDTO();
 				dto.setIdx(rs.getInt("idx"));
@@ -394,15 +376,16 @@ public class ReviewDAO {
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
-				//++num;
-				//map.put(String.valueOf(num), list);
 			}
-			//for(int i=start; i<=end; i++) {
-				//mapToList.add(map.get(String.valueOf(i)));
-			//}
-			System.out.println("listSize : "+list.size());
-			int maxPage = getMaxPageMP(pagePerCnt);
-			map.put("list", list);
+			for(int i=start-1; i<end; i++) {
+				if(i<list.size()) {
+					System.out.println(i);
+					listToList.add(list.get(i));
+				}
+			}
+			System.out.println("listSize : "+listToList.size());
+			int maxPage = (int) Math.ceil(list.size()/(double)pagePerCnt);
+			map.put("list", listToList);
 			map.put("maxPage", maxPage);
 			System.out.println("maxPage : "+maxPage);
 		} catch (SQLException e) {
