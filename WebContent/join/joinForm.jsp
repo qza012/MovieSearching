@@ -160,11 +160,15 @@ $("#idChk").click(function(){
 		var A = document.getElementById("pw_answer");
 		var email_sel = document.getElementById("email_sel");
 		var email = email_sel.value;
-
+		
+		
 		if (id.value == "") {
 			alert("아이디를 입력하세요.")
 			id.focus()
 			
+		}else if (idChk==false) {
+			alert("아이디 중복체크를 해주세요.");
+			id.focus();
 		}else if (pw.value == "") {
 			alert("비밀번호를 입력하세요.");
 			pw.focus();
