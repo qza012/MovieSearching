@@ -163,41 +163,120 @@
                </ul>
            </nav>
        </div>    
-        <div class="reviewList">
-            <h3>작성한 리뷰</h3>
-            <table>
-                <tr>
-                    <th>리뷰 번호</th>
-                    <th>제목</th>
-                    <th>영화 제목</th>
-                    <th>평점</th>
-                    <th>좋아요</th>
-                    <th>작성일</th>
-                    <th>삭제</th>
-                </tr>
-                <c:forEach items="${list}" var="review">
-                	<tr>
-                		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteMyReview?idx=${review.idx}">삭제</a> </td>
-                	</tr>
-                </c:forEach>
-            </table>
-        </div>
-        <div class="pageArea">
-			<span>
-				<c:if test="${currPage == 1}">이전</c:if>
-				<c:if test="${currPage > 1}">
-					<a href="./?page=${currPage-1}">이전</a>
-				</c:if>				
-			</span>
-			<span id="page">${currPage}</span>
-			<span>
-				<c:if test="${currPage == maxPage}">다음</c:if>
-				<c:if test="${currPage < maxPage}">
-					<a href="./?page=${currPage+1}">다음</a>	
-				</c:if>	
-			</span>
-		</div>
+        <div class="updateMember">
+            <h3>회원정보 수정</h3>
+            <form action="./update" method="post" enctype="multipart/form-data" >
+	            <table>
+	                <tr>
+	                    <th>아이디</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="userId" id="userId" value="${mDto.id}" readonly="readonly"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>비밀번호</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="userPw" id="userPw"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>비밀번호 확인</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" id="conPw"/>
+	                    </td>
+	                    <span></span>
+	                </tr>
+	                <tr>
+	                    <th>비밀번호 찾기 질문</th>
+	                </tr>
+	                <tr>
+	                	<td>
+	                		<select name="Question">
+	                			<c:forEach items="${qList}" var="list" >
+	                            	<option value="${list.idx}">${list.content}</option>
+	                        	</c:forEach>
+	                        </select>
+	                   	</td>
+					</tr>
+	                <tr>
+	                    <th>비밀번호 찾기 답변</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="answer" id="answer"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>이름</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="userName" value="${mDto.name}"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>나이</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="age" value="${mDto.age}"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>성별</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                    	<c:if test="${mDto.gender == '남'}">
+	                        	<input type="radio" name="gender" value="남" checked="checked"/>남
+	                        	<input type="radio" name="gender" value="여" />여
+	                    	</c:if>
+	                    	<c:if test="${mDto.gender == '여'}">
+		                    	<input type="radio" name="gender" value="남"/>남
+	                        	<input type="radio" name="gender" value="여" checked="checked"/>여
+	                    	</c:if>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>이메일</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <input type="text" name="email" value="${mDto.email}"/>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>선호하는 영화 장르</th>
+	                </tr>
+	                <tr>
+	                    <td>
+	                        <select name="genre">
+	                            <option value="${mDto.genre}">${mDto.genre}</option>
+	                         </select>
+	                    </td>
+	                </tr>
+	                <tr>
+	                    <th>프로필 사진 등록</th>
+	                </tr>
+	                <tr>
+	                	<td>
+	                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
+                			<input type="file"  name="photo"/>
+		    			</td>
+	                <tr>
+	                    <th colspan="2">
+	                        <input type="submit" value="저장">
+	                    </th>
+	                </tr>
+	            </table>
+	    	</form>        
+	    </div>
     </body>
 	<script>
 		var showIf = document.getElementById('myPage').style.display;

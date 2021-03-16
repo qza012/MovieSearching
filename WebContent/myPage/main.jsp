@@ -54,13 +54,15 @@
             }
            .mainData{
                font-family: Verdana;
-               width: 70%;
+               width: 50%;
                margin-top: 40px;
-               margin-left: 12%;
+               margin-left: 30%;
            }    
-           table {
+           table,input[type="text"]{
                text-align: center;
-               width: 100%;
+               width: 70%;
+               height: 20px;
+               
            }
            th{
                background-color: lightgrey;
@@ -156,7 +158,7 @@
            </nav>
        </div>    
        <div class="mainData">
-           <h3>로그인</h3>
+           <h1>로그인</h1>
            <span>
            		<button onclick="location.href='./follow?targetId=${targetId}'">팔로우</button>
            </span>

@@ -536,14 +536,22 @@ public class MemberDAO {
 		return follow3List;
 	}
 
-	public ArrayList<FollowDTO> followerList(String loginId) {
+	public HashMap<String, Object> followerList(String loginId, int group) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
 		FollowDTO dto = null;
 		String sql=null;
+		
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		
 		try {
-			sql="SELECT id FROM follow3 WHERE target_id=?";
+			sql="SELECT idx, id FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, idx, id FROM follow3 WHERE target_id=?) WHERE rnum BETWEEN ? AND ?";
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
 			List<String> idList = new ArrayList<String>();
 			while(rs.next()) {
@@ -580,10 +588,15 @@ public class MemberDAO {
 				}
 				follow3List.add(dto);
 			}
+			System.out.println("listSize : "+follow3List.size());
+			int maxPage = getMaxPage(pagePerCnt);
+			map.put("list", follow3List);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : "+maxPage);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return follow3List;
+		return map;
 	}
 
 	public boolean notFollow(String myId, String targetId) {

@@ -51,22 +51,43 @@
             }
             .followerList {
                 font-family: Verdana;
-                width: 45%;
+                width:66%;
                 margin-top: 45px;
-                margin-left: 25%;
+                margin-left: 22%;
             } 
-            table {
-                text-align: center;
-                width: 100%;
+            #table{
+            	padding: 1%;
+            	margin: 1%;
+            	width: 40%;
             }
-            th{
+            #followerId{
             	color: red;
-            	padding: 3%;
+            	padding: 1%;
             }
-            td{
+            #followNum{
             	text-decoration: underline;
-            	padding: 3%;
+            	padding: 1%;
             }
+            #notLike{
+            	margin: 10px 30px;
+            }
+            .pageArea{
+				width:700px;
+				text-align: center;
+				margin-top: 25px;
+				margin-left: 25%;
+			}
+			.pageArea span{
+				font-size:16px;
+				padding: 5px 10px;
+				margin: 5px;
+			}
+			#btn{
+				color:balck;
+			}
+			#page{
+				color:red;
+			}
         </style>
     </head>
     <body>
@@ -152,28 +173,27 @@
        </div>    
        <h1>팔로워</h1>
         <div class="followerList">
-            <table>
-                <c:forEach items="${fList}" var="follow">
-                	<tr>
-	                	<td><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></td>
-                		<th>${follow.id}</th><td>팔로잉 ${follow.followingNum}</td><td>팔로워 ${follow.followerNum}</td>
-                		<th><button id="notLike" onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></th>
-                	</tr>
-                </c:forEach>      
-            </table>
+         	<c:forEach items="${fList}" var="follow">
+            	<div id="table">
+	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></div>
+                	<div id="followerId">${follow.id}</div>	
+                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
+                	<div><button id="notLike" onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div>
+                </div>
+        	</c:forEach>
         </div>
         <div class="pageArea">
-			<span>
-				<c:if test="${currPage == 1}">이전</c:if>
+			<span id="btn">
+				<c:if test="${currPage == 1}"> 이전</c:if>
 				<c:if test="${currPage > 1}">
-					<a href="./?page=${currPage-1}">이전</a>
-				</c:if>				
+					<a href="./followerList?id=${sessionScope.myLoginId}&page=${currPage-1}">이전</a>
+				</c:if>
 			</span>
 			<span id="page">${currPage}</span>
-			<span>
+			<span id="btn">
 				<c:if test="${currPage == maxPage}">다음</c:if>
 				<c:if test="${currPage < maxPage}">
-					<a href="./?page=${currPage+1}">다음</a>	
+					<a href="./followerList?id=${sessionScope.myLoginId}&page=${currPage+1}">다음</a>
 				</c:if>	
 			</span>
 		</div>
