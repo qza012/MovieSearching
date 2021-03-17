@@ -100,12 +100,26 @@
 			<c:if test="${currPage>1}">
 				<a href="reviewList?page=${currPage-1}">이전</a>
 			</c:if>
-			<c:if test="${currPage == 1}">
+			<c:if test="${currPage == 1 && maxPage != 0}">
 				<a style="color: gray;">이전</a>
 			</c:if>
 		</span>
 		
-		<span id="pageArea">${currPage}</span>
+		
+		<c:set var="startNum" value="${currPage-(currPage-1)%10}"/>
+		
+		<span id="pageArea">
+			<c:forEach begin="0" end="9" var="i">
+				<c:if test="${startNum+i <= maxPage}">
+					<c:if test="${startNum+i != currPage}">
+						<a href="reviewList?page=${startNum+i}">${startNum+i} </a>
+					</c:if>
+					<c:if test="${startNum+i == currPage}">
+						<b><a href="reviewList?page=${startNum+i}">${startNum+i} </a></b>
+					</c:if>
+				</c:if>
+			</c:forEach>
+		</span>
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
@@ -116,6 +130,7 @@
 			</c:if>
 		</span>
     </div>
+    
     <div class="button">
     <input type="button" value="리뷰 작성" onclick="location.href='./review/reviewWrite.jsp' ">
     </div>
