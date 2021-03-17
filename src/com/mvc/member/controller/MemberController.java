@@ -15,7 +15,6 @@ import com.mvc.member.service.MemberService;
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
 	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/member/alarmDel","/myPage/alarm"})
 
-
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -141,6 +140,9 @@ public class MemberController extends HttpServlet {
 				service.pwQuestionList();
 				break;
 				
+<<<<<<< HEAD
+			case "/myPage/alarmList":
+=======
 			case "/member/fChk":
 				System.out.println("팔로우 체크");
 				service.followCheck();
@@ -151,11 +153,12 @@ public class MemberController extends HttpServlet {
 				service.alramChk();
 
 			case "/member/alarmList":
+>>>>>>> 2352a0dba8923c732d285b6ba8e87cd37d297f1a
 				System.out.println("알람보기 요청");
 				service.alarmList();
 				break;
 				
-			case "/member/alarmDel":
+			case "/myPage/alarmDel":
 				System.out.println("알람 삭제 요청");
 				service.alarmDel();
 				break;
