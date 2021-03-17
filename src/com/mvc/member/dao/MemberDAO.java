@@ -702,6 +702,41 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return map;
+
+	public int alarm(String targetId, String myId) throws SQLException {
+		String sql = "INSERT INTO alarm3(idx,reg_date,content,target_id,id)VALUES(alarm3_seq.NEXTVAL,SYSDATE,?,?,?)";
+		int success = 0;
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, "팔로우+1");
+		ps.setString(2, targetId);
+		ps.setString(3, myId);
+		success = ps.executeUpdate();
+		return success;
+	}
+	
+	public ArrayList<AlarmDTO> alarmList(String myId) throws SQLException {
+		String sql = "SELECT idx,content,reg_date FROM alarm3 WHERE target_id=? ORDER BY reg_date DESC";
+		ArrayList<AlarmDTO> alarm_list = new ArrayList<AlarmDTO>();
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, myId);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			AlarmDTO dto = new AlarmDTO();
+			dto.setIdx(rs.getInt("idx"));
+			dto.setContent(rs.getString("content"));
+			dto.setReg_date(rs.getDate("reg_date"));
+			alarm_list.add(dto);
+		}
+		return alarm_list;
+	}
+	
+	public int alarmDel(String idx) throws SQLException {
+		String sql = "DELETE FROM alarm3 WHERE idx=?";
+		int success = 0;
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, idx);
+		ps.executeUpdate();
+		return success;
 	}
 
 }

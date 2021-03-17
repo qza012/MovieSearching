@@ -37,6 +37,7 @@
     }
 </style>
 <body>
+	<jsp:include page="../movie/include.jsp" />
     <table>
         <tr>
             <th>번호</th>

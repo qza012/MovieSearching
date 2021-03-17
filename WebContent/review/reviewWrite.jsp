@@ -1,78 +1,89 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
-        table{
-            width: 100%;
-        }
-        table,td,th{
-            border-top: 1px solid lightgray;
-            border-radius: 1px solid lightgray;
-            border-collapse: collapse;
-        }
-        .button{
-            width: 100%;
-            text-align: center;
-        }
-        textarea{
-            width: 99%;
-            height: 500px;
-            resize: none;
-        }
-        .title{
-            width: 100%;
-            text-align: center;
-        }
+table {
+	width: 100%;
+	color: white;
+}
+
+table, td, th {
+	border-top: 1px solid lightgray;
+	border-radius: 1px solid lightgray;
+	border-collapse: collapse;
+}
+
+.button {
+	width: 100%;
+	text-align: center;
+}
+
+textarea {
+	width: 99%;
+	height: 600px;
+	resize: none;
+}
+
+.title {
+	width: 100%;
+	text-align: center;
+}
 </style>
 </head>
 <body>
-    <h3 class="title">리뷰 작성하기</h3>
-    <table>
-        <tr>
-            <th>제목</th>
-            <td><input type="text" id="subject" style="width: 80%;"/></td>
-            <th>작성자</th>
-            <td><input type="text" id="id" value="${sessionScope.myLoginId}" style="width: 80%;" readonly/></td>
-        </tr>
-        
-        <tr>
-        <th>영화제목</th>
-        <td>
-        	<input type="hidden" id="movieCode" />
-            <input type="text" id="movieName" style="width: 80%;"/>
-            <input type="button" value="검색" onclick="movieSearchOpen()"/>
-        </td>
-        
-        <th>평점</th>
-        <td>
-            <select id="score" class="star">
-            	<option value="0"></option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-        </td>
-        </tr>
-        
-        <tr>
-            <td colspan="4">
-                <textarea id="content"></textarea>
-            </td>
-        </tr>
-        
-    </table>
-    <div class="button">
-        <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="cancel()"/>
-    </div>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3 class="title" style="color: white;">리뷰 작성하기</h3>
+					<table>
+						<tr>
+							<th>제목</th>
+							<td><input type="text" id="subject" style="width: 80%;" /></td>
+							<th>작성자</th>
+							<td><input type="text" id="id"
+								value="${sessionScope.myLoginId}" style="width: 80%;" readonly /></td>
+						</tr>
+
+						<tr>
+							<th>영화제목</th>
+							<td><input type="hidden" id="movieCode" /> <input
+								type="text" id="movieName" style="width: 80%;" /> <input
+								type="button" value="검색" onclick="movieSearchOpen()" /></td>
+
+							<th>평점</th>
+							<td><select style="width: 20%;" id="score" class="star">
+									<option value="0"></option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+							</select></td>
+						</tr>
+
+						<tr>
+							<td colspan="4"><textarea id="reviewContent"></textarea></td>
+						</tr>
+
+					</table>
+					<div class="button">
+						<input type="button" id="save" value="저장" /> <input type="button"
+							value="취소" onclick="cancel()" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 <script>
 $("#save").click(function(){
@@ -82,7 +93,7 @@ $("#save").click(function(){
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
-	var content = $('#content').val(); 
+	var content = $('#reviewContent').val(); 
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
