@@ -41,7 +41,7 @@
 		<c:forEach items="${reportList }" var="report" varStatus="status">
 		<tr>
 			<td>${report.idx }</td>
-			<td>${report.report_idx }</td>
+			<td><a href="#">${report.report_idx }</a></td>
 			<td>${commentList[status.index].review_idx }</td>
 			<td>${report.content }</td>
 			<td>${report.report_id}</td>
@@ -59,6 +59,21 @@
 		</tr>
 		</c:forEach>
 		</table>
+		<div>
+			<span>
+				<c:if test="${curPage == 1 }">이전</c:if>
+				<c:if test="${curPage > 1 }">
+					<a href="javascript:prevFunc();">이전</a>
+				</c:if>
+			</span>
+			<span id="page">${curPage }</span>
+			<span>
+				<c:if test="${curPage == maxPage }">다음</c:if>
+				<c:if test="${curPage < maxPage }">
+					<a href="javascript:nextFunc();">다음</a>
+				</c:if>
+			</span>
+		</div>
 	</body>
 	<script>
 		var msg = "${msg}";

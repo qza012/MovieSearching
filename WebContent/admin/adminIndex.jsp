@@ -11,7 +11,7 @@
 </head>
 <body>
 	<!-- <button onclick="location.href='mainPage'">데이터 얻기</button> -->
-	<button onclick="location.href='#'">영화 관리 이동</button>
+	<button onclick="location.href='movieList'">영화 관리 이동</button>
 	<button onclick="location.href='memberDisableList'">멤버 비활성화 이동</button>
 	<button onclick="location.href='pwQuestionList'">pw 질문 관리 이동</button>
 	<button onclick="location.href='reviewList'">리뷰 관리 이동</button>

@@ -16,9 +16,11 @@
 		<div id="container">
 			<div id="content">
 				<div class="movie_main">
-					<ul style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
+					<ul style="position: absolute; width: 825px; height: 560px; left: 0%; display: block;">
 						<li>
-							
+						<c:forEach items="${top}" var="movie">
+							<a href="moviedetail?movieCode=${movie.movieCode}"><img src="${movie.posterUrl}" style="width: 159px; height: 280px;" alt="${movie.movieName}" ></a>
+						</c:forEach>
 						</li>
 					</ul>
 				</div>
@@ -27,5 +29,6 @@
 	</div>
 </body>
 <script>
+	
 </script>
 </html>

@@ -56,21 +56,26 @@
             color: black;
             text-decoration: none;
         }
-    </style>
+</style>
 </head>
 <body>
 	<form action="reviewSearchList" method="POST">
 		<div class="search">
 			<select name="search" class="searchBar">
-		        <option value="movieName" selected>영화 제목</option>
-		        <option value="id">사용자 아이디</option>
-		        <option value="subject">리뷰 제목</option>
+		        <option ${(search == "movieName")? "selected" : ""} value="movieName" selected>영화 제목</option>
+		        <option ${(search == "id")? "selected" : ""} value="id">사용자 아이디</option>
+		        <option ${(search == "subject")? "selected" : ""} value="subject">리뷰 제목</option>
    		 	</select>
-	    <input class="searchForm" id="keyword" name="keyword" type="text"/>
+	    <input class="searchForm" id="keyword" name="keyword" value="${keyword}" type="text"/>
 	    <input type="button" id="searchButton" value="검색" onclick="keywordCheck()"/>
     	</div>
 	</form>
-    <h2>전체 리뷰</h2>
+	
+    <h2>리뷰 검색 결과</h2>
+    <div style="text-align: right; padding-bottom: 10px;">
+    	<a href="./reviewList">전체 리뷰 리스트</a>
+    </div>
+    
     <table>
         <tr>
             <th>순번</th>
@@ -98,7 +103,7 @@
     <div class="paging">
 		<span>
 			<c:if test="${currPage>1}">
-				<a href="reviewList?page=${currPage-1}">이전</a>
+				<a href="reviewSearchList?page=${currPage-1}&search=${search}&keyword=${keyword}">이전</a>
 			</c:if>
 			<c:if test="${currPage == 1}">
 				<a style="color: gray;">이전</a>
@@ -109,13 +114,14 @@
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
-				<a href="reviewList?page=${currPage+1}">다음</a>
+				<a href="reviewSearchList?page=${currPage+1}&search=${search}&keyword=${keyword}">다음</a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
 				<a style="color: gray;">다음</a>
 			</c:if>
 		</span>
     </div>
+
     <div class="button">
     <input type="button" value="리뷰 작성" onclick="location.href='./review/reviewWrite.jsp' ">
     </div>
@@ -129,8 +135,9 @@
 			$("#searchButton").attr('type','submit');
 		}
 	}
-	
+
 	var msg="${msg}";
+	
 	if(msg!=""){
 		alert(msg);
 	}

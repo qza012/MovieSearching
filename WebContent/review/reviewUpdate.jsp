@@ -9,7 +9,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,td,th{
             border-top: 1px solid lightgray;
@@ -17,7 +17,7 @@
             border-collapse: collapse;
         }
         .button{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
         textarea{
@@ -26,10 +26,10 @@
             resize: none;
         }
         .title{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
-    </style>
+</style>
 </head>
 <body>
     <h3 class="title">리뷰 수정하기</h3>
@@ -47,14 +47,13 @@
         <th>영화제목</th>
         <td>
         	<input type="hidden" id="movieCode" value="${review.movieCode}"/>
-            <input type="text" id="movieName" value="${review.movieName}" readonly style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+            <input type="text" id="movieName" value="${review.movieName}" readonly style="width: 97%;" readonly/>
         </td>
         
         <th>평점</th>
         <td>
             <select id="score" class="star">
-            
+            <option value="0"></option>
              <c:forEach begin="1" end="5" var="i">
              	<c:if test="${review.score eq i}">
              		<option value="${review.score}" selected>${review.score}</option>
@@ -63,7 +62,6 @@
              		<option value="${i}">${i}</option>
              	</c:if>
              </c:forEach>
-             
             </select>
         </td>
         </tr>
@@ -73,14 +71,14 @@
                 <textarea id="content">${review.content}</textarea>
             </td>
         </tr>
-        
     </table>
+    
     <div class="button">
         <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="location.href='./reviewList' "/>
+        <input type="button" value="취소" onclick="cancel()"/>
     </div>
-   </body>
-   <script>
+</body>
+<script>
 $("#save").click(function(){
 	
 	var idx = $('#idx').val();
@@ -92,31 +90,50 @@ $("#save").click(function(){
 	var content = $('#content').val(); 
 	
 	console.log(idx + " / " + subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
-
-	$.ajax({ 
-		type:'post'
-		,url:'./reviewUpdate' 
-		,data:{
-			'idx':idx,
-			'subject':subject,
-			'id':id,
-			'movieCode':movieCode,
-			'movieName':movieName,
-			'score':score,
-			'content':content
-		}
-		,dataType: 'json'
-		,success: function(data){
-			console.log(data);
-		
-			alert(data.msg);
-			location.href = "./reviewDetail?Idx="+idx;
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
 	
+	if(subject==""){
+		alert("제목을 입력해주세요.");
+		$("#subject").focus();
+	}else if(id==""){
+		alert("로그인을 해주세요.");
+	}else if(score==0){
+		alert('평점을 선택해주세요.');
+		$("#score").focus();
+	}else if(content==""){
+		alert('내용을 입력해주세요.');
+		$("#content").focus();
+	}else{ 
+		$.ajax({ 
+			type:'post'
+			,url:'./reviewUpdate' 
+			,data:{
+				'idx':idx,
+				'subject':subject,
+				'id':id,
+				'movieCode':movieCode,
+				'movieName':movieName,
+				'score':score,
+				'content':content
+			}
+			,dataType: 'json'
+			,success: function(data){
+				console.log(data);
+			
+				alert(data.msg);
+				location.href = "./reviewDetail?Idx="+idx;
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
+
+function cancel(){
+	var check = confirm('수정을 취소하시겠습니까?');
+	if(check){
+		location.href='./reviewList' 
+	}
+}
 </script>
 </html>

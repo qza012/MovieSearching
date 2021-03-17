@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.mvc.comment.dto.CommentDTO;
+import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dao.ReviewDAO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -36,11 +37,6 @@ public class ReviewService {
 		
 		System.out.println(subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 		
-		//비동기 방식은 데이터를 다른 페이지에 전달 할 수 없다.
-		//(요청한 페이지에게만 보낼 수 있음 asyncLogin.jsp에서 받았으면 거기에만 보낼 수 있음 result.jsp로 못보냄)
-		//response객체를 통해서 답변하므로 다른 페이지로 데이터를 보낼 수 없다. => request사용 못함, map에 데이터 담기
-		
-		//json과 HashMap이 가장 비슷한 형태
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		String msg ="리뷰작성에 실패했습니다.";
@@ -60,24 +56,16 @@ public class ReviewService {
 		}
 		dao.resClose();
 		
-		//map에 msg와 success 담기
 		map.put("msg", msg);
 		map.put("success",success);
 		
-		//맵형태로 전달하면 javascript에서 읽을 수 없어서 map을 json 형태로 변경
-		//map -> json으로 바꾸기 작업 (gson사용)
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
-		//이 컨텐츠가 보낼 데이터 타입과 한글깨짐 방지를 위한 인코딩 타입 지정
 		resp.setContentType("text/html; charset=UTF-8");
-		
-		//javascript에서 다른 도메인으로 통신은 기본적으로 안됨(cross domain issue) , 자바스크립트는 보안에 취약해서 안됨
-		//그래서 접속하려는 것에 대해 허용해야함
 		resp.setHeader("Access-Control-Allow", "*"); 
 		
-		//resp에서 쓸수있는 객체를 하나 꺼내서 json을 씀
 		PrintWriter out = resp.getWriter();
 		out.println(json);
 	}
@@ -85,7 +73,6 @@ public class ReviewService {
 	public void list() throws ServletException, IOException {
 		String pageParam = req.getParameter("page");
 		
-		//1페이지 그룹 -> 1~10번
 		int group = 1;
 		if(pageParam !=null) {
 			group = Integer.parseInt(pageParam);
@@ -96,12 +83,10 @@ public class ReviewService {
 		dao.resClose();
 		
 		String page="review/reviewList.jsp";
-		
 		req.setAttribute("maxPage", map.get("maxPage"));
 		req.setAttribute("review", map.get("list"));
 		req.setAttribute("currPage", group);
-		
-		//특정 페이지로 보내기
+
 		RequestDispatcher dis = req.getRequestDispatcher(page);
 		dis.forward(req, resp);
 	}
@@ -118,7 +103,6 @@ public class ReviewService {
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
 		ReviewDAO dao = new ReviewDAO();
 		
-		//리뷰 상세 가져오기
 		dto = dao.detail(reviewIdx);
 		
 		//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
@@ -138,6 +122,8 @@ public class ReviewService {
 				req.setAttribute("comment", list);
 			}
 		}
+		req.setAttribute("br", "<br/>");
+		req.setAttribute("cn", "\n");
 		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 	
@@ -154,8 +140,10 @@ public class ReviewService {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}finally {
+				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("member/review.jsp");
+			RequestDispatcher dis = req.getRequestDispatcher("review.jsp");
 			dis.forward(req, resp);
 //		}else {
 //			resp.sendRedirect("index.jsp");
@@ -210,24 +198,16 @@ public class ReviewService {
 		}
 		dao.resClose();
 		
-		//map에 msg와 success 담기
 		map.put("msg", msg);
 		map.put("success",success);
 		
-		//맵형태로 전달하면 javascript에서 읽을 수 없어서 map을 json 형태로 변경
-		//map -> json으로 바꾸기 작업 (gson사용)
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson(); 
+		String json = gson.toJson(map); 
 		System.out.println(json);
 		
-		//이 컨텐츠가 보낼 데이터 타입과 한글깨짐 방지를 위한 인코딩 타입 지정
 		resp.setContentType("text/html; charset=UTF-8");
-		
-		//javascript에서 다른 도메인으로 통신은 기본적으로 안됨(cross domain issue) , 자바스크립트는 보안에 취약해서 안됨
-		//그래서 접속하려는 것에 대해 허용해야함
 		resp.setHeader("Access-Control-Allow", "*"); 
 		
-		//resp에서 쓸수있는 객체를 하나 꺼내서 json을 씀
 		PrintWriter out = resp.getWriter();
 		out.println(json);
 	}
@@ -253,16 +233,25 @@ public class ReviewService {
 	public void myReviewList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
 			ReviewDAO dao = new ReviewDAO();
-			ArrayList<ReviewDTO> list = dao.myReviewList(loginId);
+			HashMap<String, Object> map = dao.myReviewList(loginId,group);
 			
 			String page="./main.jsp";
 			
-			if(list!=null) {
-				page="./reviewList.jsp";
+			if(map!=null) {
+				page="/myPage/reviewList.jsp";
+				req.setAttribute("list", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
 			}
 			dao.resClose();
-			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
@@ -273,16 +262,24 @@ public class ReviewService {
 	public void iLikeReview() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			ReviewDAO dao = new ReviewDAO();
-			ArrayList<ReviewDTO> list = dao.myLikeReview(loginId);
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
 			
+			ReviewDAO dao = new ReviewDAO();
+			HashMap<String, Object> map = dao.myLikeReview(loginId,group);
 			String page="./main.jsp";
 			
-			if(list!=null) {
-				page="./likeReview.jsp";
+			if(map != null) {
+				page="/myPage/likeReview.jsp";
+				req.setAttribute("list", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
 			}
 			dao.resClose();
-			req.setAttribute("list", list);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
@@ -343,7 +340,7 @@ public class ReviewService {
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
-		String msg ="댓글성에 실패했습니다.";
+		String msg ="댓글작성에 실패했습니다.";
 		int success = 0;
 		
 		CommentDTO dto = new CommentDTO();
@@ -358,12 +355,11 @@ public class ReviewService {
 		}
 		dao.resClose();
 		
-		//map에 msg와 success 담기
 		map.put("msg", msg);
 		map.put("success",success);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -392,8 +388,8 @@ public class ReviewService {
 		map.put("success",success);
 		map.put("content", content);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -423,8 +419,8 @@ public class ReviewService {
 		map.put("success",success);
 		map.put("msg", msg);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -480,8 +476,8 @@ public class ReviewService {
 		
 		map.put("success",success);
 		
-		Gson gson = new Gson(); //gson 라이브러리 추가 후 객체화
-		String json = gson.toJson(map); //map을 json형태로 변환
+		Gson gson = new Gson();
+		String json = gson.toJson(map);
 		System.out.println(json);
 		
 		resp.setContentType("text/html; charset=UTF-8");
@@ -490,4 +486,164 @@ public class ReviewService {
 		PrintWriter out = resp.getWriter();
 		out.println(json);
 	}
+	
+	public void reportForm() throws ServletException, IOException {
+		String loginId = (String)req.getSession().getAttribute("loginId");
+		int idx = Integer.parseInt(req.getParameter("idx"));
+		int type_idx = Integer.parseInt(req.getParameter("type_idx"));
+		
+		System.out.println(loginId + " / " + idx + " / " + type_idx);
+		
+		//이미 신고 했는지 확인
+		String msg = "";
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.reportCheck(loginId, idx, type_idx) == false) {
+			dao.resClose();
+		}else {
+			if(type_idx == 2001) {
+				msg = "이미 신고한 리뷰입니다.";
+			}else {
+				msg = "이미 신고한 댓글입니다.";
+			}
+		}
+		req.setAttribute("msg", msg);
+		req.setAttribute("idx", idx);
+		req.setAttribute("type_idx", type_idx);
+		req.getRequestDispatcher("./review/reviewReport.jsp").forward(req, resp);
+	}
+	
+	public void report() throws IOException {
+		String report_id = (String)req.getSession().getAttribute("loginId");
+		int type_idx = Integer.parseInt(req.getParameter("type_idx"));
+		int report_idx = Integer.parseInt(req.getParameter("report_idx"));
+		String content = req.getParameter("content");
+		
+		System.out.println(report_id + " / " + type_idx + " / " + report_idx + " / " + content);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		int success = 0;
+		String msg = "신고에 실패했습니다.";
+		
+		ReportDTO dto = new ReportDTO();
+		dto.setReport_id(report_id);
+		dto.setType_idx(type_idx);
+		dto.setReport_idx(report_idx);
+		dto.setContent(content);
+		
+		ReviewDAO dao = new ReviewDAO();
+		if(dao.report(dto)) {
+			success = 1;
+			msg="신고되었습니다.";
+		}
+		dao.resClose();
+		
+		map.put("success",success);
+		map.put("msg", msg);
+		
+		Gson gson = new Gson(); 
+		String json = gson.toJson(map); 
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void reviewMovieSearch() throws ServletException, IOException {
+		String pageParam = req.getParameter("page");
+		String subName = req.getParameter("subName");
+		
+		int group = 1;
+		if(pageParam !=null) {
+			group = Integer.parseInt(pageParam);
+		}
+		
+		System.out.println(pageParam + subName);
+		
+		ReviewDAO dao = new ReviewDAO();
+		HashMap<String, Object> map = dao.reviewMovieSearch(subName, group);
+		dao.resClose();
+		
+		String page="review/movieSearch.jsp";
+		
+		req.setAttribute("subName", subName);
+		req.setAttribute("maxPage", map.get("maxPage"));
+		req.setAttribute("movie", map.get("list"));
+		req.setAttribute("currPage", group);
+		
+		RequestDispatcher dis = req.getRequestDispatcher(page);
+		dis.forward(req, resp);
+	}
+
+	public void reviewMovieChoice() throws ServletException, IOException {
+		String movieCode = req.getParameter("movieCode");
+		String loginId = (String) req.getSession().getAttribute("loginId");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		int success = 0;
+		int haveReview = 0;
+		
+		ReviewDAO dao = new ReviewDAO();
+		haveReview = dao.reviewMovieCheck(movieCode, loginId);
+		String movieName = dao.reviewMovieChoice(movieCode);
+		
+		dao.resClose();
+		
+		if(movieName != null) {
+			success = 1;
+		}
+		System.out.println(movieCode + movieName);
+		
+		map.put("haveReview", haveReview);
+		map.put("moiveCode",movieCode);
+		map.put("movieName", movieName);
+		map.put("success", success);
+		
+		Gson gson = new Gson(); 
+		String json = gson.toJson(map); 
+		System.out.println(json);
+		
+		resp.setContentType("text/html; charset=UTF-8");
+		resp.setHeader("Access-Control-Allow", "*"); 
+		
+		PrintWriter out = resp.getWriter();
+		out.println(json);
+	}
+
+	public void reviewSearchList() throws ServletException, IOException {
+		String pageParam = req.getParameter("page");
+		String search = req.getParameter("search");
+		String keyword = req.getParameter("keyword");
+		
+		if(search == null) {
+			search = "movieName";
+		}
+		if(keyword == null) {
+			keyword = "";
+		}
+		System.out.println(search + keyword);
+		
+		int group = 1;
+		if(pageParam !=null) {
+			group = Integer.parseInt(pageParam);
+		}
+		
+		ReviewDAO dao = new ReviewDAO();
+		HashMap<String, Object> map = dao.reviewSearchList(group,search,keyword);
+		dao.resClose();
+		
+		String page="review/reviewSearchList.jsp";
+		req.setAttribute("maxPage", map.get("maxPage"));
+		req.setAttribute("review", map.get("list"));
+		req.setAttribute("currPage", group);
+		req.setAttribute("search", search);
+		req.setAttribute("keyword", keyword);
+		
+		RequestDispatcher dis = req.getRequestDispatcher(page);
+		dis.forward(req, resp);
+	}
+
 }

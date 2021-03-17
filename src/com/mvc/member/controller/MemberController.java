@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/login","/logout", "/join","/Qlist", "/myPage/updateMF","/myPage/update","/myPage/withdraw","/member/member",
-	"/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/myPage/page"})
+@WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
+	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+
 public class MemberController extends HttpServlet {
 
 	@Override
@@ -49,7 +50,7 @@ public class MemberController extends HttpServlet {
 				service.join();
 				break;
 				
-			case "/login":
+			case "/join/login":
 				System.out.println("로그인 요청");
 				service.login();
 				break;
@@ -60,7 +61,7 @@ public class MemberController extends HttpServlet {
 				resp.sendRedirect("index.jsp");
 				break;
 				
-			case "/Qlist":
+			case "/questionList":
 				System.out.println("질문지 요청");
 				service.questionList();
 				break;
@@ -90,6 +91,24 @@ public class MemberController extends HttpServlet {
 				service.getMemberList();
 				break;
 				
+			case "/member/search":
+				System.out.println("검색 요청");
+				service.search();
+				break;
+				
+			case "/follow":
+				System.out.println("팔로우 하기");
+
+			case "/join/idFind":
+				System.out.println("아이디 찾기 요청");
+				service.idFind();
+				break;
+				
+			case "/pwFind":
+				System.out.println("비밀번호 찾기 요청");
+				service.pwFind();
+				break;
+				
 			case "/myPage/follow":
 				System.out.println("팔로우 하기_마이페이지");
 				service.follow();
@@ -113,11 +132,10 @@ public class MemberController extends HttpServlet {
 			case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
-				break;
-				
-			case "/myPage/page":
-				System.out.println("페이징 처리");
-				/*service.pagingMyPage();*/
+
+			case "/pwQuestionList":
+				System.out.println("비밀번호 질문지 요청");
+				service.pwQuestionList();
 				break;
 		}
 		

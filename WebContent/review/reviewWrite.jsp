@@ -29,30 +29,30 @@
             width: 70%;
             text-align: center;
         }
-    </style>
+</style>
 </head>
 <body>
     <h3 class="title">리뷰 작성하기</h3>
     <table>
         <tr>
             <th>제목</th>
-            <td><input type="text" id="subject" style="width: 97%;"/></td>
-            
+            <td><input type="text" id="subject" style="width: 80%;"/></td>
             <th>작성자</th>
-            <td>세션아이디에서 가져오기</td>
+            <td><input type="text" id="id" value="${sessionScope.loginId}" style="width: 80%;" readonly/></td>
         </tr>
         
         <tr>
         <th>영화제목</th>
         <td>
-        	<input type="hidden" id="movieCode" value="19398001"/>
-            <input type="text" id="movieName" value="오즈의 마법사" style="width: 80%;"/>
-            <input type="button" value="검색" onclick="location.href='./movieSearch.jsp' "/>
+        	<input type="hidden" id="movieCode" />
+            <input type="text" id="movieName" style="width: 80%;"/>
+            <input type="button" value="검색" onclick="movieSearchOpen()"/>
         </td>
         
         <th>평점</th>
         <td>
             <select id="score" class="star">
+            	<option value="0"></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -64,21 +64,21 @@
         
         <tr>
             <td colspan="4">
-                <textarea id="content" rows="0" cols="0"></textarea>
+                <textarea id="content"></textarea>
             </td>
         </tr>
         
     </table>
     <div class="button">
         <input type="button" id="save" value="저장"/>
-        <input type="button" value="취소" onclick="location.href='../reviewList' "/>
+        <input type="button" value="취소" onclick="cancel()"/>
     </div>
 </body>
 <script>
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = "juju"; //아이디 세션에서 가져오기
+	var id = $("#id").val(); //아이디 세션에서 가져오기
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
@@ -86,33 +86,60 @@ $("#save").click(function(){
 	
 	console.log(subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 
-	$.ajax({ 
-		type:'post' 
-		,url:'../reviewWrite' 
-		,data:{
-			'subject':subject,
-			'id':id,
-			'movieCode':movieCode,
-			'movieName':movieName,
-			'score':score,
-			'content':content
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			console.log('data.success');
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "../reviewList";
-			}else{
-				alert('리뷰 작성에 실패했습니다.');
+	if(subject==""){
+		alert("제목을 입력해주세요.");
+		$("#subject").focus();
+	}else if(id==""){
+		alert("로그인을 해주세요.");
+	}else if(movieCode=="" || movieName==""){
+		alert("적합한 영화를 선택해주세요.");
+		$("#movieName").focus();
+	}else if(score==0){
+		alert('평점을 선택해주세요.');
+		$("#score").focus();
+	}else if(content==""){
+		alert('내용을 입력해주세요.');
+		$("#content").focus();
+	}else{
+		$.ajax({ 
+			type:'post' 
+			,url:'../reviewWrite' 
+			,data:{
+				'subject':subject,
+				'id':id,
+				'movieCode':movieCode,
+				'movieName':movieName,
+				'score':score,
+				'content':content
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
-	
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				console.log('data.success');
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "../reviewList";
+				}else{
+					alert('리뷰 작성에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
+
+function movieSearchOpen(){
+	var movieName = $("#movieName").val();
+	window.open("../reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
+}
+
+function cancel(){
+	var check = confirm('이미 작성한 내용은 모두 지워집니다. 취소하시겠습니까?');
+	if(check){
+		location.href='../reviewList' 
+	}
+}
 </script>
 </html>

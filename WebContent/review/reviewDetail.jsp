@@ -1,15 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,td,th{
             border-top: 1px solid lightgray;
@@ -20,7 +22,7 @@
             padding: 10px;
         }
         div{
-            width: 70%;
+            width: 100%;
         }
         .aTag{
             text-align: right;
@@ -35,21 +37,20 @@
         .list{
             text-align: center;
         }
-        .comment{
-            margin-bottom: 10px;
-
-        }
-
-    </style>
+</style>
 </head>
 <body>
 	<input type="hidden" id="review_idx" value="${review.idx}"/>
+	
 	<table>
         <tr>
-            <td colspan="6">
-                <div>
+        	<th>리뷰 영화</th>
+            <td colspan="5">
+            	<c:if test="${review.posterURL ne null}">
+            		<div>
                     <img src="${review.posterURL}"/>
-                </div>
+                	</div>
+            	</c:if>
                 <div>
                     ${review.movieName}
                 </div>
@@ -64,28 +65,30 @@
             <td>${review.id}</td>
         </tr>
         <tr>
-            <td colspan="6">${review.content}</td>
+            <td colspan="6">
+            ${fn:replace(review.content, cn, br)}
+            </td>
         </tr>
         <tr>
         	<!-- 세션아이디 가져와서 작성자와 같으면 그냥 냅두고 -->
         	<!-- 작성자와 다른데 좋아요 이미 눌렀으면? -->
         	<!-- 작성자와 다른데 좋아요 안눌렀으면? -->
         	<c:if test="${sessionScope.loginId eq review.id}">
-        		<th>좋아요</th>
+        		<th><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
         	</c:if>
         	<c:if test="${sessionScope.loginId ne review.id}">
         		<c:if test="${reviewLike eq 1}">
-        			<th class="like" style="cursor: pointer;  color: red;" onclick="reviewLike(${review.idx})">좋아요 취소</th>
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="fas fa-heart"></i></th>
         		</c:if>
         		<c:if test="${reviewLike eq 0}">
-        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})">좋아요</th>
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
         		</c:if>
         	</c:if>
             <td id="reviewCntLike">${review.cntLike}</td>
             <!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
             <td colspan="2">
             <c:if test="${sessionScope.loginId ne review.id}">
-            	<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            	<a onclick="reportOpen(${review.idx},2001)" style="cursor: pointer;">신고</a>
             </c:if>
             </td>
             <th>작성일</th>
@@ -95,7 +98,7 @@
     <div class="aTag">
 	  	<c:if test="${sessionScope.loginId eq review.id}">
 	   		<a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
-	    	<a href="reviewDel?Idx=${review.idx}">삭제</a>
+	    	<a onclick="return confirm('정말 삭제하시겠습니까?')" href="reviewDel?Idx=${review.idx}">삭제</a>
 	    </c:if>
     </div>
 
@@ -103,19 +106,23 @@
     <input type="button" value="리스트" onclick="location.href='./reviewList' "/>
     </div>
 
-
-    <div style="margin-bottom: 10px;">
-    <span>댓글</span>
+    <div style="margin: 30px 10px;">
+    <h3>댓글</h3>
     </div>
-
-    <div class="comment">
-        <div>
-        <input type="hidden" id="comment_idx"/>
-        <input type="text" id="comment_content" style="width: 90%; height: 50px;"/>
-        <input type="button" id="save" value="등록"  style="width:7%; height: 50px;"/>
-        <input type="hidden" id="update" value="수정" style="width:7%; height: 50px;"/>
-        </div>
-    </div>
+	
+	<table>
+		<tr>
+			<td>
+	        	<input type="hidden" id="comment_idx"/>
+	        	<textarea id="comment_content" style="width: 100%; height: 50px; resize: none;"></textarea>
+	        </td>
+	        <td>
+	        	<input type="button" id="save" value="등록"  style="width:20%; height: 50px;"/>
+	        	<input type="hidden" id="update" value="수정" style="width:20%; height: 50px;"/>
+	        </td>
+		</tr> 
+	</table>
+   
 
     <table>
         <tr>
@@ -124,14 +131,14 @@
             <th>작성일</th>
         </tr>
         <c:forEach items="${comment}" var="comment">
-        <tr>
-            <td>${comment.content}</td>
+        <tr style="text-align: center;">
+            <td> ${fn:replace(comment.content, cn, br)}</td>
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
             
             <td style="border-top: white; border-bottom: white; ">
             	<c:if test="${sessionScope.loginId ne comment.id}">
-            		<a onclick="reportOpen()" style="cursor: pointer;">신고</a>
+            		<a onclick="reportOpen(${comment.idx},2002)" style="cursor: pointer;">신고</a>
             	</c:if>
             </td>
             <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
@@ -141,7 +148,7 @@
             </td>
             <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
             	<c:if test="${sessionScope.loginId eq comment.id}">
-            		<a href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
+            		<a onclick="return confirm('정말 삭제하시겠습니까?')" href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
             	</c:if>
             </td>
         </tr>
@@ -155,30 +162,35 @@ $("#save").click(function(){
 	var review_idx = $("#review_idx").val();
 	
 	console.log(content + " / " + id + " / " + review_idx);
-
-	$.ajax({ 
-		type:'post' 
-		,url:'./commentWrite' 
-		,data:{ 
-			'content':content,
-			'id':id,
-			'review_idx':review_idx,
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			console.log('data.success');
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "./reviewDetail?Idx="+review_idx;
-			}else{
-				alert('댓글 작성에 실패했습니다.');
+	
+	if(content==""){
+		alert("내용을 입력해주세요.");
+		$("#content").focus();
+	}else{
+		$.ajax({ 
+			type:'post' 
+			,url:'./commentWrite' 
+			,data:{ 
+				'content':content,
+				'id':id,
+				'review_idx':review_idx,
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				console.log('data.success');
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "./reviewDetail?Idx="+review_idx;
+				}else{
+					alert('댓글 작성에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 
 function update(comment_idx){
@@ -208,28 +220,33 @@ $("#update").click(function(){
 	var content = $("#comment_content").val();
 	var review_idx = $("#review_idx").val();
 	console.log(content + " / "+ comment_idx);
-
-	$.ajax({
-		type:'post' 
-		,url:'./commentUpdate' 
-		,data:{
-			'content':content,
-			'comment_idx':comment_idx,
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			if(data.success == 1){
-				alert(data.msg);
-				location.href = "./reviewDetail?Idx="+review_idx;
-			}else{
-				alert('댓글 수정에 실패했습니다.');
+	
+	if(content==""){
+		alert("내용을 입력해주세요.");
+		$("#content").focus();
+	}else{
+		$.ajax({
+			type:'post' 
+			,url:'./commentUpdate' 
+			,data:{
+				'content':content,
+				'comment_idx':comment_idx,
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				if(data.success == 1){
+					alert(data.msg);
+					location.href = "./reviewDetail?Idx="+review_idx;
+				}else{
+					alert('댓글 수정에 실패했습니다.');
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 
 function reviewLike(review_idx){
@@ -243,7 +260,12 @@ function reviewLike(review_idx){
 		,success: function(data){
 			console.log(data);
 			if(data.success == 1){
-				location.href = "./reviewDetail?Idx="+review_idx;
+				var reviewLike ="${reviewLike}";
+				if(reviewLike == 0){ //좋아요 안한 경우
+					$('.like').html(' <i style="color: red; font-size: 23px;" class="fas fa-heart"></i> ');
+				}else{ //좋아요 한경우
+					$('.like').html(' <i style="color: red; font-size: 23px;" class="far fa-heart"></i> ');
+				}
 			}
 		}
 		,error: function(e){
@@ -252,13 +274,13 @@ function reviewLike(review_idx){
 	});
 }
 
-function reportOpen(){
-	window.open("./review/report.jsp", "report", "width=400, height=400, left=100, top=100");
-}
-
+function reportOpen(idx, type_idx){
+	window.open("./reviewReportForm?idx="+idx+"&type_idx="+type_idx, "report", "width=600, height=300, left=200, top=100");
+	}
+	
 var msg="${msg}";
-if(msg!=""){
-	alert(msg);
-}
+	if(msg!=""){
+		alert(msg);
+	}
 </script>
 </html>

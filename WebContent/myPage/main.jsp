@@ -54,13 +54,15 @@
             }
            .mainData{
                font-family: Verdana;
-               width: 70%;
+               width: 50%;
                margin-top: 40px;
-               margin-left: 12%;
+               margin-left: 30%;
            }    
-           table {
+           table,input[type="text"]{
                text-align: center;
-               width: 100%;
+               width: 70%;
+               height: 20px;
+               
            }
            th{
                background-color: lightgrey;
@@ -78,7 +80,11 @@
         <h2>로고</h2>
         <p>
      		${sessionScope.myLoginId}님,
+<<<<<<< HEAD
            <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃 ]</a>
+=======
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
+>>>>>>> d190351670face04dbe089ccbaace98c85ba35bf
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
@@ -156,7 +162,7 @@
            </nav>
        </div>    
        <div class="mainData">
-           <h3>로그인</h3>
+           <h1>로그인</h1>
            <span>
            		<button onclick="location.href='./follow?targetId=${targetId}'">팔로우</button>
            </span>

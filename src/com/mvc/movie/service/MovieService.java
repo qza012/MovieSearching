@@ -3,17 +3,15 @@ package com.mvc.movie.service;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mvc.member.dao.MemberDAO;
-import com.mvc.member.dto.MemberDTO;
 import com.mvc.movie.dao.MovieDAO;
 import com.mvc.movie.dto.MovieDTO;
-import com.mvc.review.dao.ReviewDAO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieService {
@@ -37,7 +35,6 @@ public class MovieService {
 		} finally {
 			dao.resClose();
 		}
-
 		System.out.println("영화 갯수 : " + top.size());
 		req.setAttribute("top", top);
 		dis = req.getRequestDispatcher("index.jsp");
@@ -45,54 +42,65 @@ public class MovieService {
 		return top;
 	}
 
-	public void list() throws ServletException, IOException {
-		String loginId = (String) req.getSession().getAttribute("loginId"); // 로그인 아이디 불러오기(저장된 세션)
-		if (loginId == null) {
-			resp.sendRedirect("home");
-		} else {
-			MovieDAO dao = new MovieDAO();
-			ArrayList<MovieDTO> list = null;
-			try {
-				list = dao.list();
-				System.out.println("영화 갯수 : " + list.size());
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dao.resClose();
-			}
-
-			req.setAttribute("list", list);
-			dis = req.getRequestDispatcher("movielist.jsp");
-			dis.forward(req, resp);
+	public void movieList() throws ServletException, IOException {
+//		String loginId = (String) req.getSession().getAttribute("loginId");
+//		if (loginId != null) {
+		String pageParam = req.getParameter("page");
+		System.out.println("현재 페이지 : " + pageParam);
+		int group = 1;
+		if (pageParam != null) {
+			group = Integer.parseInt(pageParam);
 		}
+		MovieDAO dao = new MovieDAO();
+		try {
+			HashMap<String, Object> map = dao.movieList(group);
+			dao = new MovieDAO();
+			req.setAttribute("maxPage", map.get("maxPage"));
+			if (req.getAttribute("search_list") == null) {
+				req.setAttribute("movie_list", map.get("list"));
+			} else {
+				req.setAttribute("movie_list", req.getAttribute("search_list"));
+			}
+			req.setAttribute("currPage", group);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		dis = req.getRequestDispatcher("movielist.jsp");
+		dis.forward(req, resp);
+//		} else {
+//			resp.sendRedirect("index.jsp");
+//		}
+//	}
 	}
 
 	public void detail() throws ServletException, IOException {
-		MovieDAO movie_dao = new MovieDAO();
-		MovieDTO movie_dto = new MovieDTO();
+		MovieDAO dao = new MovieDAO();
+		MovieDTO dto = new MovieDTO();
 		String loginId = (String) req.getSession().getAttribute("loginId");
 
-		if (loginId == null) {
-			resp.sendRedirect("home");
-		} else {
-			String movieCode = req.getParameter("movieCode");
-			movie_dao = new MovieDAO();
-			ArrayList<ReviewDTO> review_dto = null;
-			try {
-				movie_dto = movie_dao.detail(movieCode);
-				review_dto = movie_dao.review(movieCode);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				movie_dao.resClose();
-			}
+//		if (loginId == null) {
+//			resp.sendRedirect("home");
+//		} else {
+		String movieCode = req.getParameter("movieCode");
+		dao = new MovieDAO();
+		ArrayList<ReviewDTO> review = null;
+		try {
+			dto = dao.detail(movieCode);
 			System.out.println("영화코드 : " + movieCode);
-			System.out.println("리뷰 갯수 : " + review_dto.size());
-			req.setAttribute("movie", movie_dto);
-			req.setAttribute("review", review_dto);
-			dis = req.getRequestDispatcher("moviedetail.jsp");
-			dis.forward(req, resp);
+			req.setAttribute("movie", dto);
+			review = dao.review(movieCode);
+			System.out.println("리뷰 갯수 : " + review.size());
+			req.setAttribute("review", review);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
 		}
+		dis = req.getRequestDispatcher("moviedetail.jsp");
+		dis.forward(req, resp);
+//		}
 	}
 
 	public void likeMovie() throws ServletException, IOException {
@@ -103,18 +111,75 @@ public class MovieService {
 		 */
 //		String loginId = (String) req.getSession().getAttribute("loginId");
 //		if(loginId!=null) {
-//			String id = req.getParameter("id");
-//			System.out.println("영화보기 할 id"+id);
-//			MovieDAO dao = new MovieDAO();
-//			ArrayList<MovieDTO> movie_list = dao.detail(id);
-//			if(movie_list!=null) {
-//				req.setAttribute("movie_list", movie_list);
-//			}
-//			dis = req.getRequestDispatcher("movie.jsp");
-//			dis.forward(req, resp);
+		String id = req.getParameter("id");
+		System.out.println("영화보기 할 id" + id);
+		MovieDAO dao = new MovieDAO();
+		try {
+			ArrayList<MovieDTO> movie_list = dao.likeMovie(id);
+			if (movie_list != null) {
+				req.setAttribute("movie_list", movie_list);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		dis = req.getRequestDispatcher("movie.jsp");
+		dis.forward(req, resp);
 //		}else {
 //			resp.sendRedirect("index.jsp");
 //		}
 	}
+
+	public void movieSearch() throws ServletException, IOException {
+		String pageParam = req.getParameter("page");
+		String search = req.getParameter("search");
+		System.out.println("search값:" + search);
+		String keyWord = req.getParameter("keyWord");
+		System.out.println("검색 요청한 키워드:" + keyWord);
+
+		int group = 1;
+		if (pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}
+
+		MovieDAO dao = new MovieDAO();
+		try {
+			HashMap<String, Object> map = dao.movieSearch(keyWord, search, group);
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("keyWord", keyWord);
+			req.setAttribute("search", search);
+			if (map != null) {
+				req.setAttribute("search_list", map.get("list"));
+			}
+			req.setAttribute("currPage", group);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
+		dis = req.getRequestDispatcher("search.jsp");
+		dis.forward(req, resp);
+	}
+//	public void search() throws ServletException, IOException {
+//		String search = req.getParameter("search");
+//		System.out.println("search값:" + search);
+//		String keyWord = req.getParameter("keyWord");
+//		System.out.println("검색 요청한 키워드:" + keyWord);
+//		MovieDAO dao = new MovieDAO();
+//		try {
+//			ArrayList<MovieDTO> search_list = dao.search(keyWord, search);
+//			if (search_list != null) {
+//				req.setAttribute("search_list", search_list);
+//				System.out.println(search_list.size());
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			dao.resClose();
+//		}
+//		dis = req.getRequestDispatcher("movielist");
+//		dis.forward(req, resp);
+//	}
 
 }

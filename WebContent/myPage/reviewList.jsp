@@ -72,13 +72,30 @@
             #delete{
             	color: red;
             }
+            .pageArea{
+				width:700px;
+				text-align: center;
+				margin-top: 25px;
+				margin-left: 25%;
+			}
+			.pageArea span{
+				font-size:16px;
+				padding: 5px 10px;
+				margin: 5px;
+			}
+			#btn{
+				color:balck;
+			}
+			#page{
+				color:red;
+			}
         </style>
     </head>
     <body>
         <h2>로고</h2>
         <p>
      		${sessionScope.myLoginId}님,
-           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃 ]</a>
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
@@ -176,17 +193,17 @@
             </table>
         </div>
         <div class="pageArea">
-			<span>
-				<c:if test="${currPage == 1}">이전</c:if>
+			<span id="btn">
+				<c:if test="${currPage == 1}"> 이전</c:if>
 				<c:if test="${currPage > 1}">
-					<a href="./?page=${currPage-1}">이전</a>
-				</c:if>				
+					<a href="./myReviewList?id=${sessionScope.myLoginId}&page=${currPage-1}">이전</a>
+				</c:if>
 			</span>
 			<span id="page">${currPage}</span>
-			<span>
+			<span id="btn">
 				<c:if test="${currPage == maxPage}">다음</c:if>
 				<c:if test="${currPage < maxPage}">
-					<a href="./?page=${currPage+1}">다음</a>	
+					<a href="./myReviewList?id=${sessionScope.myLoginId}&page=${currPage+1}">다음</a>
 				</c:if>	
 			</span>
 		</div>

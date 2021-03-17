@@ -26,6 +26,10 @@ public enum AdminSql {
 	,REPORT_TABLE("report3")
 	,REPORT_COLUMNS("idx, report_id, report_idx, content, reg_date, type_idx, complete")
 	
+	// movie3
+	,MOVIE_TABLE("movie3")
+	,MOVIE_COLUMNS("movieCode, movieName, openDate, genre, director, country, actors, grade, youtubeUrl, posterUrl")
+	
 	;
 
 	private final String value;

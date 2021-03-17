@@ -41,7 +41,7 @@
 		<c:forEach items="${reportList }" var="report" varStatus="status">
 		<tr>
 			<td>${report.idx }</td>
-			<td>${report.report_idx }</td>
+			<td><a href="#?idx=${report.report_idx }">${report.report_idx }</a></td>
 			<td>${report.content }</td>
 			<td>${report.report_id }</td>
 			<td>${reviewList[status.index].id }</td>

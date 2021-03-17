@@ -68,8 +68,7 @@ li {
 	overflow: hidden;
 	position: relative;
 	height: 600px;
-	padding-top: 68px;
-	border: 1px solid black;
+	padding: 30px;
 }
 </style>
 </head>
@@ -84,7 +83,7 @@ li {
 						<div class="naviscroll-in">
 							<ul class="navi">
 								<li><a href="home" id="moviehome" title="영화홈"><h3>영화 홈</h3></a></li>
-								<li><a href="movielist" id="movielist" title="영화 리스트"><h3>영화리스트</h3></a></li>
+								<li><a href="movieList" id="movieList" title="영화 리스트"><h3>영화리스트</h3></a></li>
 								<li><a href="#" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
 								<li><a href="#" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
 								<li><a href="#" id="moviedownload" title="영화 다운로드"><h3>영화다운로드</h3></a></li>
