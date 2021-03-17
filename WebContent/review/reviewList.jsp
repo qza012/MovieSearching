@@ -5,8 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
@@ -78,16 +77,17 @@ a:link, a:hover, a:visited, a:active {
 		<div id="container">
 			<div id="content">
 				<div class="movie_main">
-
+				
+				<!-- 본인 코드  삽입-->
 					<form action="reviewSearchList" method="POST">
 						<div class="search">
 							<select name="search" class="searchBar">
 								<option value="movieName" selected>영화 제목</option>
 								<option value="id">사용자 아이디</option>
 								<option value="subject">리뷰 제목</option>
-							</select> <input class="searchForm" id="keyword" name="keyword"
-								type="text" /> <input type="button" id="searchButton" value="검색"
-								onclick="keywordCheck()" />
+							</select> 
+							<input class="searchForm" id="keyword" name="keyword"type="text" /> 
+							<input type="button" id="searchButton" value="검색" onclick="keywordCheck()" />
 						</div>
 					</form>
 					<h2 style="color: white;">전체 리뷰</h2>
@@ -105,8 +105,7 @@ a:link, a:hover, a:visited, a:active {
 						<c:forEach items="${review}" var="review">
 							<tr>
 								<td>${review.idx}</td>
-								<td class="reviewDetail"
-									onclick="location.href='reviewDetail?Idx=${review.idx}' ">${review.subject}</td>
+								<td class="reviewDetail" onclick="location.href='reviewDetail?Idx=${review.idx}' ">${review.subject}</td>
 								<td class="movieDetail" onclick="location.href='#' ">${review.movieName}</td>
 								<td>${review.score}</td>
 								<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
@@ -152,7 +151,7 @@ a:link, a:hover, a:visited, a:active {
 						<input type="button" value="리뷰 작성"
 							onclick="location.href='./review/reviewWrite.jsp' ">
 					</div>
-
+			<!-- 본인코드 삽입 -->
 				</div>
 			</div>
 		</div>
