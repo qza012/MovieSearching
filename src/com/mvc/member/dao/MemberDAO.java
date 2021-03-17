@@ -702,7 +702,8 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return map;
-
+	}
+	
 	public int alarm(String targetId, String myId) throws SQLException {
 		String sql = "INSERT INTO alarm3(idx,reg_date,content,target_id,id)VALUES(alarm3_seq.NEXTVAL,SYSDATE,?,?,?)";
 		int success = 0;

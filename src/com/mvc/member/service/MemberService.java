@@ -381,42 +381,10 @@ public class MemberService {
 		dis.forward(req, resp);
 	}
 
+	
 	public void follow() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
-		MemberDAO dao =new MemberDAO();
 		if(loginId != null) {
-			req.setCharacterEncoding("UTF-8");
-			String orNot = req.getParameter("팔로우");
-			if(orNot != null) {
-				String myId = (String) req.getSession().getAttribute("myLoginId");
-				String targetId = req.getParameter("targetId");
-				System.out.println(myId+"님이, "+targetId+"님을 팔로우");
-				
-				dao = new MemberDAO();
-				boolean success = dao.follow(myId,targetId);
-				
-				if(success) {
-					System.out.println("팔로우 신청!");
-				}
-			} else {
-				orNot = req.getParameter("팔로우 취소");
-				String myId = (String) req.getSession().getAttribute("myLoginId");
-				String targetId = req.getParameter("target_id");
-				System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
-				
-				dao = new MemberDAO();
-				boolean success = dao.notFollow(myId,targetId);
-				
-				if(success) {
-					System.out.println("팔로우 취소!");
-				}
-			}
-			dao.resClose();
-			RequestDispatcher dis = req.getRequestDispatcher("./member");
-			dis.forward(req, resp);
-		} else {
-			resp.sendRedirect("/movie/home");
-
 			String myId = (String) req.getSession().getAttribute("myLoginId");
 			String targetId = req.getParameter("targetId");
 			String follow = req.getParameter("btn");
