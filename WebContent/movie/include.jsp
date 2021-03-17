@@ -94,7 +94,7 @@ li {
 										<li><a href="/MovieSearching/myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
 										<li><a href="/MovieSearching/myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
 										<li><a href="/MovieSearching/myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
-										<li><a href="/MovieSearching/member/alram.jsp" title="알람"> 알람 </a></li>
+										<li><a href="/MovieSearching/member/alarm.jsp" title="알람"> 알람 </a></li>
 									</ul>
 								</li>
 								<li><a href="#" id="adminpage" title="관리자페이지"><h3>관리자페이지</h3></a>
