@@ -165,7 +165,6 @@
     </div>
     <div id="search">
         <form action="search" method="GET">
-        <button><a href="member">회원목록 돌아가기</a></button>
             <select id="select" name="search">
                 <option value="id">ID</option>
                 <option value="name">이름</option>

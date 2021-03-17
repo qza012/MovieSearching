@@ -8,7 +8,14 @@ public class AlarmDTO {
 	private Date reg_date;
 	private int type_idx;
 	private String content;
+	private String id;
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public int getIdx() {
 		return idx;
 	}
