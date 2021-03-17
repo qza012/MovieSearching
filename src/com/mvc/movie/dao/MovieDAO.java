@@ -11,7 +11,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.movielike.dto.MovieLikeDTO;
 import com.mvc.rank.dto.RankDTO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -262,7 +264,7 @@ public class MovieDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT m.movieName, m.genre, m.director, m.openDate FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		String sql="SELECT m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {	
@@ -277,6 +279,7 @@ public class MovieDAO {
 				dto.setGenre(rs.getString("genre"));
 				dto.setDirector(rs.getString("director"));
 				dto.setOpenDate(rs.getDate("openDate"));
+				dto.setPosterUrl(rs.getString("posterUrl"));
 				list.add(dto);
 			}
 			for(int i=start-1; i<end; i++) {
@@ -294,6 +297,24 @@ public class MovieDAO {
 			e.printStackTrace();
 		}
 		return map;
+	}
+
+	public boolean notLikeMovie(String loginId, String idx) {
+		boolean success = false;
+		String sql="DELETE movie_like3 WHERE id=?, idx=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, Integer.parseInt(idx));
+			int count = ps.executeUpdate();
+			if(count>0) {
+				success = true;
+			}
+			System.out.println("deleteIdx : "+idx+", "+success);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 }

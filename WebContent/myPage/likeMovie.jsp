@@ -22,9 +22,6 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
-            	float: left;
-            }
             .likeMovie {
                 font-family: Verdana;
                 width: 70%;
@@ -68,32 +65,23 @@
     <body>
 		<jsp:include page="/movie/include.jsp" />
         <div class="likeMovie">
-            <h3>좋아요한 영화 -> 아직 내용 안불러온거에요</h3>
+            <h3>좋아요한 영화</h3>
             <table>
                 <tr>
                     <th></th>
                     <th>영화제목</th>
                     <th>장르</th>
                     <th>감독</th>
-                    <th>배우</th>
                     <th>개봉일</th>
                     <th></th>
                 </tr>
-                <tr>
-                	<td><img src="https://i.pinimg.com/originals/96/a0/0d/96a00d42b0ff8f80b7cdf2926a211e47.jpg" width="100px"></td>
-                	<td> 영화는 어떻게 만들어 지는가 </td><td> 다큐 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./iDonotLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-               	</tr>
-                <tr>
-                    <td><img src="https://i.pinimg.com/736x/30/d5/38/30d53895b7337958e79aff2e974c7a1f.jpg" width="100px"></td>
-                	<td> The Title </td><td> 액션 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-                </tr>
-                <tr>
-                    <td><img src="https://i.pinimg.com/originals/9e/4b/97/9e4b97433364d774a2a4a9c6290e8906.jpg" width="100px"></td>
-                	<td> 영화같은 삶 </td><td> 멜로 </td><td> 익명 </td><td> 김배우, 이배우 </td><td> 2021-03-09 </td>
-                    <td><button id="notLikeMovie" onclick="location.href='./notLikeMovie?idx=${review.idx}'">좋아요 취소</button></td>
-                </tr>
+                <c:forEach items="${movie_list}" var="movie">
+                	<tr>
+                		<td><img src="${movie.posterUrl}" width="100px"></td>
+                		<td> ${movie.movieName}</td><td>${movie.genre}</td><td>${movie.director}</td>
+                		<td>${movie.openDate}</td><td><button id="notLike" onclick="location.href='./notLikeMovie?idx=${movie.idx}'">좋아요 취소</button></td>
+                	</tr>
+                </c:forEach>
             </table>
         </div>
         <div class="pageArea">
