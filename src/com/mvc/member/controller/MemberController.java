@@ -139,10 +139,7 @@ public class MemberController extends HttpServlet {
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();
 				break;
-				
-<<<<<<< HEAD
-			case "/myPage/alarmList":
-=======
+
 			case "/member/fChk":
 				System.out.println("팔로우 체크");
 				service.followCheck();
@@ -152,8 +149,7 @@ public class MemberController extends HttpServlet {
 				System.out.println("알람 체크");
 				service.alramChk();
 
-			case "/member/alarmList":
->>>>>>> 2352a0dba8923c732d285b6ba8e87cd37d297f1a
+			case "/myPage/alarmList":
 				System.out.println("알람보기 요청");
 				service.alarmList();
 				break;

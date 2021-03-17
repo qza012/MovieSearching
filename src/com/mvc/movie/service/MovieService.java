@@ -29,14 +29,15 @@ public class MovieService {
 	public ArrayList<MovieDTO> main() throws ServletException, IOException {
 		MovieDAO dao = new MovieDAO();
 		ArrayList<MovieDTO> top = null;
-		try {
-			String week = "202102";
-			top = dao.main(week);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
-		}
+//		try {
+//			String week = "202102";
+//			top = dao.main(week);
+			top = new ArrayList<MovieDTO>();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			dao.resClose();
+//		}
 		System.out.println("영화 갯수 : " + top.size());
 		req.setAttribute("top", top);
 		dis = req.getRequestDispatcher("index.jsp");
