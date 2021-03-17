@@ -29,7 +29,8 @@ public class MovieService {
 		MovieDAO dao = new MovieDAO();
 		ArrayList<MovieDTO> top = null;
 		try {
-			top = dao.main();
+			String week = "202102";
+			top = dao.main(week);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -161,25 +162,5 @@ public class MovieService {
 		dis = req.getRequestDispatcher("search.jsp");
 		dis.forward(req, resp);
 	}
-//	public void search() throws ServletException, IOException {
-//		String search = req.getParameter("search");
-//		System.out.println("search값:" + search);
-//		String keyWord = req.getParameter("keyWord");
-//		System.out.println("검색 요청한 키워드:" + keyWord);
-//		MovieDAO dao = new MovieDAO();
-//		try {
-//			ArrayList<MovieDTO> search_list = dao.search(keyWord, search);
-//			if (search_list != null) {
-//				req.setAttribute("search_list", search_list);
-//				System.out.println(search_list.size());
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			dao.resClose();
-//		}
-//		dis = req.getRequestDispatcher("movielist");
-//		dis.forward(req, resp);
-//	}
 
 }

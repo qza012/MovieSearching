@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="com.mvc.movie.dto.*"%>
 <!DOCTYPE html>
@@ -25,6 +24,14 @@ table, th, td {
 	color: white;
 }
 
+.movie_main {
+	overflow: hidden;
+	position: relative;
+	height: 600px;
+	padding: 30px;
+	text-align: center;
+}
+
 .review>ul li table tr td {
 	width: 182px;
 	height: 50px;
@@ -37,11 +44,9 @@ table, th, td {
 	text-align: right;
 }
 
-.movie_Like {
-	padding-right: 30px;
+.movieLike {
 	font-size: 15px;
 	font-weight: bold;
-	text-align: right;
 }
 </style>
 </head>
@@ -51,7 +56,9 @@ table, th, td {
 		<div id="container">
 			<div id="content">
 				<div class="movie_main">
-					<div class="movie_Like"><input type="button" class="like" value="좋아요"></div>
+					<div class="movie_Like">
+						
+					</div>
 					<ul style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
 						<li>
 							<table>
@@ -102,6 +109,5 @@ table, th, td {
 	</div>
 </body>
 <script>
-	
 </script>
 </html>

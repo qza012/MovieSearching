@@ -32,11 +32,11 @@ public class MovieDAO {
 
 	public void resClose() {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (ps != null) {
+				ps.close();
 			}
-			if (conn != null) {
-				conn.close();
+			if (rs != null) {
+				rs.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -47,11 +47,12 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> main() throws SQLException {
-		String sql = "SELECT DISTINCT * FROM rank3 r, movie3 m WHERE ROWNUM <= 10 ORDER BY rank";
+	public ArrayList<MovieDTO> main(String week) throws SQLException {
+		String sql = "SELECT * FROM (SELECT * FROM rank3 WHERE week=?), movie3 ORDER BY rank";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
+			ps.setString(1, week);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
@@ -176,7 +177,7 @@ public class MovieDAO {
 	}
 
 	public ArrayList<ReviewDTO> review(String movieCode) {
-		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=?";
+		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=? ORDER BY reg_date DESC";
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
 			ps = conn.prepareStatement(sql);

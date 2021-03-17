@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.service.MovieService;
-import com.mvc.review.service.ReviewService;
 
-
-@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/likeMovie", "/movie/movieSearch", "/myPage/iLikeMovie" })
+@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/likeMovie", "/movie/movieSearch",
+		"/myPage/iLikeMovie" })
 
 public class MovieController extends HttpServlet {
 
@@ -56,20 +55,15 @@ public class MovieController extends HttpServlet {
 			service.likeMovie();
 			break;
 
-
 		case "/myPage/iLikeMovie":
 			System.out.println("임시 url");
 			resp.sendRedirect("./likeMovie.jsp");
 			break;
 
-
 		case "/movie/movieSearch":
 			System.out.println("검색 요청");
-			service.movieSearch();;
+			service.movieSearch();
 			break;
-
-
 		}
 	}
-
 }
