@@ -7,7 +7,8 @@
 		<title>likeMovie</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
-        	h3{
+        	h2{
+				margin-top: 5%;
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -22,10 +23,7 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
-            	float: left;
-            }
-            .likeMovie {
+			.likeMovie {
                 font-family: Verdana;
                 width: 70%;
                 margin-top: 40px;
@@ -68,7 +66,7 @@
     <body>
 		<jsp:include page="/movie/include.jsp" />
         <div class="likeMovie">
-            <h3>좋아요한 영화 -> 아직 내용 안불러온거에요</h3>
+            <h2>좋아요한 영화 -> 아직 내용 안불러온거에요</h2>
             <table>
                 <tr>
                     <th></th>

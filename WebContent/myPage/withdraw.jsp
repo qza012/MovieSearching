@@ -22,9 +22,6 @@
 			::marker {
 				font-size: 0px;
 			}
-			div{
-            	float: left;
-            }
            	.withdraw{
 				text-align: center;
                 font-family: Verdana;

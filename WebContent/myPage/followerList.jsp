@@ -22,21 +22,20 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
-            	float: left;
-            }
             .followerList {
                 font-family: Verdana;
-                width:65%;
+                width:60%;
                 margin-top: 5%;
                 margin-left: 30%;
             } 
             #table{
             	padding: 1%;
             	margin: 1%;
-            	width: 40%;
+            	width: 20%;
+            	height: 15%;
             	border: 1px solid black;
             	background-color: white;
+            	float: left;
             }
             #followerId{
             	color: red;
@@ -61,7 +60,7 @@
             .pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 25px;
+				margin-top: 20%;
 				margin-left: 40%;
 			}
 			.pageArea span{
@@ -90,6 +89,7 @@
                 </div>
         	</c:forEach>
         </div>
+        <div></div>
         <div class="pageArea">
 			<span id="btn">
 				<c:if test="${currPage == 1}"> 이전</c:if>

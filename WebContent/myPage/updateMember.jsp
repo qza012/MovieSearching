@@ -7,7 +7,8 @@
 		<title>UpdateMember</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
        	<style>
- 			h3{
+ 			h2{
+ 				margin-top: 5%;
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -21,9 +22,6 @@
             }
             ::marker {
                 font-size: 0px;
-            }
-            div{
-            	float: left;
             }
             #login{
             	float: right;
@@ -67,7 +65,7 @@
     <body>
         <jsp:include page="/movie/include.jsp"/>
         <div class="updateMember">
-            <h3>회원정보 수정</h3>
+            <h2>회원정보 수정</h2>
             <form action="./update" method="post" enctype="multipart/form-data" >
 	            <table>
 	                <tr>

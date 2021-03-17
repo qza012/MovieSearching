@@ -59,7 +59,7 @@ public class MovieController extends HttpServlet {
 
 		case "/myPage/iLikeMovie":
 			System.out.println("임시 url");
-			resp.sendRedirect("./likeMovie.jsp");
+			service.iLikeMovie();
 			break;
 
 

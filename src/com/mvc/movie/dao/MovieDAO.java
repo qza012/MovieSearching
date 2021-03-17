@@ -285,4 +285,8 @@ public class MovieDAO {
 		return null;
 	}
 
+	public HashMap<String, Object> myLikeMovie(String loginId, int group) {
+		return null;
+	}
+
 }

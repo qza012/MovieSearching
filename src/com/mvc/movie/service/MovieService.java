@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.dao.MovieDAO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.review.dao.ReviewDAO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieService {
@@ -181,5 +182,33 @@ public class MovieService {
 //		dis = req.getRequestDispatcher("movielist");
 //		dis.forward(req, resp);
 //	}
+
+	public void iLikeMovie() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
+			MovieDAO dao = new MovieDAO();
+			HashMap<String, Object> map = dao.myLikeMovie(loginId,group);
+			String page="./main.jsp";
+			
+			if(map != null) {
+				page="/myPage/likeMovie.jsp";
+				req.setAttribute("list", map.get("list"));
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("currPage", group);
+			}
+			dao.resClose();
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("./main.jsp");
+		}
+	}
 
 }
