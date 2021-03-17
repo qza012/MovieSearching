@@ -17,7 +17,7 @@
     }
     #search{
         text-align: center;
-        margin-top: 5%;
+        margin-top: 7%;
     }
     input[type=text]{
         width: 500px;
@@ -61,7 +61,8 @@
         height: 30px;
         position: relative;
         float: left;
-        left: 22%;
+        left: 20%;
+        margin-top: 50px;
     } 
     #topMenu ul {
         list-style-type: none;
@@ -133,11 +134,18 @@
 		font-weight: 600;
 		color: red;
 	}
+	h4{
+		position: relative;
+		left: 25%;
+		float: left;
+		z-index: 5;
+		color: white;
+	}
 </style>
 <body>
 	<jsp:include page="../movie/include.jsp" />
     <hr>
-    <h3>인기 리뷰</h3>
+    <h4>인기 리뷰</h4>
     <div id="member">
         <c:forEach items="${top_list}" var="review3">
 	        <nav id="topMenu">
