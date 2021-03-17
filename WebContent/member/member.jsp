@@ -57,13 +57,6 @@
     .table{
         margin-top: 10px;
     }
-    h3{
-        position: relative;
-        left: 30%;
-    }
-    nav{
-    	text-align: center;
-    }
  	#topMenu { 
         height: 30px;
         position: relative;
@@ -143,11 +136,6 @@
 </style>
 <body>
 	<jsp:include page="../movie/include.jsp" />
-    <div id="top">
-        <a href="logout">로그아웃</a>
-        &nbsp;&nbsp;
-        <a href="alarm.jsp">알람</a>
-    </div>
     <hr>
     <h3>인기 리뷰</h3>
     <div id="member">

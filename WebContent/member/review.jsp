@@ -41,31 +41,10 @@
     .table{
         margin-top: 10px;
     }
-    #follow,#id{
-        float: left;
-        position: relative;
-        left: 30%;
-        padding: 5px 10px;
-    }
-    button{
-        margin-top: 10px;
-        padding: 10px;
-        font-size: large;
-        font-weight: bold;
-    }
-    #id{
-    
-    }
 </style>
 <body>
-	<jsp:include id="include" page="../movie/include.jsp"/>
+	<jsp:include page="../movie/include.jsp"/>
     <hr>
-    <div id="id">
-        <h3>님</h3>
-    </div>
-    <div id="follow">
-        <button>팔로우</button>
-    </div>
         <table class="table">
             <tr>
                 <th>순번</th>

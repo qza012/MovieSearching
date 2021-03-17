@@ -236,32 +236,32 @@ public class MemberService {
 	public void getMemberList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-		String pageParam = req.getParameter("page");
-		System.out.println("page : "+pageParam);	
-		int group = 1;
-		if(pageParam != null) {
-			group = Integer.parseInt(pageParam);
-		}		
-		MemberDAO dao = new MemberDAO();
-		try {
-			HashMap<String, Object> map = dao.memberList(group);
-			dao = new MemberDAO();
-			ArrayList<ReviewDTO> top_list = dao.top();
-			if (req.getAttribute("search_list")== null) {
-				req.setAttribute("maxPage", map.get("maxPage"));
-				req.setAttribute("member_list", map.get("list"));
-				req.setAttribute("currPage", group);
-			} else {
-				req.setAttribute("member_list", req.getAttribute("search_list"));
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);	
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}		
+			MemberDAO dao = new MemberDAO();
+			try {
+				HashMap<String, Object> map = dao.memberList(group);
+				dao = new MemberDAO();
+				ArrayList<ReviewDTO> top_list = dao.top();
+				if (req.getAttribute("search_list")== null) {
+					req.setAttribute("maxPage", map.get("maxPage"));
+					req.setAttribute("member_list", map.get("list"));
+					req.setAttribute("currPage", group);
+				} else {
+					req.setAttribute("member_list", req.getAttribute("search_list"));
+				}
+				req.setAttribute("top_list", top_list);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				dao.resClose();
 			}
-			req.setAttribute("top_list", top_list);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			dao.resClose();
-		}
-		RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
-		dis.forward(req, resp);
+			RequestDispatcher dis = req.getRequestDispatcher("member.jsp");
+			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
 		}
@@ -501,6 +501,7 @@ public class MemberService {
 				ArrayList<AlarmDTO> alarm_list = dao.alarmList(myId);
 				if(alarm_list!=null) {
 					req.setAttribute("alarm_list", alarm_list);
+					System.out.println("알람 리스트 불러오기 완료");
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -530,7 +531,7 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/alarmList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/alarmList");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");

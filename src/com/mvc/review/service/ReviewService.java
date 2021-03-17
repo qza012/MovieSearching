@@ -143,8 +143,8 @@ public class ReviewService {
 	}
 	
 	public void memReviewList() throws ServletException, IOException {
-//		String loginId = (String) req.getSession().getAttribute("loginId");
-//		if(loginId!=null) {		
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {	
 			String id = req.getParameter("id");
 			System.out.println("상세보기 할 id:"+id);
 			ReviewDAO dao = new ReviewDAO();
@@ -160,11 +160,10 @@ public class ReviewService {
 			}
 			RequestDispatcher dis = req.getRequestDispatcher("review.jsp");
 			dis.forward(req, resp);
-//		}else {
-//			resp.sendRedirect("index.jsp");
-//		}
-		
+	} else {
+		resp.sendRedirect("../movie/home");
 	}
+}
 
 	public void updateFrom() throws ServletException, IOException {
 		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
