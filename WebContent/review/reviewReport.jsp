@@ -36,7 +36,7 @@
 		<tr>
 			<th>신고자 아이디</th>
             <td>
-               ${sessionScope.loginId}
+               ${sessionScope.myLoginId}
             </td>
 		</tr>
 		<tr>

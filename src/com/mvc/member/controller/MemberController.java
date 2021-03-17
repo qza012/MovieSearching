@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
+	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/member/alarmDel"})
 
 public class MemberController extends HttpServlet {
 
@@ -104,8 +105,10 @@ public class MemberController extends HttpServlet {
 				break;
 				
 			case "/follow":
-				System.out.println("팔로우 하기");
-
+				System.out.println("팔로우/팔로우 취소 요청");
+				service.follow();
+				break;
+				
 			case "/join/idFind":
 				System.out.println("아이디 찾기 요청");
 				service.idFind();
@@ -114,11 +117,6 @@ public class MemberController extends HttpServlet {
 			case "/pwFind":
 				System.out.println("비밀번호 찾기 요청");
 				service.pwFind();
-				break;
-				
-			case "/myPage/follow":
-				System.out.println("팔로우 하기_마이페이지");
-				service.follow();
 				break;
 				
 			case "/myPage/followerList":
@@ -131,11 +129,6 @@ public class MemberController extends HttpServlet {
 				service.followingList();
 				break;
 				
-			case "/myPage/notFollow":
-				System.out.println("팔로우 취소");
-				service.notFollow();
-				break;
-				
 			case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
@@ -143,6 +136,16 @@ public class MemberController extends HttpServlet {
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();
+				break;
+				
+			case "/member/alarmList":
+				System.out.println("알람보기 요청");
+				service.alarmList();
+				break;
+				
+			case "/member/alarmDel":
+				System.out.println("알람 삭제 요청");
+				service.alarmDel();
 				break;
 		}
 		

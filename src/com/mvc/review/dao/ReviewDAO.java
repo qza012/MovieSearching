@@ -783,4 +783,22 @@ HashMap<String, Object> map = new HashMap<String, Object>();
 		}
 		return max;
 	}
+
+	public int cntComment(int reviewIdx) {
+		int cntComment = 0;
+		String sql="SELECT COUNT(r.idx) FROM review3 r left outer join comment3 c ON r.idx = c.review_idx "
+				+ "WHERE c.del_type='N' AND r.idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, reviewIdx);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				cntComment = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cntComment;
+	}
 }
