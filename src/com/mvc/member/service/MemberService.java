@@ -225,18 +225,18 @@ public class MemberService {
 
 	public void login() throws IOException {
 		MemberDAO dao = new MemberDAO();
-		String id = req.getParameter("id");
+		String myLoginId = req.getParameter("myLoginId");
 		String pw = req.getParameter("pw");
-		System.out.println(id + "/" + pw);
+		System.out.println(myLoginId + "/" + pw);
 
 		boolean result = false;
 		
 		try {
-			result = dao.login(id, pw);
+			result = dao.login(myLoginId, pw);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			dao.resClose();
+		} if(result) {
+			req.getSession().setAttribute("myLoginId", myLoginId);
 		}
 		
 

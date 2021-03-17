@@ -55,20 +55,20 @@ public class MovieController extends HttpServlet {
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.likeMovie();
 			break;
-<<<<<<< HEAD
+
 			
 		case "/myPage/iLikeMovie":
 			System.out.println("임시 url");
 			resp.sendRedirect("./likeMovie.jsp");
 			break;
-=======
+
 
 		case "/movie/movieSearch":
 			System.out.println("검색 요청");
 			service.movieSearch();;
 			break;
 
->>>>>>> 914528f73448afc9bf3e50ae2dcea7e8fa5d0fd0
+
 		}
 	}
 

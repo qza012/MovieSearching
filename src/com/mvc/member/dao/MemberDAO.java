@@ -223,11 +223,11 @@ public class MemberDAO {
 		return !success;
 	}
 
-	public boolean login(String id, String pw) throws SQLException {
+	public boolean login(String myLoginId, String pw) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
 		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
+		ps.setString(1, myLoginId);
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		success = rs.next();
