@@ -89,7 +89,7 @@ li {
 										<li><a href="/MovieSearching/myPage/updateMF" title="회원정보수정"> 회원정보수정 </a></li>
 										<li><a href="/MovieSearching/myPage/withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
 										<li><a href="/MovieSearching/myPage/myReviewList?id=${sessionScope.myLoginId}" title="작성한 리뷰"> 작성한 리뷰 </a></li>
-										<li><a href="/MovieSearching/myPage/iLikeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
+										<li><a href="/MovieSearching/member/likeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
 										<li><a href="/MovieSearching/myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
 										<li><a href="/MovieSearching/myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
 										<li><a href="/MovieSearching/myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>

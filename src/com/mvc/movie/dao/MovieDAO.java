@@ -286,12 +286,7 @@ public class MovieDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT * FROM (SELECT m.posterUrl,m.movieName,m.genre,m.director,m.actors, m.reg_date "
-				+ "FROM movie3 m INNER JOIN movie_like3 l ON m.moviecode = l.moviecode)m JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
-				+ "FROM (SELECT r.IDX, l.REVIEW_IDX FROM movie3 m RIGHT OUTER JOIN movie_like3 l ON r.idx = l.review_idx AND l.id = ?) "
-				+ "GROUP BY IDX)l ON r.IDX = l.IDX WHERE del_type='N' ORDER BY R.IDX DESC";
-//		SELECT posterUrl,movieName,genre,director,actors,opendate FROM movie3;
-//		SELECT moviecode FROM movie_like3 WHERE id='user0310';
+		String sql="SELECT m.movieName, m.genre, m.director, m.openDate FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {	
@@ -301,7 +296,11 @@ public class MovieDAO {
 			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
 			while(rs.next()) {
 				MovieDTO dto = new MovieDTO();
-				
+//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문에 추가해야 함
+				dto.setMovieName(rs.getString("movieName"));
+				dto.setGenre(rs.getString("genre"));
+				dto.setDirector(rs.getString("director"));
+				dto.setOpenDate(rs.getDate("openDate"));
 				list.add(dto);
 			}
 			for(int i=start-1; i<end; i++) {

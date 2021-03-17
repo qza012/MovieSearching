@@ -118,7 +118,7 @@ public class MovieService {
 			try {
 				HashMap<String, Object> map = dao.likeMovie(loginId,group);
 				if(map != null) {
-					req.setAttribute("list", map.get("list"));
+					req.setAttribute("movie_list", map.get("list"));
 					req.setAttribute("maxPage", map.get("maxPage"));
 					req.setAttribute("currPage", group);
 				}
