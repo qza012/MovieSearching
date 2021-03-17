@@ -94,7 +94,7 @@ li {
 										<li><a href="/MovieSearching/myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
 										<li><a href="/MovieSearching/myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
 										<li><a href="/MovieSearching/myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
-										<li><a href="/MovieSearching/member/alarmList?id=${sessionScope.myLoginId}" title="알람"> 알람 </a></li>
+										<li><a href="/MovieSearching/myPage/alarmList?id=${sessionScope.myLoginId}" title="알람"> 알람 </a></li>
 									</ul>
 								</li>
 								<li><a href="#" id="adminpage" title="관리자페이지"><h3>관리자페이지</h3></a>
@@ -148,7 +148,7 @@ li {
 	});
 	
 	$("#btn4").click(function() {
-		location.href = "/MovieSearching/member/alarmList?id=${sessionScope.myLoginId}";
+		location.href = "/MovieSearching/myPage/alarmList?id=${sessionScope.myLoginId}";
 	});
 
 	$("#movielist").click(function() {

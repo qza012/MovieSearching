@@ -13,7 +13,7 @@ import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
-	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/member/alarmDel"})
+	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/myPage/alarmList","/myPage/alarmDel"})
 
 public class MemberController extends HttpServlet {
 
@@ -138,12 +138,12 @@ public class MemberController extends HttpServlet {
 				service.pwQuestionList();
 				break;
 				
-			case "/member/alarmList":
+			case "/myPage/alarmList":
 				System.out.println("알람보기 요청");
 				service.alarmList();
 				break;
 				
-			case "/member/alarmDel":
+			case "/myPage/alarmDel":
 				System.out.println("알람 삭제 요청");
 				service.alarmDel();
 				break;

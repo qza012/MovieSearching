@@ -508,7 +508,7 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member/alarm.jsp");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarm.jsp");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
@@ -531,7 +531,7 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member/alarmList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarmList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");

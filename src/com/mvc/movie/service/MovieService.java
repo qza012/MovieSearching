@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.dao.MovieDAO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.review.dao.ReviewDAO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieService {
@@ -102,33 +103,33 @@ public class MovieService {
 		dis.forward(req, resp);
 //		}
 	}
-
-	public void likeMovie() throws ServletException, IOException {
-		/*
-		 * 
-		 * 
-		 * 수정 바람.정원석 dao.detail(moviename); moviename-> code로 바꾸세요
-		 */
-//		String loginId = (String) req.getSession().getAttribute("loginId");
-//		if(loginId!=null) {
-		String id = req.getParameter("id");
-		System.out.println("영화보기 할 id" + id);
-		MovieDAO dao = new MovieDAO();
-		try {
-			ArrayList<MovieDTO> movie_list = dao.likeMovie(id);
-			if (movie_list != null) {
-				req.setAttribute("movie_list", movie_list);
+	public void likeMovie() throws IOException, ServletException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
+			MovieDAO dao = new MovieDAO();
+			try {
+				HashMap<String, Object> map = dao.likeMovie(loginId,group);
+				if(map != null) {
+					req.setAttribute("list", map.get("list"));
+					req.setAttribute("maxPage", map.get("maxPage"));
+					req.setAttribute("currPage", group);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				dao.resClose();
+			}
+			RequestDispatcher dis = req.getRequestDispatcher("/member/movie.jsp");
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("../movie/home");
 		}
-		dis = req.getRequestDispatcher("movie.jsp");
-		dis.forward(req, resp);
-//		}else {
-//			resp.sendRedirect("index.jsp");
-//		}
 	}
 
 	public void movieSearch() throws ServletException, IOException {

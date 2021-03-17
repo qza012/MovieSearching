@@ -61,7 +61,7 @@
         height: 30px;
         position: relative;
         float: left;
-        left: 20%;
+        left: 10%;
         margin-top: 50px;
     } 
     #topMenu ul {
@@ -81,7 +81,7 @@
     .menuLink, .submenuLink {
         text-decoration: none;
         display: block;
-        width: 150px;
+        width: 200px;
         font-size: 12px;
         font-weight: bold;
     }
@@ -93,7 +93,7 @@
         background-color: #4d4d4d;
     }
     .longLink {
-        width: 150px;
+        width: 200px;
     }
     .submenuLink {
         color: #2d2d2d;
@@ -136,10 +136,12 @@
 	}
 	h4{
 		position: relative;
-		left: 25%;
+		left: 20%;
 		float: left;
 		z-index: 5;
 		color: white;
+		font-size: 25px;
+		margin-top: 5px;
 	}
 </style>
 <body>
