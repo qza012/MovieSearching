@@ -34,10 +34,10 @@
             width: 100%;
             text-align: center;
         }
-        .paging>a:link,
-        .paing>a:hover,
-        .paging>a:visited,
-        .paging>a:active{
+        a:link,
+        a:hover,
+        a:visited,
+        a:active{
             color: black;
             text-decoration: none;
         }
@@ -76,12 +76,25 @@
 			<c:if test="${currPage>1}">
 				<a href="reviewMovieSearch?subName=${subName}&page=${currPage-1}">이전</a>
 			</c:if>
-			<c:if test="${currPage == 1}">
+			<c:if test="${currPage == 1 && maxPage != 0}">
 			이전
 			</c:if>
 		</span>
 		
-		<span id="pageArea">${currPage}</span>
+		<c:set var="startNum" value="${currPage-(currPage-1)%10}"/>
+		
+		<span id="pageArea">
+			<c:forEach begin="0" end="9" var="i">
+				<c:if test="${startNum+i <= maxPage}">
+					<c:if test="${startNum+i != currPage}">
+						<a href="reviewMovieSearch?subName=${subName}&page=${startNum+i}">${startNum+i} </a>
+					</c:if>
+					<c:if test="${startNum+i == currPage}">
+						<b><a href="reviewMovieSearch?subName=${subName}&page=${startNum+i}">${startNum+i} </a></b>
+					</c:if>
+				</c:if>
+			</c:forEach>
+		</span>
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
