@@ -74,14 +74,14 @@
         	<!-- 작성자와 다른데 좋아요 이미 눌렀으면? -->
         	<!-- 작성자와 다른데 좋아요 안눌렀으면? -->
         	<c:if test="${sessionScope.loginId eq review.id}">
-        		<th><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
+        		<th><i style="font-size: 23px;" class="far fa-heart"></i></th>
         	</c:if>
         	<c:if test="${sessionScope.loginId ne review.id}">
         		<c:if test="${reviewLike eq 1}">
         			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="fas fa-heart"></i></th>
         		</c:if>
         		<c:if test="${reviewLike eq 0}">
-        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="far fa-heart"></i></th>
+        			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="font-size: 23px;" class="far fa-heart"></i></th>
         		</c:if>
         	</c:if>
             <td id="reviewCntLike">${review.cntLike}</td>
@@ -264,8 +264,9 @@ function reviewLike(review_idx){
 				if(reviewLike == 0){ //좋아요 안한 경우
 					$('.like').html(' <i style="color: red; font-size: 23px;" class="fas fa-heart"></i> ');
 				}else{ //좋아요 한경우
-					$('.like').html(' <i style="color: red; font-size: 23px;" class="far fa-heart"></i> ');
+					$('.like').html(' <i style="font-size: 23px;" class="far fa-heart"></i> ');
 				}
+				location.href=" ./reviewDetail?Idx="+${review.idx};
 			}
 		}
 		,error: function(e){

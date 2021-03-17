@@ -205,11 +205,11 @@ public class MemberDAO {
 		return !success;
 	}
 
-	public boolean login(String id, String pw) throws SQLException {
+	public boolean login(String myLoginId, String pw) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
 		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
+		ps.setString(1, myLoginId);
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		success = rs.next();
@@ -291,8 +291,8 @@ public class MemberDAO {
 	}
 
 	public int join(MemberDTO dto) throws SQLException {
-		String sql = "INSERT INTO member3(id,pw,name,age,pw_answer,gender,genre,email,question_idx)"
-				+ "VALUES (?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO member3(id,pw,name,age,pw_answer,gender,genre,email,question_idx,withdraw,disable,type)"
+				+ "VALUES (?,?,?,?,?,?,?,?,?,'N','N','user')";
 		int result = 0;
 
 		ps = conn.prepareStatement(sql);

@@ -58,9 +58,7 @@
 				h3{
 					padding: 40px 180px 0px;
 				}
-				/* tr>th{
-					border-right: 1px solid #cdcdcd;
-				} */
+				
 				th,td{
 					padding :2px 5px 1px;
 					border-right: 1px solid #cdcdcd;
@@ -157,7 +155,7 @@
 				moveUrl = "moviePosterUrl.jsp";
 			}
 			
-			window.open(moveUrl, "_blank", "height=300px, width=300px");
+			window.open(moveUrl, "_blank", "height=100px, width=470px");
 		});
 		
 		function updateUrl(url, boxSelector) {

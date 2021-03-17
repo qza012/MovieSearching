@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/join/login","/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/logout","/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+@WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
+	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
 
 public class MemberController extends HttpServlet {
 
@@ -55,10 +55,10 @@ public class MemberController extends HttpServlet {
 				service.login();
 				break;
 				
-			case "/logout":
+			case "/join/logout":
 				System.out.println("로그아웃 요청");
-				req.getSession().removeAttribute("id");//session에서 값 삭제 
-				resp.sendRedirect("index.jsp");
+				req.getSession().removeAttribute("myLoginId");//session에서 값 삭제 
+				resp.sendRedirect("../movie/home");
 				break;
 				
 			case "/questionList":
