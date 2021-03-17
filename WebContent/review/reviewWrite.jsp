@@ -9,7 +9,7 @@
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
         table{
-            width: 70%;
+            width: 100%;
         }
         table,td,th{
             border-top: 1px solid lightgray;
@@ -17,7 +17,7 @@
             border-collapse: collapse;
         }
         .button{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
         textarea{
@@ -26,7 +26,7 @@
             resize: none;
         }
         .title{
-            width: 70%;
+            width: 100%;
             text-align: center;
         }
 </style>
@@ -38,7 +38,7 @@
             <th>제목</th>
             <td><input type="text" id="subject" style="width: 80%;"/></td>
             <th>작성자</th>
-            <td><input type="text" id="id" value="${sessionScope.loginId}" style="width: 80%;" readonly/></td>
+            <td><input type="text" id="id" value="${sessionScope.myLoginId}" style="width: 80%;" readonly/></td>
         </tr>
         
         <tr>
@@ -78,7 +78,7 @@
 $("#save").click(function(){
 	
 	var subject = $("#subject").val();
-	var id = $("#id").val(); //아이디 세션에서 가져오기
+	var id = $("#id").val();
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();

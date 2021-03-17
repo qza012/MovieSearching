@@ -73,10 +73,10 @@
         	<!-- 세션아이디 가져와서 작성자와 같으면 그냥 냅두고 -->
         	<!-- 작성자와 다른데 좋아요 이미 눌렀으면? -->
         	<!-- 작성자와 다른데 좋아요 안눌렀으면? -->
-        	<c:if test="${sessionScope.loginId eq review.id}">
+        	<c:if test="${sessionScope.myLoginId eq review.id}">
         		<th><i style="font-size: 23px;" class="far fa-heart"></i></th>
         	</c:if>
-        	<c:if test="${sessionScope.loginId ne review.id}">
+        	<c:if test="${sessionScope.myLoginId ne review.id}">
         		<c:if test="${reviewLike eq 1}">
         			<th class="like" style="cursor: pointer;" onclick="reviewLike(${review.idx})"><i style="color: red; font-size: 23px;" class="fas fa-heart"></i></th>
         		</c:if>
@@ -87,7 +87,7 @@
             <td id="reviewCntLike">${review.cntLike}</td>
             <!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
             <td colspan="2">
-            <c:if test="${sessionScope.loginId ne review.id}">
+            <c:if test="${sessionScope.myLoginId ne review.id}">
             	<a onclick="reportOpen(${review.idx},2001)" style="cursor: pointer;">신고</a>
             </c:if>
             </td>
@@ -96,7 +96,7 @@
         </tr>
     </table>
     <div class="aTag">
-	  	<c:if test="${sessionScope.loginId eq review.id}">
+	  	<c:if test="${sessionScope.myLoginId eq review.id}">
 	   		<a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
 	    	<a onclick="return confirm('정말 삭제하시겠습니까?')" href="reviewDel?Idx=${review.idx}">삭제</a>
 	    </c:if>
@@ -125,40 +125,52 @@
    
 
     <table>
-        <tr>
-            <th>내용</th>
-            <th>작성자</th>
-            <th>작성일</th>
-        </tr>
+    	<c:if test="${cntComment != 0}">
+    		<tr>
+            <th style="width: 50%">내용</th>
+            <th style="width: 10%">작성자</th>
+            <th style="width: 10%">작성일</th>
+            <th style="border-top: 1px solid white;" colspan="2"></th>
+       		</tr>
+    	</c:if>
+    	<c:if test="${cntComment == 0}">
+    		<p style="width: 50%; margin-left: 30px;">등록된 댓글이 없습니다.</p>
+    	</c:if>
+   		
         <c:forEach items="${comment}" var="comment">
         <tr style="text-align: center;">
+        
             <td> ${fn:replace(comment.content, cn, br)}</td>
             <td>${comment.id}</td>
             <td>${comment.reg_date}</td>
             
             <td style="border-top: white; border-bottom: white; ">
-            	<c:if test="${sessionScope.loginId ne comment.id}">
+            	<c:if test="${sessionScope.myLoginId ne comment.id}">
             		<a onclick="reportOpen(${comment.idx},2002)" style="cursor: pointer;">신고</a>
             	</c:if>
             </td>
+            
             <td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
-            	<c:if test="${sessionScope.loginId eq comment.id}">
+            	<c:if test="${sessionScope.myLoginId eq comment.id}">
             		<a onclick="update(${comment.idx})">수정</a>
             	</c:if>
             </td>
+            
             <td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
-            	<c:if test="${sessionScope.loginId eq comment.id}">
+            	<c:if test="${sessionScope.myLoginId eq comment.id}">
             		<a onclick="return confirm('정말 삭제하시겠습니까?')" href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
             	</c:if>
             </td>
+            
         </tr>
         </c:forEach>
+        
     </table>
 </body>
 <script>
 $("#save").click(function(){
 	var content = $("#comment_content").val();
-	var id = "comment"; //세션에서 현재 접속한 사람 아이디 가져와야함
+	var id = "${sessionScope.myLoginId}";
 	var review_idx = $("#review_idx").val();
 	
 	console.log(content + " / " + id + " / " + review_idx);

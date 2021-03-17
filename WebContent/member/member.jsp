@@ -4,6 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 		<title>회원 목록</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 	</head>
@@ -141,6 +142,7 @@
 	}
 </style>
 <body>
+	<jsp:include page="../movie/include.jsp" />
     <div id="top">
         <a href="logout">로그아웃</a>
         &nbsp;&nbsp;

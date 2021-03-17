@@ -82,8 +82,8 @@ li {
 					<div class="naviscroll-content" style="top: 0px; width: 180px;">
 						<div class="naviscroll-in">
 							<ul class="navi">
-								<li><a href="home" id="moviehome" title="영화홈"><h3>영화 홈</h3></a></li>
-								<li><a href="movieList" id="movieList" title="영화 리스트"><h3>영화리스트</h3></a></li>
+								<li><a href="../movie/home" id="moviehome" title="영화홈"><h3>영화 홈</h3></a></li>
+								<li><a href="../movie/movieList" id="movieList" title="영화 리스트"><h3>영화리스트</h3></a></li>
 								<li><a href="../reviewList" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
 								<li><a href="../member/member" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
 								<li><a href="https://serieson.naver.com/movie/home.nhn" id="moviedownload" title="영화 다운로드"><h3>영화다운로드</h3></a></li>
@@ -168,12 +168,12 @@ li {
 	});
 	
 	$("#mypage").click(function() {
-			if (loginId == "") {
-				alert("로그인후 이용해주세요.");
-			} else {
-				$(".navi_sub1").slideToggle('slow');
-				$(".navi_sub1").css('display', 'block');
-			}
+		if (loginId == "") {
+			alert("로그인후 이용해주세요.");
+		} else {
+			$(".navi_sub1").slideToggle('slow');
+			$(".navi_sub1").css('display', 'block');
+		}
 	});
 
 	$("#adminpage").click(function() {
