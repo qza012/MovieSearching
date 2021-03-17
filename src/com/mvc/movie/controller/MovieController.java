@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.service.MovieService;
 
-@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/likeMovie", "/movie/movieSearch",
+@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/member/likeMovie", "/movie/movieSearch",
 		"/myPage/iLikeMovie" })
 
 public class MovieController extends HttpServlet {
@@ -50,7 +50,7 @@ public class MovieController extends HttpServlet {
 			service.detail();
 			break;
 
-		case "/likeMovie":
+		case "/member/likeMovie":
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.likeMovie();
 			break;
