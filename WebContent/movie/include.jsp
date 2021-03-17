@@ -87,7 +87,7 @@ li {
 								<li><a href="../reviewList" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
 								<li><a href="../member/member" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
 								<li><a href="https://serieson.naver.com/movie/home.nhn" id="moviedownload" title="영화 다운로드"><h3>영화다운로드</h3></a></li>
-								<li><a href="" id="mypage" title="마이페이지"><h3>마이페이지</h3></a>
+								<li><a href="#" id="mypage" title="마이페이지"><h3>마이페이지</h3></a>
 									<ul class="navi_sub1" style="display: none;">
 										<li><a href="../myPage/updateMF?id=${sessionScope.myLoginId}" title="회원정보수정"> 회원정보수정 </a></li>
 										<li><a href="../myPage/withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
@@ -168,7 +168,7 @@ li {
 	});
 	
 	$("#mypage").click(function() {
-		if (${sessionScope.myLoginId} == "") {
+		if (loginId == "") {
 			alert("로그인후 이용해주세요.");
 		} else {
 			$(".navi_sub1").slideToggle('slow');
