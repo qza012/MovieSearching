@@ -102,8 +102,10 @@ public class AdminDAO {
 	 * @throws SQLException
 	 */
 	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-				.rnumSortColumn("id").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -133,8 +135,12 @@ public class AdminDAO {
 
 	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-				.rnumSortColumn("id").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord)
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -220,8 +226,10 @@ public class AdminDAO {
 	}
 
 	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-				.rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -245,8 +253,12 @@ public class AdminDAO {
 
 	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord)
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -288,8 +300,10 @@ public class AdminDAO {
 	}
 
 	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
-				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -312,9 +326,11 @@ public class AdminDAO {
 
 	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
-				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").whereStandardColumn(standard)
-						.likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord).build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -512,8 +528,10 @@ public class AdminDAO {
 	}
 
 	public List<ReportDTO> getReportList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-				.rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -537,8 +555,11 @@ public class AdminDAO {
 
 	public List<ReportDTO> getReportList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord).build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 

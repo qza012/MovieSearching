@@ -71,7 +71,7 @@
 		<h3>영화 관리</h3>
 		<div align="center">
 			<form action="movieList" method="GET">
-			    <select class="standard" name="standard">
+			    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
 			    	<option value="all">전체</option>
 			    	<option value="movieCode">영화코드</option>
 			        <option value="movieName">영화이름</option>
@@ -130,6 +130,12 @@
 			alert(msg);
 		}
 		
+		// 최초 불러올 때 실행하는 함수들.
+		$(document).ready(function() {
+			staySelectBoxValue();
+			changeSearchInput($(".standard").val());
+		});
+		
 		// 팝업 창으로 전달할 값.
 		var urlBoxSelector;
 		var IsYoutubeUrl = true;
@@ -171,10 +177,8 @@
 					,dataType:'JSON'
 					,success:function(data) {
 						if(data.youtubeUrl == null) {
-							console.log("널이다");
 							$(boxId).html("");
 						} else {
-							console.log("널 아니다");
 							$(boxId).html(data.youtubeUrl);
 						}				
 					},error:function(e) {
@@ -202,14 +206,13 @@
 		}
 
 		
-		
-		
 		// 셀렉박스 값에 따라 inputBox 교체
-		$('.standard').change(function(){
+		// input박스 자동 교체.
+		function changeSearchInput(value) {
 			var searchInput = $(".searchInput");
-			console.log(this.value);
+			//console.log(value);
 			
-			switch(this.value) {
+			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord' readonly/>"
@@ -225,7 +228,7 @@
 						);	
 				break;
 			}
-		})
+		};
 
 		// next 함수
 		function nextFunc() {
@@ -243,15 +246,17 @@
 			location.href="movieList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
-		var selectBox = $(".standard");
-		if("${standard}" == "") {
-			selectBox.val("all").prop("selected", true);
-		} else{
-			selectBox.val("${standard}").prop("selected", true);
+		function staySelectBoxValue() {
+			var selectBox = $(".standard");
+			if("${standard}" == "") {
+				selectBox.val("all").prop("selected", true);
+			} else{
+				selectBox.val("${standard}").prop("selected", true);
+			}
+			if(selectBox.val() != 'all') {
+				$('.searchInput').removeAttr("readonly");
+			} 
 		}
-		if(selectBox.val() != 'all') {
-			$('.searchInput').removeAttr("readonly");
-		} 
 	
 	</script>
 </html>

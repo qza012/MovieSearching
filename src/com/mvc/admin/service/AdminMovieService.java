@@ -92,7 +92,6 @@ public class AdminMovieService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(movieDto != null) {
-			System.out.println("여기통과해라");
 			map.put("youtubeUrl", movieDto.getYoutubeUrl());
 		}
 		

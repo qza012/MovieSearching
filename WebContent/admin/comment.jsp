@@ -19,7 +19,7 @@
 		<hr/>
 		<div>
 			<form action="commentList" method="GET">
-			    <select class="standard" name="standard">
+			    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
 			    	<option value="all">전체</option>
 			        <option value="idx">댓글번호</option>
 			        <option value="review_idx">리뷰 게시글 번호</option>
@@ -102,12 +102,12 @@
 			})				
 		})
 		
-		// 셀렉박스 값에 따라 inputBox 교체
-		$('.standard').change(function(){
+		// input박스 자동 교체.
+		function changeSearchInput(value) {
 			var searchInput = $(".searchInput");
-			console.log(this.value);
+			console.log(value);
 			
-			switch(this.value) {
+			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord' readonly/>"
@@ -132,7 +132,7 @@
 				);
 				break;
 			}
-		})
+		}
 		
 		// next 함수
 		function nextFunc() {
@@ -150,15 +150,18 @@
 			location.href="commentList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
-		var selectBox = $(".standard");
-		if("${standard}" == "") {
-			selectBox.val("all").prop("selected", true);
-		} else{
-			selectBox.val("${standard}").prop("selected", true);
+		// 셀렉트 박스 속성 유지시키기
+		function staySelectBoxValue() {
+			var selectBox = $(".standard");
+			if("${standard}" == "") {
+				selectBox.val("all").prop("selected", true);
+			} else{
+				selectBox.val("${standard}").prop("selected", true);
+			}
+			if(selectBox.val() != 'all') {
+				$('.searchInput').removeAttr("readonly");
+			}
 		}
-		if(selectBox.val() != 'all') {
-			$('.searchInput').removeAttr("readonly");
-		} 
 		
 	</script>
 </html>

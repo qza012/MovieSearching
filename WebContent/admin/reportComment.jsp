@@ -18,12 +18,17 @@
 		<h3>댓글 리포트</h3>
 		<hr/>
 		<div>
+			<button value="move" onclick="location.href='reportReviewList'">신고된 리뷰 관리</button>
+			<button value="move">신고된 댓글 관리</button>
+		</div>
+		<hr/>
+		<div>
 			<form action="reportCommentList" method="GET">
-			    <select class="standard" name="standard">
+			    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
 			    	<option value="all">전체</option>
 			    	<option value="idx">신고번호</option>    	
 			        <option value="report_idx">댓글번호</option>
-			        <option value="subject">리뷰제목</option>
+			        <option value="review_idx">리뷰번호</option>
 			        <option value="content">사유</option>
 			        <option value="report_id">신고한 회원ID</option>
 			        <option value="id">신고당한 회원ID</option>
@@ -81,7 +86,17 @@
 			alert(msg);
 		}
 		
+		// 최초 불러올 때 실행하는 함수들.
+		$(document).ready(function() {
+			staySelectBoxValue();
+			changeSearchInput($(".standard").val());
+		});
+		
 		$('button').click(function() {
+			if(this.value == "move") {
+				return;
+			}
+			
 			var button = $(this);
 			var flag = $("#"+this.value);
 			
@@ -105,5 +120,72 @@
 				}
 			})				
 		})
+
+		
+		// input박스 자동 교체.
+		function changeSearchInput(value) {
+			var searchInput = $(".searchInput");
+			console.log(value);
+			
+			switch(value) {
+			case "all" :
+				searchInput.replaceWith(
+						"<input class='searchInput' type='text' name='keyWord' readonly/>"
+				);
+				break;
+				
+			case "idx" :
+			case "report_idx" :
+			case "review_idx" :
+			case "content" :
+			case "report_id" :
+			case "id" :
+			case "reg_date" :
+				searchInput.replaceWith(
+						"<input class='searchInput' type='text' name='keyWord'/>"
+						);	
+				break;
+				
+			case "complete" :
+				searchInput.replaceWith(
+						"<select class='searchInput' name='keyWord'>"
+				    	+"<option value='Y'>Y</option>"
+				    	+"<option value='N'>N</option>"
+				    	+"</select>"
+				);
+				break;
+			}
+		}
+		
+		// next 함수
+		function nextFunc() {
+			var standard = $(".standard").val();
+			var keyWord = $(".searchInput").val();
+
+			location.href="reportCommentList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
+		}
+		
+		// prev 함수
+		function prevFunc() {
+			var standard = $(".standard").val();
+			var keyWord = $(".searchInput").val();
+
+			location.href="reportCommentList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
+		}
+		
+		
+		// 셀렉트 박스 속성 유지시키기
+		function staySelectBoxValue() {
+			var selectBox = $(".standard");
+			if("${standard}" == "") {
+				selectBox.val("all").prop("selected", true);
+			} else{
+				selectBox.val("${standard}").prop("selected", true);
+			}
+			if(selectBox.val() != 'all') {
+				$('.searchInput').removeAttr("readonly");
+			} 
+		}
+		
 	</script>
 </html>

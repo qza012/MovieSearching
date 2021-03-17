@@ -16,6 +16,10 @@
 	</head>
 	<body>
 		<h3>질문리스트</h3>
+		<div>
+			<button value="move" onclick="location.href='memberDisableList'">회원 비활성화 관리</button>
+			<button value="move">비밀번호 찾기 질문 관리</button>
+		</div>
 		<hr/>
 		<table>
 		<tr>
@@ -41,6 +45,10 @@
 		var questionBox;
 		
 		$('button').click(function() {
+			if(this.value == "move") {
+				return;
+			}
+			
 			idx = this.value;
 			questionBox = $('#'+idx);
 
@@ -57,20 +65,9 @@
 						'content' : content}
 				,dataType:'JSON'
 				,success:function(data) {
-					console.log(data.content);
-					
+					//console.log(data.content);
+				
 					questionBox.html(data.content);
-					
-					/* 실시간으로 바뀌게 수정해야함. */
-					
-					/* if(data.disable == "Y") {
-						flag.html("Y");
-						button.html("비활성화");
-					} else {
-						flag.html("N");
-						button.html("활성화");
-					} */
-	
 				},error:function(e) {
 					console.log("변경 버튼 비동기 에러");
 				}
