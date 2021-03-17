@@ -22,8 +22,14 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
+          	div{
                 float: left;
+            }
+            #login{
+            	float: right;
+            }
+            #navi{
+            	width: 500px;
             }
             .updateMember {
                 font-family: Verdana;
@@ -59,7 +65,7 @@
         </style>
     </head>
     <body>
-        <jsp:include page="/movie/include.jsp" />
+        <jsp:include page="/movie/include.jsp"/>
         <div class="updateMember">
             <h3>회원정보 수정</h3>
             <form action="./update" method="post" enctype="multipart/form-data" >
