@@ -23,8 +23,8 @@
                font-size: 0px;
            }
            div{
-               float: left;
-           }
+            	float: left;
+            }
            #myPage{
             	display: none;
             }
@@ -72,6 +72,7 @@
 	               </tr>
 	               <tr>
 	               		<td colspan="2">
+	               		
 	               			<input type="submit" value="로그인"/>
 	               		</td>
 	               </tr>

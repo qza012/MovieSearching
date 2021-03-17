@@ -116,7 +116,7 @@ public class ReviewService {
 			//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
 			int reviewLike = 0;
 			if(dao.reviewLikeCheck(reviewIdx, myLoginId)) {
-				reviewLike = 1;	
+				reviewLike = 1;
 			}
 			req.setAttribute("reviewLike", reviewLike);
 	
@@ -520,9 +520,14 @@ public class ReviewService {
 					success = 1;
 				}
 			}
+			
+			//이 리뷰의 총 좋아요 갯수 가져오기
+			int reviewCntLike = dao.getReviewCntLike(review_idx);
 			dao.resClose();
 			
 			map.put("success",success);
+			map.put("reviewLikeState", reviewLikeState);
+			map.put("reviewCntLike",reviewCntLike);
 			
 			Gson gson = new Gson();
 			String json = gson.toJson(map);

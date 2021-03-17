@@ -40,11 +40,7 @@ public class AdminMemberController extends HttpServlet {
 			System.out.println("/admin/ToggleMemberDisable 요청");
 			service.toggleDisable();
 			break;
-			
-//		case "/admin/memberSearch" :
-//			System.out.println("/admin/memberSearch");
-//			service.memberSearch();
-//			break;
+
 		}
 	}
 

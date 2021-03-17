@@ -86,27 +86,6 @@ public class AdminReportReviewService{
 			req.setAttribute("standard", standard);
 			req.setAttribute("reportList", filteredReportList);
 			req.setAttribute("reviewList", reviewList);
-			
-			
-			
-//			reportList = reportDao.getReportList();
-//			reviewList = new ArrayList<ReviewDTO>();
-//			
-//			if (reportList != null) {
-//				// 타입 번호가 2001인 것만 추출.
-//				filteredReportList = reportList.stream()
-//									.filter(dto -> dto.getType_idx() == 2001)
-//									.collect(Collectors.toList());
-//				
-//				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 리뷰를 추출.
-//				for(ReportDTO reportDto : filteredReportList) {
-//					ReviewDTO reviewDto = reportDao.getReview(reportDto.getReport_idx());
-//					reviewList.add(reviewDto);
-//				}
-//				
-//				req.setAttribute("reportList", filteredReportList);
-//				req.setAttribute("reviewList", reviewList);				
-//			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();

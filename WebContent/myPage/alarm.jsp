@@ -1,69 +1,118 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<style>
-     table {
-        border-collapse: separate;
-        border-spacing: 0;
-        text-align: center;
-        line-height: 1.5;
-        border-top: 1px solid #ccc;
-        border-left: 1px solid #ccc;
-        margin : auto;
-        margin-top: 100px;
-    }
-    th {
-        width: 100px;
-        padding: 10px;
-        font-weight: bold;
-        vertical-align: top;
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        border-top: 1px solid #fff;
-        border-left: 1px solid #fff;
-        background: #eee;
-    }
-    td {
-        width: 150px;
-        padding: 10px;
-        vertical-align: top;
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-    }
-    h4{
-		position: relative;
-		left: 35%;
-		float: left;
-		z-index: 5;
-		color: white;
-		font-size: 25px;
-	}
-</style>
-<body>
-	<jsp:include page="../movie/include.jsp" />
-	<hr>
-	<h4>알람 리스트</h4>
-    <table>
-        <tr>
-            <th>번호</th>
-            <th>알람내용</th>
-            <th>알람 날짜</th>
-            <th>확인</th>
-        </tr>
-        <c:forEach items="${alarm_list}" var="alarm3">
-        <tr>
-            <td>${alarm3.idx}</td>
-            <td>${alarm3.content}</td>
-            <td>${alarm3.reg_date}</td>
-            <td><a href="alarmDel?idx=${alarm3.idx}">삭제</a></td>
-        </tr>
-        </c:forEach>
-    </table>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<title>AlarmList</title>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<style>
+			h3{
+				margin-left: 2%;
+			}            
+			a:link, a:visited{/*링크를 클릭 하기 전*/
+				color:darkslategrey;
+				text-decoration: none;
+				font-size: 14px;
+				font-weight: 600;
+			}
+            a:active{/*링크 실행 시*/
+                color: cornflowerblue;
+            }
+            ::marker {
+                font-size: 0px;
+            }
+            div{
+            	float: left;
+            }
+            .alarmList {
+                font-family: Verdana;
+                width: 70%;
+                margin-top: 40px;
+                margin-left: 22%;
+            }    
+            table {
+                text-align: center;
+                width: 100%;
+            }
+            th{
+                background-color: lightgrey;
+            }
+            td{
+                background-color: whitesmoke;
+            }
+            th, td{
+                padding: 10px;
+                border-bottom: 1px solid darkslategrey;
+            }
+            #delete{
+            	color: red;
+            }
+            .pageArea{
+				width:70%;
+				text-align: center;
+				margin-top: 1%;
+				margin-left: 22%;
+			}
+			.pageArea span{
+				font-size:16px;
+				padding: 5px 10px;
+				margin: 5px;
+			}
+			#btn{
+				color:black;
+			}
+			#page{
+				color:red;
+			}
+        </style>
+    </head>
+    <body>
+        <jsp:include page="/movie/include.jsp" />
+        <div class="alarmList">
+            <h2>알람</h2>
+            <table>
+         		<tr>
+         			<th>알람 번호</th>
+         			<th>알람 내용</th>
+         			<th>도착 날짜</th>
+         			<th>삭제</th>
+         		</tr>
+				<c:forEach items="${aList}" var="alarm">
+					<tr>
+	          			<td id="alarmIdx">${alarm.idx}</td>	
+                		<td id="alarmContent">${alarm.content}</td>
+                		<td id="alarmDate">${alarm.reg_date}</td>
+                		<td id="deleteAlarm">
+                			<button onclick="location.href='./deleteAlarm?id=${follow.id}'">삭제</button>
+                		</td>
+                	</tr>	
+                </c:forEach>
+        	</table>
+        </div>
+        <div class="pageArea">
+			<span id="btn">
+				<c:if test="${currPage == 1}"> 이전</c:if>
+				<c:if test="${currPage > 1}">
+					<a href="./myReviewList?id=${sessionScope.myLoginId}&page=${currPage-1}">이전</a>
+				</c:if>
+			</span>
+			<span id="page">${currPage}</span>
+			<span id="btn">
+				<c:if test="${currPage == maxPage}">다음</c:if>
+				<c:if test="${currPage < maxPage}">
+					<a href="./myReviewList?id=${sessionScope.myLoginId}&page=${currPage+1}">다음</a>
+				</c:if>	
+			</span>
+		</div>
+    </body>
+	<script>
+		var showIf = document.getElementById('myPage').style.display;
+		
+		function showMyPage(){
+			if(showIf = 'none'){
+				document.getElementById('myPage').style.display='block';				
+			} 
+		}
+	</script>
 </html>

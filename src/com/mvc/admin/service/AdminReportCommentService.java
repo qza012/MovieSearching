@@ -91,25 +91,6 @@ public class AdminReportCommentService {
 			req.setAttribute("reportList", filteredReportList);
 			req.setAttribute("commentList", commentList);
 			
-//			reportList = reportDao.getReportList();
-//			commentList = new ArrayList<CommentDTO>();
-//
-//			if(reportList != null) {
-//				// 타입 번호가 2002인 것만 추출
-//				filteredReportList = reportList.stream()
-//									.filter(dto -> dto.getType_idx() == 2002)
-//									.collect(Collectors.toList());
-//				
-//				// 신고 리스트에서 글 번호를 가져온 후, 신고당한 회원의 댓글을 추출.
-//				for(ReportDTO reportDto : filteredReportList) {
-//					CommentDTO commentDto = reportDao.getComment(reportDto.getReport_idx());
-//					commentList.add(commentDto);
-//				}
-//				
-//				req.setAttribute("reportList", filteredReportList);
-//				req.setAttribute("commentList", commentList);
-//			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -79,7 +79,7 @@ textarea {
 						</tr>
 
 						<tr>
-							<td colspan="4"><textarea id="content">${review.content}</textarea>
+							<td colspan="4"><textarea id="reviewContent">${review.content}</textarea>
 							</td>
 						</tr>
 					</table>
@@ -102,7 +102,7 @@ $("#save").click(function(){
 	var movieCode = $('#movieCode').val();
 	var movieName = $("#movieName").val();
 	var score = $("#score").val();
-	var content = $('#content').val(); 
+	var content = $('#reviewContent').val(); 
 	
 	console.log(idx + " / " + subject+" / "+id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
 	

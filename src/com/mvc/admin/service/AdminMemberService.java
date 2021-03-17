@@ -110,16 +110,4 @@ public class AdminMemberService {
 		resp.getWriter().print(json);
 	}
 
-//	public void memberSearch() throws ServletException, IOException {
-//		String nextPage = "list";
-//		String standard = req.getParameter("standard");
-//		String keyWord = req.getParameter("keyWord");
-//		AdminUtil.log("search", standard, keyWord);
-//		
-//		String finalPage = "memberDisable.jsp";
-//		req.setAttribute("finalPage", finalPage);
-//		
-//		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
-//		dis.forward(req, resp);
-//	}
 }

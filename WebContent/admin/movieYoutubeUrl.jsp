@@ -17,7 +17,7 @@
 </head>
 	<body>
 		<a>youtube url 입력</a>
-		<input class="urlBox" type="text" name="url" align="right"/>
+		<input class="urlBox" type="text" name="url"/>
 		<button onclick="finish()">완료</button>
 	</body>
 	<script>

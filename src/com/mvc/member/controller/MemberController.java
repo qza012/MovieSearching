@@ -13,7 +13,7 @@ import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
-	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/myPage/alarmList","/myPage/alarmDel"})
+	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/member/alarmDel","/myPage/alarm"})
 
 public class MemberController extends HttpServlet {
 
@@ -118,6 +118,7 @@ public class MemberController extends HttpServlet {
 				System.out.println("비밀번호 찾기 요청");
 				service.pwFind();
 				break;
+
 				
 			case "/myPage/followerList":
 				System.out.println("나를 팔로우 하는 사람들");
@@ -128,17 +129,31 @@ public class MemberController extends HttpServlet {
 				System.out.println("내가 팔로잉하는 사람들");
 				service.followingList();
 				break;
-				
+
 			case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
-
+				break;
+				
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();
 				break;
 				
+<<<<<<< HEAD
 			case "/myPage/alarmList":
+=======
+			case "/member/fChk":
+				System.out.println("팔로우 체크");
+				service.followCheck();
+				break;
+				
+			case "/myPage/alarm":
+				System.out.println("알람 체크");
+				service.alramChk();
+
+			case "/member/alarmList":
+>>>>>>> 2352a0dba8923c732d285b6ba8e87cd37d297f1a
 				System.out.println("알람보기 요청");
 				service.alarmList();
 				break;

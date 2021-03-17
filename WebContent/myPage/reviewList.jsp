@@ -23,7 +23,7 @@
                 font-size: 0px;
             }
             div{
-                float: left;
+            	float: left;
             }
             .reviewList {
                 font-family: Verdana;

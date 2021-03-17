@@ -801,4 +801,21 @@ HashMap<String, Object> map = new HashMap<String, Object>();
 		}
 		return cntComment;
 	}
+
+	public int getReviewCntLike(int review_idx) {
+		int reviewCntLike = 0;
+		String sql="SELECT COUNT(idx) FROM review_like3 WHERE review_idx=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, review_idx);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				reviewCntLike = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return reviewCntLike;
+	}
 }

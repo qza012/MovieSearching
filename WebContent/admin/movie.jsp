@@ -5,13 +5,29 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 			<style>
-				table{
-					margin : auto;
+				/*table {
+					width: 100%;
+					color: white;
+					font-size: 13px;
 				}
-				select{
+				
+				table, th, td {
+					border-top: 1px solid lightgray;
+					border-radius: 1px solid lightgray;
+					border-collapse: collapse;
+					text-align: center;
+				}
+				
+				th, td {
+					padding: 10px;
+				}
+				
+				 select{
 					width : 100px;
 					height : 26px;
 					margin-right: 8px ;
@@ -57,78 +73,88 @@
        			}
 				h3{
 					padding: 40px 180px 0px;
-				}
-				
-				th,td{
-					padding :2px 5px 1px;
-					border-right: 1px solid #cdcdcd;
-				}
+				}*/
 				
 			</style>
 	</head>
 	<body>
-	<!-- 영화코드  | 영화이름 | 장르 |    개봉일    | 감독명 | 순위 | 예고편 | 포스터 -->
-		<h3>영화 관리</h3>
-		<div align="center">
-			<form action="movieList" method="GET">
-			    <select class="standard" name="standard">
-			    	<option value="all">전체</option>
-			    	<option value="movieCode">영화코드</option>
-			        <option value="movieName">영화이름</option>
-			        <option value="genre">장르</option>
-			        <option value="director">감독명</option>
-			    </select>
-				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
-			    <input type="submit" value="검색"/>
-			</form>
-		</div><hr/>
-		<table>
-		<tr>
-			<th>영화코드</th><th>영화이름</th><th>장르</th><th>개봉일</th><th>감독명</th><th>순위</th><th>예고편</th><th>포스터</th>
-		</tr>
-		<c:forEach items="${list }" var="movie">
-		<tr>
-			<td>${movie.movieCode }</td>
-			<td>${movie.movieName }</td>
-			<td>${movie.genre }</td>
-			<td>${movie.openDate}</td>
-			<td>${movie.director }</td>
-			<td>${movie.rank }</td>
-			<%-- <td id="${movie.movieCode}_youtute">${movie.youtubeUrl }</td> --%>
-			<td>
-				<a id="${movie.movieCode}_youtube">${movie.youtubeUrl }</a>
-			</td>
-			<td id="${movie.movieCode}_poster">${movie.posterUrl }</td>
-			<td>
-				<button id="youtube" value="${movie.movieCode }">예고편 수정</button>
-			</td>
-			<td>
-				<button id="poster" value="${movie.movieCode }">포스터 수정</button>
-			</td>
-		</tr>
-		</c:forEach>
-		</table>
-		<div align="center">
-			<span id="back">
-				<c:if test="${curPage == 1 }">이전</c:if>
-				<c:if test="${curPage > 1 }">
-					<a href="javascript:prevFunc();">이전</a>
-				</c:if>
-			</span>
-			<span id="page">${curPage }</span>
-			<span id="next">
-				<c:if test="${curPage == maxPage }">다음</c:if>
-				<c:if test="${curPage < maxPage }">
-					<a href="javascript:nextFunc();">다음</a>
-				</c:if>
-			</span>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3>영화 관리</h3>
+					<div align="center">
+						<form action="movieList" method="GET">
+						    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
+						    	<option value="all">전체</option>
+						    	<option value="movieCode">영화코드</option>
+						        <option value="movieName">영화이름</option>
+						        <option value="genre">장르</option>
+						        <option value="director">감독명</option>
+						    </select>
+							<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
+						    <input type="submit" value="검색"/>
+						</form>
+					</div>
+					<hr/>
+					<table>
+					<tr>
+						<th>영화코드</th><th>영화이름</th><th>장르</th><th>개봉일</th><th>감독명</th><th>순위</th><th>예고편</th><th>포스터</th>
+					</tr>
+					<c:forEach items="${list }" var="movie">
+					<tr>
+						<td>${movie.movieCode }</td>
+						<td>${movie.movieName }</td>
+						<td>${movie.genre }</td>
+						<td>${movie.openDate}</td>
+						<td>${movie.director }</td>
+						<td>${movie.rank }</td>
+						<%-- <td id="${movie.movieCode}_youtute">${movie.youtubeUrl }</td> --%>
+						<td>
+							<a id="${movie.movieCode}_youtube">${movie.youtubeUrl }</a>
+						</td>
+						<td id="${movie.movieCode}_poster">${movie.posterUrl }</td>
+						<td>
+							<button id="youtube" value="${movie.movieCode }">예고편 수정</button>
+						</td>
+						<td>
+							<button id="poster" value="${movie.movieCode }">포스터 수정</button>
+						</td>
+					</tr>
+					</c:forEach>
+					</table>
+					<div align="center">
+						<span id="back">
+							<c:if test="${curPage == 1 }">이전</c:if>
+							<c:if test="${curPage > 1 }">
+								<a href="javascript:prevFunc();">이전</a>
+							</c:if>
+						</span>
+						<span id="page">${curPage }</span>
+						<span id="next">
+							<c:if test="${curPage == maxPage }">다음</c:if>
+							<c:if test="${curPage < maxPage }">
+								<a href="javascript:nextFunc();">다음</a>
+							</c:if>
+						</span>
+					</div>
+				</div>
+			</div>
 		</div>
+	</div>
 	</body>
 	<script>
 		var msg = "${msg}";
 		if(msg != "") {
 			alert(msg);
 		}
+		
+		// 최초 불러올 때 실행하는 함수들.
+		$(document).ready(function() {
+			staySelectBoxValue();
+			changeSearchInput($(".standard").val());
+		});
 		
 		// 팝업 창으로 전달할 값.
 		var urlBoxSelector;
@@ -171,10 +197,8 @@
 					,dataType:'JSON'
 					,success:function(data) {
 						if(data.youtubeUrl == null) {
-							console.log("널이다");
 							$(boxId).html("");
 						} else {
-							console.log("널 아니다");
 							$(boxId).html(data.youtubeUrl);
 						}				
 					},error:function(e) {
@@ -202,14 +226,13 @@
 		}
 
 		
-		
-		
 		// 셀렉박스 값에 따라 inputBox 교체
-		$('.standard').change(function(){
+		// input박스 자동 교체.
+		function changeSearchInput(value) {
 			var searchInput = $(".searchInput");
-			console.log(this.value);
+			//console.log(value);
 			
-			switch(this.value) {
+			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord' readonly/>"
@@ -225,7 +248,7 @@
 						);	
 				break;
 			}
-		})
+		};
 
 		// next 함수
 		function nextFunc() {
@@ -243,15 +266,17 @@
 			location.href="movieList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
-		var selectBox = $(".standard");
-		if("${standard}" == "") {
-			selectBox.val("all").prop("selected", true);
-		} else{
-			selectBox.val("${standard}").prop("selected", true);
+		function staySelectBoxValue() {
+			var selectBox = $(".standard");
+			if("${standard}" == "") {
+				selectBox.val("all").prop("selected", true);
+			} else{
+				selectBox.val("${standard}").prop("selected", true);
+			}
+			if(selectBox.val() != 'all') {
+				$('.searchInput').removeAttr("readonly");
+			} 
 		}
-		if(selectBox.val() != 'all') {
-			$('.searchInput').removeAttr("readonly");
-		} 
 	
 	</script>
 </html>
