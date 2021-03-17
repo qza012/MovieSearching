@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>ReviewList</title>
+		<title>AlarmList</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<style>
 			h3{
@@ -25,7 +25,7 @@
             div{
             	float: left;
             }
-            .reviewList {
+            .alarmList {
                 font-family: Verdana;
                 width: 70%;
                 margin-top: 40px;
@@ -69,25 +69,26 @@
     </head>
     <body>
         <jsp:include page="/movie/include.jsp" />
-        <div class="reviewList">
-            <h3>작성한 리뷰</h3>
+        <div class="alarmList">
+            <h2>알람</h2>
             <table>
-                <tr>
-                    <th>리뷰 번호</th>
-                    <th>제목</th>
-                    <th>영화 제목</th>
-                    <th>평점</th>
-                    <th>좋아요</th>
-                    <th>작성일</th>
-                    <th>삭제</th>
-                </tr>
-                <c:forEach items="${list}" var="review">
-                	<tr>
-                		<td>${review.idx}</td><td> ${review.subject}</td><td>${review.movieName}</td><td>${review.score}</td>
-                		<td>${review.cntLike}</td><td>${review.reg_date}</td><td> <a id="delete" href="./deleteMyReview?idx=${review.idx}">삭제</a> </td>
-                	</tr>
+         		<tr>
+         			<th>알람 번호</th>
+         			<th>알람 내용</th>
+         			<th>도착 날짜</th>
+         			<th>삭제</th>
+         		</tr>
+				<c:forEach items="${aList}" var="alarm">
+					<tr>
+	          			<td id="alarmIdx">${alarm.idx}</td>	
+                		<td id="alarmContent">${alarm.content}</td>
+                		<td id="alarmDate">${alarm.reg_date}</td>
+                		<td id="deleteAlarm">
+                			<button onclick="location.href='./deleteAlarm?id=${follow.id}'">삭제</button>
+                		</td>
+                	</tr>	
                 </c:forEach>
-            </table>
+        	</table>
         </div>
         <div class="pageArea">
 			<span id="btn">

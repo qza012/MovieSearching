@@ -648,6 +648,62 @@ public class MemberDAO {
 		return success;
 	}
 
+	public boolean followCheck(String id, String target_id) {
+		boolean fChk = false;
+		String sql="SELECT id, target_id FROM follow3 WHERE id=? AND target_id=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, target_id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				fChk = true;
+				System.out.println(rs.getString("id")+", "+rs.getString("target_id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return fChk;
+	}
+
+	public HashMap<String, Object> alarmChk(String myId, int group) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<AlarmDTO> alarmList = new ArrayList<AlarmDTO>();
+		AlarmDTO dto = null;
+		
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		
+		String sql="SELECT idx, target_id, id, type_idx, content, reg_date FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)"
+				+ "AS rnum, idx, target_id, id, type_idx, content, reg_date FROM alarm3 WHERE target_id=?) WHERE rnum BETWEEN ? AND ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, myId);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			rs=ps.executeQuery();
+			while(rs.next()) {
+				dto = new AlarmDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setTarget_id(rs.getString("target_id"));
+				dto.setId(rs.getString("id"));
+				dto.setType_idx(rs.getInt("type_idx"));
+				dto.setContent(rs.getString("content"));
+				dto.setReg_date(rs.getDate("reg_date"));
+				alarmList.add(dto);
+			}
+			System.out.println("listSize : "+alarmList.size());
+			int maxPage = (int) Math.ceil(alarmList.size()/(double)pagePerCnt);
+			map.put("list", alarmList);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : "+maxPage);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+	
 	public int alarm(String targetId, String myId) throws SQLException {
 		String sql = "INSERT INTO alarm3(idx,reg_date,content,target_id,id)VALUES(alarm3_seq.NEXTVAL,SYSDATE,?,?,?)";
 		int success = 0;
