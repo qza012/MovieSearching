@@ -106,7 +106,7 @@
 					console.log(data);
 					console.log(data.use);
 					if(data=='{"use":true}'){
-						location.href="idFind.jsp";//임시
+						location.href="../movie/home";//임시
 					}else{
 						alert("아이디 또는 비밀번호를 확인하세요.")
 					}

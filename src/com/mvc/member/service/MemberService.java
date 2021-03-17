@@ -26,6 +26,7 @@ public class MemberService {
 	public MemberService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
 		this.resp = resp;
+		
 	}
 
 	public void updateMemberForm() throws ServletException, IOException {
@@ -238,7 +239,9 @@ public class MemberService {
 		} finally {
 			dao.resClose();
 		}
-		
+		if(result) {
+			req.getSession().setAttribute("myLoginId", id);
+		}
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
