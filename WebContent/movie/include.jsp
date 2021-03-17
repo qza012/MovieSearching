@@ -87,16 +87,16 @@ li {
 								<li><a href="#" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
 								<li><a href="#" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
 								<li><a href="#" id="moviedownload" title="영화 다운로드"><h3>영화다운로드</h3></a></li>
-								<li><a href="#" id="mypage" title="마이페이지"><h3>마이페이지</h3></a>
-									<ul class="navi_sub1" style="display: none;">
-										<li><a href="#" title="회원정보수정"> 회원정보수정 </a></li>
-										<li><a href="#" title="회원탈퇴"> 회원탈퇴 </a></li>
-										<li><a href="#" title="작성한 리뷰"> 작성한 리뷰 </a></li>
-										<li><a href="#" title="좋아요한 영화"> 좋아요한 영화 </a></li>
-										<li><a href="#" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
-										<li><a href="#" title="팔로워"> 팔로워 </a></li>
-										<li><a href="#" title="팔로잉"> 팔로잉 </a></li>
-										<li><a href="#" title="알람"> 알람 </a></li>
+								<li><a href="./updateMF?id=${sessionScope.myLoginId}" id="mypage" title="마이페이지"><h3>마이페이지</h3></a>
+									<ul class="navi_sub1"><!-- style="display: none;" -->
+										<li><a href="./updateMF?id=${sessionScope.myLoginId}" title="회원정보수정"> 회원정보수정 </a></li>
+										<li><a href="./withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
+										<li><a href="./myReviewList?id=${sessionScope.myLoginId}" title="작성한 리뷰"> 작성한 리뷰 </a></li>
+										<li><a href="./iLikeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
+										<li><a href="./iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
+										<li><a href="./followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
+										<li><a href="./followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
+										<li><a href="alram.jsp" title="알람"> 알람 </a></li>
 									</ul>
 								</li>
 								<li><a href="#" id="adminpage" title="관리자페이지"><h3>관리자페이지</h3></a>
@@ -167,7 +167,7 @@ li {
 	});
 	
 	$("#mypage").click(function() {
-		if (loginId == "") {
+		if (${sessionScope.myLoginId} == "") {
 			alert("로그인후 이용해주세요.");
 		} else {
 			$(".navi_sub1").slideToggle('slow');
