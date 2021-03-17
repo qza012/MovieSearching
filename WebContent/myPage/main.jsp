@@ -23,8 +23,8 @@
                font-size: 0px;
            }
            div{
-               float: left;
-           }
+            	float: left;
+            }
            #myPage{
             	display: none;
             }

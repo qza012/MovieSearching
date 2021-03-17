@@ -4,11 +4,18 @@ import java.sql.Date;
 
 public class AlarmDTO {
 	private int idx;
+	private String id;
 	private String target_id;
 	private Date reg_date;
 	private int type_idx;
 	private String content;
 	
+	public final String getId() {
+		return id;
+	}
+	public final void setId(String id) {
+		this.id = id;
+	}
 	public int getIdx() {
 		return idx;
 	}

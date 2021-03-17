@@ -23,7 +23,7 @@
                 font-size: 0px;
             }
             div{
-                float: left;
+            	float: left;
             }
             .followingList {
             	font-family: Verdana;
@@ -35,23 +35,34 @@
             	padding: 1%;
             	margin: 1%;
             	width: 40%;
+            	border: 1px solid black;
+            	background-color: white;
             }
             #followingId{
             	color: red;
+            	font-size: 18px;
+				font-weight: 600;
             	padding: 1%;
+            	margin-top: 8%;
+            	margin-left: 10px;
             }
             #followNum{
             	text-decoration: underline;
+            	font-size: 18px;
+				font-weight: 600;
             	padding: 1%;
+            	margin-top: 8%;
+            	margin-left: 10px;
             }
             #notLike{
-            	margin: 10px 30px;
+            	margin-top: 8%;
+            	margin-left: 15px;
             }
             .pageArea{
 				width:700px;
 				text-align: center;
 				margin-top: 25px;
-				margin-left: 35%;
+				margin-left: 40%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -75,7 +86,7 @@
 	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="100px" height="100px"/></div>
                 	&nbsp;<div id="followingId">${follow.target_id}</div>	
                 	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
-                	<div><button id="notLike" onclick="location.href='./notFollow?target_id=${follow.target_id}'">팔로우 취소</button></div>
+                	<div id="notLike"><button onclick="location.href='./follow?target_id=${follow.target_id}'">팔로우 취소</button></div>
                 </div>
         	</c:forEach>
         </div>

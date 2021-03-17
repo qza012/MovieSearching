@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.member.service.MemberService;
 
-@WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
+@WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw", "/member/member","/member/search","/follow", "/member/fChk",
+	"/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/myPage/alarm"})
 
 public class MemberController extends HttpServlet {
 
@@ -105,6 +105,8 @@ public class MemberController extends HttpServlet {
 				
 			case "/follow":
 				System.out.println("팔로우 하기");
+				service.follow();
+				break;
 
 			case "/join/idFind":
 				System.out.println("아이디 찾기 요청");
@@ -116,10 +118,10 @@ public class MemberController extends HttpServlet {
 				service.pwFind();
 				break;
 				
-			case "/myPage/follow":
+			/*case "/myPage/follow":
 				System.out.println("팔로우 하기_마이페이지");
 				service.follow();
-				break;
+				break;*/
 				
 			case "/myPage/followerList":
 				System.out.println("나를 팔로우 하는 사람들");
@@ -136,13 +138,24 @@ public class MemberController extends HttpServlet {
 				service.notFollow();
 				break;
 				
-			case "/myPage/deleteFollower":
+			/*case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
-
+			*/
+				
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();
+				break;
+				
+			case "/member/fChk":
+				System.out.println("팔로우 체크");
+				service.followCheck();
+				break;
+				
+			case "/myPage/alarm":
+				System.out.println("알람 체크");
+				service.alramChk();
 				break;
 		}
 		
