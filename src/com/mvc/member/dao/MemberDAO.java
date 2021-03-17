@@ -291,8 +291,8 @@ public class MemberDAO {
 	}
 
 	public int join(MemberDTO dto) throws SQLException {
-		String sql = "INSERT INTO member3(id,pw,name,age,pw_answer,gender,genre,email,question_idx)"
-				+ "VALUES (?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO member3(id,pw,name,age,pw_answer,gender,genre,email,question_idx,withdraw,disable,type)"
+				+ "VALUES (?,?,?,?,?,?,?,?,?,'N','N','user')";
 		int result = 0;
 
 		ps = conn.prepareStatement(sql);
