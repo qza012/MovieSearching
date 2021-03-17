@@ -157,7 +157,7 @@
                            <li>
                                <a href="./followingList?id=${sessionScope.myLoginId}">팔로잉</a>
                            </li>
-                             <li>
+                           <li>
                                <a href="alram.jsp">알람</a>
                            </li>
                        </ul>
@@ -171,7 +171,7 @@
                </ul>
            </nav>
        </div>    
-       <h1>팔로워</h1>
+       <h1>팔로잉</h1>
         <div class="followingList">
          	<c:forEach items="${fList}" var="follow">
             	<div id="table">
