@@ -7,17 +7,75 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
-			table, th, td{
-				border: 1px solid black;
+			
+			table{
+				/* border: 1px solid black;
 				border-collapse: collapse;
-				padding: 5px 10px;
+				padding: 5px 10px; */
+				margin : auto;
+				text-align : center;
 			}
+			select{
+					width : 100px;
+					height : 26px;
+					margin-right: 8px ;
+			}
+			.searchInput{
+				width : 320px;
+				height : 20px;
+			}
+			input[type='submit']{
+				width : 80px;
+				height : 26px;
+				margin-top :10px;
+				margin-left: 8px;
+			}
+			th{
+					padding :0px 8px 0px 8px;
+					border-right: 1px solid #cdcdcd;
+				}
+			tr>td{
+				padding : 5px 10px 5px 10px;
+			}
+			h3{
+					padding: 40px 180px 0px;
+				}
+			#back, #next, #page {
+		            display: inline-block;
+		            width: 30px;
+		            height: 25px;
+		            border: 1px solid #cdcdcd;
+		            color: #000000;
+		            font-size: 11px;
+		            border-collapse: collapse;
+		            line-height:25px;
+		            margin-top : 50px;
+       		 	}
+       		 	#back{
+       		 		border-bottom-left-radius: 4px;
+            		border-top-left-radius: 4px;
+       		 	}
+       		 	#page{
+					border-radius: 0px;	
+					font-weight: bold;
+					margin-right:-5px;
+					margin-left:-5px;
+				}
+       		 	#next{
+       		 		border-bottom-right-radius: 4px;
+            		border-top-right-radius: 4px;
+       		 	}
+       		 	a:visited,a:link{
+					color: #000000;
+       			}
+       			a:hover {
+					text-decoration: underline;
+				}
 		</style>
 	</head>
 	<body>
 		<h3>회원리스트</h3>
-		<hr/>
-		<div>
+		<div align="center">
 			<form action="memberDisableList" method="GET">
 			    <select class="standard" name="standard">
 			    	<option value="all">전체</option>
@@ -58,15 +116,15 @@
 			</tr>
 			</c:forEach>
 		</table>
-		<div>
-			<span>
+		<div align="center">
+			<span id="back">
 				<c:if test="${curPage == 1 }">이전</c:if>
 				<c:if test="${curPage > 1 }">
 					<a href="javascript:prevFunc();">이전</a>
 				</c:if>
 			</span>
 			<span id="page">${curPage }</span>
-			<span>
+			<span id="next">
 				<c:if test="${curPage == maxPage }">다음</c:if>
 				<c:if test="${curPage < maxPage }">
 					<a href="javascript:nextFunc();">다음</a>
