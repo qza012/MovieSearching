@@ -215,11 +215,12 @@ public class MemberService {
 			result = dao.login(myLoginId, pw);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} if(result) {
-			req.getSession().setAttribute("myLoginId", myLoginId);
+		} finally {
+			dao.resClose();
 		}
+		
 		if(result) {
-			req.getSession().setAttribute("myLoginId", id);
+			req.getSession().setAttribute("myLoginId", myLoginId);
 		}
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
