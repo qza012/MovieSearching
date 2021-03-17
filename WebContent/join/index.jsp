@@ -99,7 +99,7 @@
 				type : 'POST',
 				url : 'login',
 				data : {
-					"id" : id.value,
+					"myLoginId" : id.value,
 					"pw" : pw.value
 				},
 				success : function(data){

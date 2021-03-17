@@ -6,6 +6,14 @@
 <meta charset="UTF-8">
 <title>poster URL 수정</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<style>
+	body{
+		padding : 10px 50px;
+	}
+	input{
+		width : 300px;
+	}
+</style>
 </head>
 	<body>
 		<a>poster url 입력</a>

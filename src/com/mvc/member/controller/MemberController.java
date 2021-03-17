@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 
-
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList","/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind"})
 
@@ -134,8 +133,7 @@ public class MemberController extends HttpServlet {
 			case "/myPage/deleteFollower":
 				System.out.println("팔로워 삭제");
 				service.deleteFollower();
-				break;	
-				
+
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();

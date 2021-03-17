@@ -124,7 +124,7 @@ public class ReviewDAO {
 			if(rs.next()) {
 				int cnt = rs.getInt(1);//첫번째 컬럼 가져오기
 				max = (int) Math.ceil(cnt/(double)pagePerCnt);
-				System.out.println(max);
+				System.out.println("마지막페이지" + max);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -776,7 +776,7 @@ HashMap<String, Object> map = new HashMap<String, Object>();
 			if(rs.next()) {
 				int cnt = rs.getInt(1);//첫번째 컬럼 가져오기
 				max = (int) Math.ceil(cnt/(double)pagePerCnt);
-				System.out.println(max);
+				System.out.println("마지막페이지" + max);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

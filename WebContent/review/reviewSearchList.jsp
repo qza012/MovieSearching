@@ -105,12 +105,25 @@
 			<c:if test="${currPage>1}">
 				<a href="reviewSearchList?page=${currPage-1}&search=${search}&keyword=${keyword}">이전</a>
 			</c:if>
-			<c:if test="${currPage == 1}">
+			<c:if test="${currPage == 1 && maxPage != 0}">
 				<a style="color: gray;">이전</a>
 			</c:if>
 		</span>
 		
-		<span id="pageArea">${currPage}</span>
+		<c:set var="startNum" value="${currPage-(currPage-1)%10}"/>
+		
+		<span id="pageArea">
+			<c:forEach begin="0" end="9" var="i">
+				<c:if test="${startNum+i <= maxPage}">
+					<c:if test="${startNum+i != currPage}">
+						<a href="reviewSearchList?page=${startNum+i}&search=${search}&keyword=${keyword}">${startNum+i} </a>
+					</c:if>
+					<c:if test="${startNum+i == currPage}">
+						<b><a href="reviewSearchList?page=${startNum+i}&search=${search}&keyword=${keyword}">${startNum+i} </a></b>
+					</c:if>
+				</c:if>
+			</c:forEach>
+		</span>
 		
 		<span>
 			<c:if test="${currPage < maxPage}">

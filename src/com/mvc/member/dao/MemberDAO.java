@@ -193,24 +193,6 @@ public class MemberDAO {
 		return success;
 	}
 	
-	public boolean follow(String myId, String targetId) {
-		boolean success = false;
-		String sql="INSERT INTO follow3(idx,id,target_id) VALUES(follow3_seq.NEXTVAL,?,?)";
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, myId);
-			ps.setString(2, targetId);
-			int count = ps.executeUpdate();
-			if(count>0) {
-				System.out.println(myId+"가 팔로우 신청 ->"+targetId);
-				success = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return success;
-	}
-	
 	public boolean idChk(String id) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=?";
@@ -223,11 +205,11 @@ public class MemberDAO {
 		return !success;
 	}
 
-	public boolean login(String id, String pw) throws SQLException {
+	public boolean login(String myLoginId, String pw) throws SQLException {
 		boolean success = false;
 		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
 		ps = conn.prepareStatement(sql);
-		ps.setString(1, id);
+		ps.setString(1, myLoginId);
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		success = rs.next();
@@ -484,6 +466,24 @@ public class MemberDAO {
 		return success;
 	}
 
+	public boolean follow(String myId, String targetId) {
+		boolean success = false;
+		String sql="INSERT INTO follow3(idx,id,target_id) VALUES(follow3_seq.NEXTVAL,?,?)";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, myId);
+			ps.setString(2, targetId);
+			int count = ps.executeUpdate();
+			if(count>0) {
+				System.out.println(myId+"가 팔로우 신청 ->"+targetId);
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
 	public HashMap<String, Object> followingList(String loginId, int group) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
@@ -646,8 +646,5 @@ public class MemberDAO {
 		}
 		return success;
 	}
-
-
-	
 
 }

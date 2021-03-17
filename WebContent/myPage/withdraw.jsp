@@ -77,7 +77,11 @@
        <h2>로고</h2>
         <p>
      		${sessionScope.myLoginId}님,
+<<<<<<< HEAD
+           <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃 ]</a>
+=======
            <a href="./logout?id=${sessionScope.myLoginId}">[ 로그아웃</a>
+>>>>>>> d190351670face04dbe089ccbaace98c85ba35bf
            |
            <a href="alram.jsp">알람 ]</a>
        </p>
