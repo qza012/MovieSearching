@@ -19,7 +19,6 @@ h2{
 table{
 		margin : auto;
 		margin-top : 100px;
-		
 	}
 label{
 	text-align : center;
@@ -27,6 +26,11 @@ label{
 :focus{
     	outline-color: black;
     }
+#img{
+	display : none;
+	padding : 0px 5px;
+	height : 18px;
+}
 </style>
 </head>
 
@@ -42,8 +46,9 @@ label{
 				<td>
 					<div>
 						<label>아이디</label><br> <input type="text" name="id" id="id" />
-						<input type="button" value="중복 확인" id="idChk" /> <span
-							id="id_span"></span> <span id="fail"></span>
+						<img src="https://img.icons8.com/android/24/000000/checkmark.png" id="img" />
+						<input type="button" value="중복 확인" id="idChk" /><!--  <span
+							id="id_span"></span> <span id="fail"></span> -->
 					</div>
 
 					<div>
@@ -92,7 +97,7 @@ label{
 						
 						<span id="email_span"></span>
 						 <select
-							name="email_sel" id="email_sel" onchange="change_email()" ">
+							name="email_sel" id="email_sel" onchange="change_email()">
 							<option value="선택" >선택</option>
 							<option value="직접 입력" >직접 입력</option>
 							<option value="naver.com">naver.com</option>
@@ -115,7 +120,7 @@ label{
 						</select>
 					</div>
 					<div>
-						<button type="button" onclick="checkAll()">회원가입</button>
+						<input type="submit" value="회원가입" onclick="checkAll()" id="join"/>
 					</div>
 
 				</td>
@@ -126,28 +131,56 @@ label{
 <script>
 var idChk = false;//중복 체크 여부
 
-$("#idChk").click(function(){			
-	$.ajax({
-		type:'get'
-		,url:'idChk'
-		,data:{"id":$("#id").val()}
-		,dataType:'JSON'
-		,success:function(obj){
-			console.log(obj);
-			if(obj.use){
-				alert('사용할 수 있는 아이디 입니다.');
-				idChk= true;
-			}else{
-				alert('이미 사용중인 아이디 입니다.');
-				$("#id").val('');
-			}
-		}
-		,error:function(e){
-			console.log(e);
-		}
-	});				
+//id 값 변경 -> 중복 체크 
+/* $("#id").on("propertychange change keyup paste input",function(){
+	if(idChk==false){
+		alert("아이디 중복체크를 해주세요.");
+		id.focus();
+		return false;
+	}
+}); 
+//아이디를 수정했을 때 
+	$('#id').change(function(){
+		$('#img').hide();
+		$('#idChk').show();
+	});
+*/
+
+$(function(){
+	$('#id').change(function(){
+		$('#img').hide();
+		$('#idChk').show();
+		idChk = false;
+	});
+
+	 $("#idChk").click(function(){
+		
+			$.ajax({
+				type:'get'
+				,url:'idChk'
+				,data:{"id":$("#id").val()}
+				,dataType:'JSON'
+				,success:function(obj){
+					console.log(obj);
+					if(obj.use){
+						alert('사용할 수 있는 아이디 입니다.');
+						$('#img').show();
+						$('#idChk').hide();
+						idChk= true;
+					}else if(obj.use==false){
+						alert('이미 사용중인 아이디 입니다.');
+						$("#id").val('').focus();
+					}
+				}
+				,error:function(e){
+					console.log(e);
+				}
+			});				
+	});	 
 });	
 	
+
+			
 	function checkAll() {//빈칸 확인 
 		var id = document.getElementById("id");
 		var pw = document.getElementById("pw");
@@ -162,10 +195,10 @@ $("#idChk").click(function(){
 		var email = email_sel.value;
 		
 		
+		
 		if (id.value == "") {
 			alert("아이디를 입력하세요.")
 			id.focus()
-			
 		}else if (idChk==false) {
 			alert("아이디 중복체크를 해주세요.");
 			id.focus();
@@ -200,7 +233,14 @@ $("#idChk").click(function(){
 				alert("올바른 도메인을 입력해주세요.");
 				email_add.focus();
 			}
-		}else{
+		
+			$("#id").on("propertychange change keyup paste input",function(){
+				alert('중복 체크를 해주세요.');
+				$('#img').hide();
+				$('#idChk').show();
+				idChk= false;
+			});
+			
 			$.ajax({
 				type:'post'
 				,url:'join'
@@ -252,7 +292,6 @@ $("#idChk").click(function(){
 			document.getElementById('check').innerHTML = '<font color=red>비밀번호가 일치하지 않습니다.</font>';
 		}
 	} 
-	
 	
 	
 </script>
