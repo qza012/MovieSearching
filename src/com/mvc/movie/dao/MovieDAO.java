@@ -12,6 +12,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.rank.dto.RankDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieDAO {
@@ -47,19 +48,20 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> main(String week) throws SQLException {
-		String sql = "SELECT * FROM (SELECT * FROM rank3 WHERE week=?), movie3 ORDER BY rank";
+	public ArrayList<MovieDTO> rankList(String week) throws SQLException {
+		String sql = "SELECT idx, moviecode, rank, week FROM rank3 WHERE week=?";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, week);
 			rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
-				dto.setRank(rs.getInt("rank"));
-				dto.setPosterUrl(rs.getString("posterUrl"));
-				dto.setMovieName(rs.getString("movieName"));
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieCode(rs.getString("movieCode"));
+				dto.setRank(rs.getInt("rank"));
+				dto.setWeek(rs.getString("week"));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -122,32 +124,6 @@ public class MovieDAO {
 			e.printStackTrace();
 		}
 		return dto;
-	}
-
-	/***
-	 * 영화 목록 API에게 한 번에 가져올 수 있는 데이터가 movieCd, movieNm, prdtYear, openDt
-	 * 
-	 * @return
-	 */
-	public int insertMovie(MovieDTO dto) throws SQLException {
-		int result = 0;
-		String sql = "INSERT INTO movie3(movieCode, movieName, openDate, genre, director, country) VALUES(?, ?, to_date(?, 'yyyy-mm-dd'), ?, ?, ?)";
-
-		// System.out.println(dto.getCode() + " / " + dto.getTitle() + " / " +
-		// dto.getOpeningDate() + " / " + dto.getGenre() + " / " + dto.getDirector() + "
-		// / " + dto.getCountry());
-
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, dto.getMovieCode());
-		ps.setString(2, dto.getMovieName());
-		ps.setDate(3, dto.getOpenDate()); // 코드 수정해야함
-		ps.setString(4, dto.getGenre());
-		ps.setString(5, dto.getDirector());
-		ps.setString(6, dto.getCountry());
-
-		result = ps.executeUpdate();
-		ps.close();
-		return result;
 	}
 
 	public int setYoutubeUrl(String movieCode, String youtubeUrl) throws SQLException {

@@ -29,15 +29,22 @@ public class MovieService {
 	public ArrayList<MovieDTO> main() throws ServletException, IOException {
 		MovieDAO dao = new MovieDAO();
 		ArrayList<MovieDTO> top = null;
-//		try {
-//			String week = "202102";
-//			top = dao.main(week);
-			top = new ArrayList<MovieDTO>();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			dao.resClose();
-//		}
+		try {
+			String week = "202102";
+			top = dao.rankList(week);	// MovieDTO에 rank 정보만 포함.
+			
+			ArrayList<MovieDTO> topTemp = new ArrayList<MovieDTO>();
+			for(MovieDTO dto : top) {
+				MovieDTO movieDTO = dao.detail(dto.getMovieCode());
+				topTemp.add(movieDTO);
+			}
+			top = topTemp;
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
 		System.out.println("영화 갯수 : " + top.size());
 		req.setAttribute("top", top);
 		dis = req.getRequestDispatcher("index.jsp");
