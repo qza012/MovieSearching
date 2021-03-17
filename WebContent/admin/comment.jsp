@@ -15,61 +15,70 @@
 		</style>
 	</head>
 	<body>
-		<h3>댓글리스트</h3>
-		<hr/>
-		<div>
-			<form action="commentList" method="GET">
-			    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
-			    	<option value="all">전체</option>
-			        <option value="idx">댓글번호</option>
-			        <option value="review_idx">리뷰 게시글 번호</option>
-			        <option value="content">내용</option>
-			        <option value="id">작성자 아이디</option>
-			        <option value="reg_date">작성날짜</option>
-			        <option value="del_type">삭제 여부</option>
-			    </select>
-				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
-			    <input type="submit" value="검색"/>
-			</form>
-		</div>	
-		<table>
-		<tr>
-			<th>댓글번호</th><th>리뷰 게시글 번호 </th><th>내용</th><th>작성자아이디</th><th>작성날짜</th><th>삭제여부</th>
-		</tr>
-		<c:forEach items="${list }" var="comment">
-		<tr>
-			<td>${comment.idx }</td>
-			<td>${comment.review_idx }</td>
-			<td><a href="#">${comment.content }</a></td>
-			<td>${comment.id }</td>
-			<td>${comment.reg_date }</td>
-			<td id="${comment.idx }">${comment.del_type }</td>
-			<td>
-				<c:if test="${comment.del_type == 'y' || comment.del_type == 'Y'}">
-					<button value="${comment.idx }">삭제 취소</button>
-				</c:if>
-				<c:if test="${member.del_type == 'n' || comment.del_type == 'N'}">
-					<button value="${comment.idx }">삭제</button>
-				</c:if>
-			</td>
-		</tr>
-		</c:forEach>
-		</table>
-		<div>
-			<span>
-				<c:if test="${curPage == 1 }">이전</c:if>
-				<c:if test="${curPage > 1 }">
-					<a href="javascript:prevFunc();">이전</a>
-				</c:if>
-			</span>
-			<span id="page">${curPage }</span>
-			<span>
-				<c:if test="${curPage == maxPage }">다음</c:if>
-				<c:if test="${curPage < maxPage }">
-					<a href="javascript:nextFunc();">다음</a>
-				</c:if>
-			</span>
-		</div>	
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3>댓글리스트</h3>
+					<hr/>
+					<div>
+						<form action="commentList" method="GET">
+						    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
+						    	<option value="all">전체</option>
+						        <option value="idx">댓글번호</option>
+						        <option value="review_idx">리뷰 게시글 번호</option>
+						        <option value="content">내용</option>
+						        <option value="id">작성자 아이디</option>
+						        <option value="reg_date">작성날짜</option>
+						        <option value="del_type">삭제 여부</option>
+						    </select>
+							<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
+						    <input type="submit" value="검색"/>
+						</form>
+					</div>	
+					<table>
+					<tr>
+						<th>댓글번호</th><th>리뷰 게시글 번호 </th><th>내용</th><th>작성자아이디</th><th>작성날짜</th><th>삭제여부</th>
+					</tr>
+					<c:forEach items="${list }" var="comment">
+					<tr>
+						<td>${comment.idx }</td>
+						<td>${comment.review_idx }</td>
+						<td><a href="/MovieSearching/reviewDetail?Idx=${comment.review_idx }">${comment.content }</a></td>
+						<td>${comment.id }</td>
+						<td>${comment.reg_date }</td>
+						<td id="${comment.idx }">${comment.del_type }</td>
+						<td>
+							<c:if test="${comment.del_type == 'y' || comment.del_type == 'Y'}">
+								<button value="${comment.idx }">삭제 취소</button>
+							</c:if>
+							<c:if test="${member.del_type == 'n' || comment.del_type == 'N'}">
+								<button value="${comment.idx }">삭제</button>
+							</c:if>
+						</td>
+					</tr>
+					</c:forEach>
+					</table>
+					<div>
+						<span>
+							<c:if test="${curPage == 1 }">이전</c:if>
+							<c:if test="${curPage > 1 }">
+								<a href="javascript:prevFunc();">이전</a>
+							</c:if>
+						</span>
+						<span id="page">${curPage }</span>
+						<span>
+							<c:if test="${curPage == maxPage }">다음</c:if>
+							<c:if test="${curPage < maxPage }">
+								<a href="javascript:nextFunc();">다음</a>
+							</c:if>
+						</span>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
 	</body>
 	<script>
 		var msg = "${msg}";

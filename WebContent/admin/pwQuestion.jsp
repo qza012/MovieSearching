@@ -15,28 +15,37 @@
 		</style>
 	</head>
 	<body>
-		<h3>질문리스트</h3>
-		<div>
-			<button value="move" onclick="location.href='memberDisableList'">회원 비활성화 관리</button>
-			<button value="move">비밀번호 찾기 질문 관리</button>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3>질문리스트</h3>
+					<div>
+						<button value="move" onclick="location.href='memberDisableList'">회원 비활성화 관리</button>
+						<button value="move">비밀번호 찾기 질문 관리</button>
+					</div>
+					<hr/>
+					<table>
+					<tr>
+						<th>순번</th><th>질문내용</th>
+					</tr>
+					<c:forEach items="${list }" var="question">
+					<tr>
+						<td>${question.idx }</td>
+						<td>
+							<a id="${question.idx}">${question.content }</a>
+						</td>
+						<td>
+							<button value="${question.idx}">변경</button>
+						</td>
+					</tr>
+					</c:forEach>
+					</table>
+				</div>
+			</div>
 		</div>
-		<hr/>
-		<table>
-		<tr>
-			<th>순번</th><th>질문내용</th>
-		</tr>
-		<c:forEach items="${list }" var="question">
-		<tr>
-			<td>${question.idx }</td>
-			<td>
-				<a id="${question.idx}">${question.content }</a>
-			</td>
-			<td>
-				<button value="${question.idx}">변경</button>
-			</td>
-		</tr>
-		</c:forEach>
-		</table>
+	</div>
 	</body>
 	<script>
 	

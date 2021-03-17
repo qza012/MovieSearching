@@ -8,10 +8,10 @@
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
 			
-			table{
-				/* border: 1px solid black;
-				border-collapse: collapse;
-				padding: 5px 10px; */
+			/* table{
+				// border: 1px solid black;
+				//border-collapse: collapse;
+				//padding: 5px 10px; 
 				margin : auto;
 				text-align : center;
 			}
@@ -70,71 +70,81 @@
        			}
        			a:hover {
 					text-decoration: underline;
-				}
+				} */
 		</style>
 	</head>
 	<body>
-		<h3>회원리스트</h3>
-		<div>
-			<button value="move">회원 비활성화 관리</button>
-			<button value="move" onclick="location.href='pwQuestionList'">비밀번호 찾기 질문 관리</button>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3>회원리스트</h3>
+					<div>
+						<button value="move">회원 비활성화 관리</button>
+						<button value="move" onclick="location.href='pwQuestionList'">비밀번호 찾기 질문 관리</button>
+					</div>
+					<div align="center">
+						<form action="memberDisableList" method="GET">
+						    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
+						    	<option value="all">전체</option>
+						        <option value="id">아이디</option>
+						        <option value="name">이름</option>
+						        <option value="age">나이</option>
+						        <option value="gender">성별</option>
+						        <option value="email">이메일</option>
+						        <option value="withdraw">탈퇴 여부</option>
+						       	<option value="disable">비활성화 여부</option>
+						    </select>
+							<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
+						    <input type="submit" value="검색"/>
+						</form>
+					</div>
+					<hr/>
+					<table>
+						<tr>
+							<th>아이디</th><th>이름</th><th>나이</th><th>성별</th><th>이메일</th><th>탈퇴여부</th><th>활성화 여부</th>
+						</tr>
+						<c:forEach items="${list }" var="member">
+						<tr>
+			
+							<td><a href="../member/memReviewList?id=${member.id }">${member.id }</a></td>
+							<td>${member.name }</td>
+							<td>${member.age }</td>
+							<td>${member.gender}</td>
+							<td>${member.email }</td>
+							<td>${member.withdraw }</td>
+							<td id="${member.id }">${member.disable }</td>
+							<td>
+								<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
+									<button value="${member.id }">비활성화</button>
+								</c:if>
+								<c:if test="${member.disable == 'n' || member.disable == 'N'}">
+									<button value="${member.id }">활성화</button>
+								</c:if>
+							</td>
+						</tr>
+						</c:forEach>
+					</table>
+					<div align="center">
+						<span id="back">
+							<c:if test="${curPage == 1 }">이전</c:if>
+							<c:if test="${curPage > 1 }">
+								<a href="javascript:prevFunc();">이전</a>
+							</c:if>
+						</span>
+						<span id="page">${curPage }</span>
+						<span id="next">
+							<c:if test="${curPage == maxPage }">다음</c:if>
+							<c:if test="${curPage < maxPage }">
+								<a href="javascript:nextFunc();">다음</a>
+							</c:if>
+						</span>
+					</div>	
+				</div>
+			</div>
 		</div>
-		<div align="center">
-			<form action="memberDisableList" method="GET">
-			    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
-			    	<option value="all">전체</option>
-			        <option value="id">아이디</option>
-			        <option value="name">이름</option>
-			        <option value="age">나이</option>
-			        <option value="gender">성별</option>
-			        <option value="email">이메일</option>
-			        <option value="withdraw">탈퇴 여부</option>
-			       	<option value="disable">비활성화 여부</option>
-			    </select>
-				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
-			    <input type="submit" value="검색"/>
-			</form>
-		</div>
-		<hr/>
-		<table>
-			<tr>
-				<th>아이디</th><th>이름</th><th>나이</th><th>성별</th><th>이메일</th><th>탈퇴여부</th><th>활성화 여부</th>
-			</tr>
-			<c:forEach items="${list }" var="member">
-			<tr>
-				<td><a href="#?id=${member.id }">${member.id }</a></td>
-				<td>${member.name }</td>
-				<td>${member.age }</td>
-				<td>${member.gender}</td>
-				<td>${member.email }</td>
-				<td>${member.withdraw }</td>
-				<td id="${member.id }">${member.disable }</td>
-				<td>
-					<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
-						<button value="${member.id }">비활성화</button>
-					</c:if>
-					<c:if test="${member.disable == 'n' || member.disable == 'N'}">
-						<button value="${member.id }">활성화</button>
-					</c:if>
-				</td>
-			</tr>
-			</c:forEach>
-		</table>
-		<div align="center">
-			<span id="back">
-				<c:if test="${curPage == 1 }">이전</c:if>
-				<c:if test="${curPage > 1 }">
-					<a href="javascript:prevFunc();">이전</a>
-				</c:if>
-			</span>
-			<span id="page">${curPage }</span>
-			<span id="next">
-				<c:if test="${curPage == maxPage }">다음</c:if>
-				<c:if test="${curPage < maxPage }">
-					<a href="javascript:nextFunc();">다음</a>
-				</c:if>
-			</span>
-		</div>	
+	</div>
 	</body>
 	<script>
 		var msg = "${msg}";
