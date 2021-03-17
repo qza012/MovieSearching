@@ -124,7 +124,7 @@ li {
 		document.getElementById("login").innerHTML = content;
 	} else {
 		content = "환영합니다. " + loginId
-				+ "님 <button id='btn3'>로그아웃</button> <button>알람</button>";
+				+ "님 <button id='btn3'>로그아웃</button> <button id='btn4'>알람</button>";
 		document.getElementById("login").innerHTML = content;
 	}
 
@@ -145,6 +145,10 @@ li {
 
 	$("#btn3").click(function() {
 		location.href = "/MovieSearching/join/logout";
+	});
+	
+	$("#btn4").click(function() {
+		location.href = "/MovieSearching/member/alarmList?id=${sessionScope.myLoginId}";
 	});
 
 	$("#movielist").click(function() {

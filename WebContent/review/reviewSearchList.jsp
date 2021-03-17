@@ -65,8 +65,11 @@ div.search {
 	height: 40%;
 }
 
-a:link, a:hover, a:visited, a:active {
-	color: black;
+.aClickGo:link, 
+.aClickGo:hover, 
+.aClickGo:visited, 
+.aClickGo:active {
+	color: white;
 	text-decoration: none;
 }
 </style>
@@ -94,7 +97,7 @@ a:link, a:hover, a:visited, a:active {
 
 					<h2 style="color: white;">리뷰 검색 결과</h2>
 					<div style="text-align: right; padding-bottom: 10px;">
-						<a href="./reviewList">전체 리뷰 리스트</a>
+						<a class="aClickGo" href="./reviewList">전체 리뷰 리스트</a>
 					</div>
 
 					<table>

@@ -32,8 +32,11 @@ th, td {
 	text-align: right;
 }
 
-a:link, a:hover, a:visited, a:active {
-	color: black;
+.aClickGo:link, 
+.aClickGo:hover, 
+.aClickGo:visited, 
+.aClickGo:active {
+	color: white;
 	text-decoration: none;
 }
 
@@ -95,8 +98,7 @@ a:link, a:hover, a:visited, a:active {
 							<!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
 							<td colspan="2"><c:if
 									test="${sessionScope.myLoginId ne review.id}">
-									<a onclick="reportOpen(${review.idx},2001)"
-										style="cursor: pointer;">신고</a>
+									<a  class="aClickGo" onclick="reportOpen(${review.idx},2001)" style="cursor: pointer;">신고</a>
 								</c:if></td>
 							<th>작성일</th>
 							<td>${review.reg_date}</td>
@@ -105,9 +107,8 @@ a:link, a:hover, a:visited, a:active {
 					
 					<div class="aTag">
 						<c:if test="${sessionScope.myLoginId eq review.id}">
-							<a href="reviewUpdateForm?Idx=${review.idx}">수정</a>
-							<a onclick="return confirm('정말 삭제하시겠습니까?')"
-								href="reviewDel?Idx=${review.idx}">삭제</a>
+							<a class="aClickGo" href="reviewUpdateForm?Idx=${review.idx}">수정</a>
+							<a  class="aClickGo" onclick="return confirm('정말 삭제하시겠습니까?')" href="reviewDel?Idx=${review.idx}">삭제</a>
 						</c:if>
 					</div>
 
@@ -116,17 +117,17 @@ a:link, a:hover, a:visited, a:active {
 							onclick="location.href='./reviewList' " />
 					</div>
 
-					<div style="margin: 30px 10px;">
+					<div style="margin-top: 40px; margin-bottom: 0px; margin-left: 10px;">
 						<h3 style="color: white;">댓글</h3>
 					</div>
 
 					<table>
 						<tr>
-							<td>
+							<td style="border-top: 1px solid #212121;">
 								<input type="hidden" id="comment_idx" /> 
 								<textarea id="comment_content" style="width: 100%; height: 50px; resize: none;"></textarea>
 							</td>
-							<td>
+							<td style="border-top: 1px solid #212121;">
 								<input type="button" id="save" value="등록" style="width: 20%; height: 50px;" /> 
 								<input type="hidden"id="update" value="수정" style="width: 20%; height: 50px;" />
 							</td>
@@ -153,24 +154,20 @@ a:link, a:hover, a:visited, a:active {
 								<td>${comment.id}</td>
 								<td>${comment.reg_date}</td>
 
-								<td style="border-top: white; border-bottom: white;"><c:if
-										test="${sessionScope.myLoginId ne comment.id}">
-										<a onclick="reportOpen(${comment.idx},2002)"
-											style="cursor: pointer;">신고</a>
+								<td style="border-top: white; border-bottom: white;">
+									<c:if test="${sessionScope.myLoginId ne comment.id}">
+										<a  class="aClickGo" onclick="reportOpen(${comment.idx},2002)" style="cursor: pointer;">신고</a>
 									</c:if></td>
 
-								<td
-									style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
+								<td style="border-top: white; border-bottom: white; text-align: right; cursor: pointer;">
 									<c:if test="${sessionScope.myLoginId eq comment.id}">
-										<a onclick="update(${comment.idx})">수정</a>
+										<a  class="aClickGo" onclick="update(${comment.idx})">수정</a>
 									</c:if>
 								</td>
 
-								<td
-									style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
+								<td style="border-top: white; border-bottom: white; text-align: left; cursor: pointer;">
 									<c:if test="${sessionScope.myLoginId eq comment.id}">
-										<a onclick="return confirm('정말 삭제하시겠습니까?')"
-											href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
+										<a  class="aClickGo" onclick="return confirm('정말 삭제하시겠습니까?')" href="commentDel?idx=${comment.idx}&review_idx=${review.idx}">삭제</a>
 									</c:if>
 								</td>
 							</tr>

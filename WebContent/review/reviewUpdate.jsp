@@ -51,7 +51,7 @@ textarea {
 						<tr>
 							<th>제목</th>
 							<td><input type="text" id="subject"
-								value="${review.subject}" style="width: 97%;" /></td>
+								value="${review.subject}" style="width: 80%;" /></td>
 
 							<th>작성자</th>
 							<td><input type="hidden" id="id" value="${review.id}" />${review.id}</td>
@@ -61,11 +61,11 @@ textarea {
 							<th>영화제목</th>
 							<td><input type="hidden" id="movieCode"
 								value="${review.movieCode}" /> <input type="text" id="movieName"
-								value="${review.movieName}" readonly style="width: 97%;"
+								value="${review.movieName}" readonly style="width: 80%;"
 								readonly /></td>
 
 							<th>평점</th>
-							<td><select id="score" class="star">
+							<td><select id="score" style="width: 50%;" class="star">
 									<option value="0"></option>
 									<c:forEach begin="1" end="5" var="i">
 										<c:if test="${review.score eq i}">

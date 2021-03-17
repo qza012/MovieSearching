@@ -61,7 +61,7 @@ textarea {
 								type="button" value="검색" onclick="movieSearchOpen()" /></td>
 
 							<th>평점</th>
-							<td><select id="score" class="star">
+							<td><select style="width: 20%;" id="score" class="star">
 									<option value="0"></option>
 									<option value="1">1</option>
 									<option value="2">2</option>
