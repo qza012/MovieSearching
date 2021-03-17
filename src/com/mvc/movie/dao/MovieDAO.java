@@ -32,11 +32,11 @@ public class MovieDAO {
 
 	public void resClose() {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (ps != null) {
+				ps.close();
 			}
-			if (conn != null) {
-				conn.close();
+			if (rs != null) {
+				rs.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -47,11 +47,12 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> main() throws SQLException {
-		String sql = "SELECT DISTINCT * FROM rank3 r, movie3 m WHERE ROWNUM <= 10 ORDER BY rank";
+	public ArrayList<MovieDTO> main(String week) throws SQLException {
+		String sql = "SELECT * FROM (SELECT * FROM rank3 WHERE week=?), movie3 ORDER BY rank";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
+			ps.setString(1, week);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
@@ -176,7 +177,7 @@ public class MovieDAO {
 	}
 
 	public ArrayList<ReviewDTO> review(String movieCode) {
-		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=?";
+		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=? ORDER BY reg_date DESC";
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
@@ -280,9 +281,44 @@ public class MovieDAO {
 		return max;
 	}
 
-	public ArrayList<MovieDTO> likeMovie(String id) {
-
-		return null;
+	public HashMap<String, Object> likeMovie(String loginId, int group) {	
+		int pagePerCnt = 10;
+		int end = group*pagePerCnt;
+		int start = end-(pagePerCnt-1);
+		
+		String sql="SELECT * FROM (SELECT m.posterUrl,m.movieName,m.genre,m.director,m.actors, m.reg_date "
+				+ "FROM movie3 m INNER JOIN movie_like3 l ON m.moviecode = l.moviecode)m JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
+				+ "FROM (SELECT r.IDX, l.REVIEW_IDX FROM movie3 m RIGHT OUTER JOIN movie_like3 l ON r.idx = l.review_idx AND l.id = ?) "
+				+ "GROUP BY IDX)l ON r.IDX = l.IDX WHERE del_type='N' ORDER BY R.IDX DESC";
+//		SELECT posterUrl,movieName,genre,director,actors,opendate FROM movie3;
+//		SELECT moviecode FROM movie_like3 WHERE id='user0310';
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
+		try {	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
+			while(rs.next()) {
+				MovieDTO dto = new MovieDTO();
+				
+				list.add(dto);
+			}
+			for(int i=start-1; i<end; i++) {
+				if(i<list.size()) {
+					System.out.println(i);
+					likeMovie_list.add(list.get(i));
+				}
+			}
+			System.out.println("listSize : "+likeMovie_list.size());
+			int maxPage = (int) Math.ceil(list.size()/(double)pagePerCnt);
+			map.put("list", likeMovie_list);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : "+maxPage);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 
 }

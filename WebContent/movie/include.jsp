@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,12 +88,12 @@ li {
 									<ul class="navi_sub1" style="display: none;">
 										<li><a href="/MovieSearching/myPage/updateMF" title="회원정보수정"> 회원정보수정 </a></li>
 										<li><a href="/MovieSearching/myPage/withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
-										<li><a href="/MovieSearching/myPage/myReviewList" title="작성한 리뷰"> 작성한 리뷰 </a></li>
-										<li><a href="/MovieSearching/myPage/iLikeMovie" title="좋아요한 영화"> 좋아요한 영화 </a></li>
-										<li><a href="/MovieSearching/myPage/iLikeReview" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
-										<li><a href="/MovieSearching/myPage/followerList" title="팔로워"> 팔로워 </a></li>
-										<li><a href="/MovieSearching/myPage/followingList" title="팔로잉"> 팔로잉 </a></li>
-										<li><a href="/MovieSearching/myPage/alarm" title="알람"> 알람 </a></li>
+										<li><a href="/MovieSearching/myPage/myReviewList?id=${sessionScope.myLoginId}" title="작성한 리뷰"> 작성한 리뷰 </a></li>
+										<li><a href="/MovieSearching/myPage/iLikeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
+										<li><a href="/MovieSearching/myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
+										<li><a href="/MovieSearching/myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
+										<li><a href="/MovieSearching/myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
+										<li><a href="/MovieSearching/myPage/alarmList?id=${sessionScope.myLoginId}" title="알람"> 알람 </a></li>
 									</ul>
 								</li>
 								<li><a href="#" id="adminpage" title="관리자페이지"><h3>관리자페이지</h3></a>
@@ -148,7 +147,7 @@ li {
 	});
 	
 	$("#btn4").click(function() {
-		location.href = "/MovieSearching/member/alarmList?id=${sessionScope.myLoginId}";
+		location.href = "/MovieSearching/myPage/alarmList?id=${sessionScope.myLoginId}";
 	});
 
 	$("#movielist").click(function() {
