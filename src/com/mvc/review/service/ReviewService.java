@@ -28,107 +28,118 @@ public class ReviewService {
 	}
 
 	public void write() throws IOException {
-		String subject = req.getParameter("subject");
-		String id = req.getParameter("id");
-		String movieCode = req.getParameter("movieCode");
-		String movieName = req.getParameter("movieName");
-		int score = Integer.parseInt(req.getParameter("score"));
-		String content = req.getParameter("content");
-		
-		System.out.println(subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		String msg ="리뷰작성에 실패했습니다.";
-		int success = 0;
-		
-		ReviewDTO dto = new ReviewDTO();
-		ReviewDAO dao = new ReviewDAO();
-		dto.setSubject(subject);
-		dto.setId(id);
-		dto.setMovieCode(movieCode);
-		dto.setScore(score);
-		dto.setContent(content);
-		
-		if(dao.write(dto)) {
-			msg="리뷰작성에 성공했습니다.";
-			success = 1;
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String subject = req.getParameter("subject");
+			String id = req.getParameter("id");
+			String movieCode = req.getParameter("movieCode");
+			String movieName = req.getParameter("movieName");
+			int score = Integer.parseInt(req.getParameter("score"));
+			String content = req.getParameter("content");
+			
+			System.out.println(subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			String msg ="리뷰작성에 실패했습니다.";
+			int success = 0;
+			
+			ReviewDTO dto = new ReviewDTO();
+			ReviewDAO dao = new ReviewDAO();
+			dto.setSubject(subject);
+			dto.setId(id);
+			dto.setMovieCode(movieCode);
+			dto.setScore(score);
+			dto.setContent(content);
+			
+			if(dao.write(dto)) {
+				msg="리뷰작성에 성공했습니다.";
+				success = 1;
+			}
+			dao.resClose();
+			
+			map.put("msg", msg);
+			map.put("success",success);
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		map.put("msg", msg);
-		map.put("success",success);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(map);
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void list() throws ServletException, IOException {
-		String pageParam = req.getParameter("page");
-		
-		int group = 1;
-		if(pageParam !=null) {
-			group = Integer.parseInt(pageParam);
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String pageParam = req.getParameter("page");
+			
+			int group = 1;
+			if(pageParam !=null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
+			ReviewDAO dao = new ReviewDAO();
+			HashMap<String, Object> map = dao.list(group);
+			dao.resClose();
+			
+			String page="review/reviewList.jsp";
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("review", map.get("list"));
+			req.setAttribute("currPage", group);
+	
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		
-		ReviewDAO dao = new ReviewDAO();
-		HashMap<String, Object> map = dao.list(group);
-		dao.resClose();
-		
-		String page="review/reviewList.jsp";
-		req.setAttribute("maxPage", map.get("maxPage"));
-		req.setAttribute("review", map.get("list"));
-		req.setAttribute("currPage", group);
-
-		RequestDispatcher dis = req.getRequestDispatcher(page);
-		dis.forward(req, resp);
 	}
 
 	public void detail() throws ServletException, IOException {
-		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
-		System.out.println(reviewIdx);
-		
-		//테스트용
-		req.getSession().setAttribute("myLoginId", "relike");
 		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
-		
-		ReviewDTO dto = new ReviewDTO();
-		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
-		ReviewDAO dao = new ReviewDAO();
-		
-		dto = dao.detail(reviewIdx);
-		
-		//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
-		int reviewLike = 0;
-		if(dao.reviewLikeCheck(reviewIdx, myLoginId)) {
-			reviewLike = 1;	
-		}
-		req.setAttribute("reviewLike", reviewLike);
-
-		//댓글 가져오기
-		list = dao.commentList(reviewIdx);
-		
-		//댓글 갯수 가져오기
-		int cntComment = dao.cntComment(reviewIdx);
-		dao.resClose();
-		
-		if(dto!=null) {
-			req.setAttribute("review", dto);
-			if(list!=null) {
-				req.setAttribute("comment", list);
+		if(myLoginId != null) {
+			int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
+			System.out.println(reviewIdx);
+			
+			ReviewDTO dto = new ReviewDTO();
+			ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
+			ReviewDAO dao = new ReviewDAO();
+			
+			dto = dao.detail(reviewIdx);
+			
+			//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
+			int reviewLike = 0;
+			if(dao.reviewLikeCheck(reviewIdx, myLoginId)) {
+				reviewLike = 1;	
 			}
+			req.setAttribute("reviewLike", reviewLike);
+	
+			//댓글 가져오기
+			list = dao.commentList(reviewIdx);
+			
+			//댓글 갯수 가져오기
+			int cntComment = dao.cntComment(reviewIdx);
+			dao.resClose();
+			
+			if(dto!=null) {
+				req.setAttribute("review", dto);
+				if(list!=null) {
+					req.setAttribute("comment", list);
+				}
+			}
+			req.setAttribute("br", "<br/>");
+			req.setAttribute("cn", "\n");
+			req.setAttribute("cntComment", cntComment);
+			req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		req.setAttribute("br", "<br/>");
-		req.setAttribute("cn", "\n");
-		req.setAttribute("cntComment", cntComment);
-		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 	
 	public void memReviewList() throws ServletException, IOException {
@@ -156,82 +167,97 @@ public class ReviewService {
 	}
 
 	public void updateFrom() throws ServletException, IOException {
-		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
-		System.out.println(reviewIdx);
-		
-		ReviewDTO dto = new ReviewDTO();
-		ReviewDAO dao = new ReviewDAO();
-		
-		dto = dao.updateForm(reviewIdx);
-		dao.resClose();
-		
-		if(dto != null) {
-			req.setAttribute("review", dto);
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
+			System.out.println(reviewIdx);
+			
+			ReviewDTO dto = new ReviewDTO();
+			ReviewDAO dao = new ReviewDAO();
+			
+			dto = dao.updateForm(reviewIdx);
+			dao.resClose();
+			
+			if(dto != null) {
+				req.setAttribute("review", dto);
+			}
+			req.getRequestDispatcher("review/reviewUpdate.jsp").forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		req.getRequestDispatcher("review/reviewUpdate.jsp").forward(req, resp);
 	}
 
 	public void update() throws IOException {
-		int reviewIdx = Integer.parseInt(req.getParameter("idx"));
-		String subject = req.getParameter("subject");
-		String id = req.getParameter("id");
-		String movieCode = req.getParameter("movieCode");
-		String movieName = req.getParameter("movieName");
-		int score = Integer.parseInt(req.getParameter("score"));
-		String content = req.getParameter("content");
-		
-		System.out.println(reviewIdx + " / " + subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		String msg ="리뷰수정에 실패했습니다.";
-		int success = 0;
-		
-		ReviewDTO dto = new ReviewDTO();
-		ReviewDAO dao = new ReviewDAO();
-		dto.setIdx(reviewIdx);
-		dto.setSubject(subject);
-		dto.setId(id);
-		dto.setMovieCode(movieCode);
-		dto.setScore(score);
-		dto.setContent(content);
-		
-		if(dao.update(dto)) {
-			msg="리뷰수정에 성공했습니다.";
-			success = 1;
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int reviewIdx = Integer.parseInt(req.getParameter("idx"));
+			String subject = req.getParameter("subject");
+			String id = req.getParameter("id");
+			String movieCode = req.getParameter("movieCode");
+			String movieName = req.getParameter("movieName");
+			int score = Integer.parseInt(req.getParameter("score"));
+			String content = req.getParameter("content");
+			
+			System.out.println(reviewIdx + " / " + subject + " / " + id + " / " + movieCode + " / " + movieName + " / " + score + " / " + content);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			String msg ="리뷰수정에 실패했습니다.";
+			int success = 0;
+			
+			ReviewDTO dto = new ReviewDTO();
+			ReviewDAO dao = new ReviewDAO();
+			dto.setIdx(reviewIdx);
+			dto.setSubject(subject);
+			dto.setId(id);
+			dto.setMovieCode(movieCode);
+			dto.setScore(score);
+			dto.setContent(content);
+			
+			if(dao.update(dto)) {
+				msg="리뷰수정에 성공했습니다.";
+				success = 1;
+			}
+			dao.resClose();
+			
+			map.put("msg", msg);
+			map.put("success",success);
+			
+			Gson gson = new Gson(); 
+			String json = gson.toJson(map); 
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		map.put("msg", msg);
-		map.put("success",success);
-		
-		Gson gson = new Gson(); 
-		String json = gson.toJson(map); 
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void del() throws ServletException, IOException {
-		int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
-		System.out.println(reviewIdx);
-		
-		String msg="삭제에 실패했습니다.";
-		String page="/reviewDetail?Idx="+reviewIdx;
-		
-		ReviewDAO dao = new ReviewDAO();
-		if(dao.del(reviewIdx)) {
-			msg="삭제가 완료되었습니다.";
-			page="/reviewList";
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int reviewIdx = Integer.parseInt(req.getParameter("Idx"));
+			System.out.println(reviewIdx);
+			
+			String msg="삭제에 실패했습니다.";
+			String page="/reviewDetail?Idx="+reviewIdx;
+			
+			ReviewDAO dao = new ReviewDAO();
+			if(dao.del(reviewIdx)) {
+				msg="삭제가 완료되었습니다.";
+				page="/reviewList";
+			}
+			dao.resClose();
+			
+			req.setAttribute("msg", msg);
+			req.getRequestDispatcher(page).forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		req.setAttribute("msg", msg);
-		req.getRequestDispatcher(page).forward(req, resp);
 	}
 	
 	public void myReviewList() throws ServletException, IOException {
@@ -336,193 +362,220 @@ public class ReviewService {
 	}
 
 	public void commentWrite() throws IOException {
-		String content = req.getParameter("content");
-		String id = req.getParameter("id");
-		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
-		
-		System.out.println(review_idx + " / " + id + " / " + content);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		String msg ="댓글작성에 실패했습니다.";
-		int success = 0;
-		
-		CommentDTO dto = new CommentDTO();
-		ReviewDAO dao = new ReviewDAO();
-		dto.setContent(content);
-		dto.setId(id);
-		dto.setReview_idx(review_idx);
-		
-		if(dao.commentWrite(dto)) {
-			msg="댓글작성에 성공했습니다.";
-			success = 1;
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String content = req.getParameter("content");
+			String id = req.getParameter("id");
+			int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+			
+			System.out.println(review_idx + " / " + id + " / " + content);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			String msg ="댓글작성에 실패했습니다.";
+			int success = 0;
+			
+			CommentDTO dto = new CommentDTO();
+			ReviewDAO dao = new ReviewDAO();
+			dto.setContent(content);
+			dto.setId(id);
+			dto.setReview_idx(review_idx);
+			
+			if(dao.commentWrite(dto)) {
+				msg="댓글작성에 성공했습니다.";
+				success = 1;
+			}
+			dao.resClose();
+			
+			map.put("msg", msg);
+			map.put("success",success);
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		map.put("msg", msg);
-		map.put("success",success);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(map);
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void commentUpdateForm() throws IOException {
-		int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
-		System.out.println(comment_idx);
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		int success = 0;
-		String content = null;
-		
-		ReviewDAO dao = new ReviewDAO();
-		content = dao.commentUpdateForm(comment_idx);
-		if(content != null) {
-			success = 1;
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
+			System.out.println(comment_idx);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			int success = 0;
+			String content = null;
+			
+			ReviewDAO dao = new ReviewDAO();
+			content = dao.commentUpdateForm(comment_idx);
+			if(content != null) {
+				success = 1;
+			}
+			dao.resClose();
+			
+			map.put("success",success);
+			map.put("content", content);
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		map.put("success",success);
-		map.put("content", content);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(map);
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void commentUpdate() throws IOException {
-		int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
-		String content = req.getParameter("content");
-		System.out.println(comment_idx + " / " + content);
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int comment_idx = Integer.parseInt(req.getParameter("comment_idx"));
+			String content = req.getParameter("content");
+			System.out.println(comment_idx + " / " + content);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			int success = 0;
+			String msg = "댓글 수정에 실패했습니다.";
+			
+			ReviewDAO dao = new ReviewDAO();
+			if(dao.commentUpdate(comment_idx, content)) {
+				success = 1;
+				msg = "댓글 수정에 성공했습니다.";
+			}
+			dao.resClose();
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		int success = 0;
-		String msg = "댓글 수정에 실패했습니다.";
-		
-		ReviewDAO dao = new ReviewDAO();
-		if(dao.commentUpdate(comment_idx, content)) {
-			success = 1;
-			msg = "댓글 수정에 성공했습니다.";
+			map.put("success",success);
+			map.put("msg", msg);
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-	
-		map.put("success",success);
-		map.put("msg", msg);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(map);
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void commentDel() throws ServletException, IOException {
-		int comment_idx = Integer.parseInt(req.getParameter("idx"));
-		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
-		System.out.println(comment_idx + " / " + review_idx);
-		
-		String msg = "댓글 삭제에 실패했습니다.";
-		String page= "/reviewDetail?Idx="+review_idx;
-		
-		ReviewDAO dao = new ReviewDAO();
-		if(dao.commentDel(comment_idx)) {
-			msg="댓글을 삭제했습니다.";
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			int comment_idx = Integer.parseInt(req.getParameter("idx"));
+			int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+			System.out.println(comment_idx + " / " + review_idx);
+			
+			String msg = "댓글 삭제에 실패했습니다.";
+			String page= "/reviewDetail?Idx="+review_idx;
+			
+			ReviewDAO dao = new ReviewDAO();
+			if(dao.commentDel(comment_idx)) {
+				msg="댓글을 삭제했습니다.";
+			}
+			dao.resClose();
+			
+			req.setAttribute("msg", msg);
+			req.getRequestDispatcher(page).forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		req.setAttribute("msg", msg);
-		req.getRequestDispatcher(page).forward(req, resp);
-		
 	}
 
 	public void reviewLike() throws IOException {
-		//테스트용
 		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
-		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		int reviewLikeState = 0;
-		int success = 0;
-		
-		ReviewDAO dao = new ReviewDAO();
-		if(dao.reviewLikeCheck(review_idx, myLoginId)) {
-			reviewLikeState = 1;
-		}
-		if(reviewLikeState == 0) {
-			if(dao.reviewLikeUp(review_idx, myLoginId)) {
-				success = 1;
+		if(myLoginId != null) {
+			int review_idx = Integer.parseInt(req.getParameter("review_idx"));
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			int reviewLikeState = 0;
+			int success = 0;
+			
+			ReviewDAO dao = new ReviewDAO();
+			if(dao.reviewLikeCheck(review_idx, myLoginId)) {
+				reviewLikeState = 1;
 			}
-		}else if(reviewLikeState == 1){
-			if(dao.reviewLikeDown(review_idx, myLoginId)) {
-				success = 1;
+			if(reviewLikeState == 0) {
+				if(dao.reviewLikeUp(review_idx, myLoginId)) {
+					success = 1;
+				}
+			}else if(reviewLikeState == 1){
+				if(dao.reviewLikeDown(review_idx, myLoginId)) {
+					success = 1;
+				}
 			}
+			dao.resClose();
+			
+			map.put("success",success);
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		dao.resClose();
-		
-		map.put("success",success);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(map);
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 	
 	public void reportForm() throws ServletException, IOException {
 		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
-		int idx = Integer.parseInt(req.getParameter("idx"));
-		int type_idx = Integer.parseInt(req.getParameter("type_idx"));
-		
-		System.out.println(myLoginId + " / " + idx + " / " + type_idx);
-		
-		//이미 신고 했는지 확인
-		String msg = "";
-		ReviewDAO dao = new ReviewDAO();
-		if(dao.reportCheck(myLoginId, idx, type_idx) == false) {
-			dao.resClose();
-		}else {
-			if(type_idx == 2001) {
-				msg = "이미 신고한 리뷰입니다.";
+		if(myLoginId != null) {
+			int idx = Integer.parseInt(req.getParameter("idx"));
+			int type_idx = Integer.parseInt(req.getParameter("type_idx"));
+			
+			System.out.println(myLoginId + " / " + idx + " / " + type_idx);
+			
+			//이미 신고 했는지 확인
+			String msg = "";
+			ReviewDAO dao = new ReviewDAO();
+			if(dao.reportCheck(myLoginId, idx, type_idx) == false) {
+				dao.resClose();
 			}else {
-				msg = "이미 신고한 댓글입니다.";
+				if(type_idx == 2001) {
+					msg = "이미 신고한 리뷰입니다.";
+				}else {
+					msg = "이미 신고한 댓글입니다.";
+				}
 			}
+			req.setAttribute("msg", msg);
+			req.setAttribute("idx", idx);
+			req.setAttribute("type_idx", type_idx);
+			req.getRequestDispatcher("./review/reviewReport.jsp").forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		req.setAttribute("msg", msg);
-		req.setAttribute("idx", idx);
-		req.setAttribute("type_idx", type_idx);
-		req.getRequestDispatcher("./review/reviewReport.jsp").forward(req, resp);
 	}
 	
 	public void report() throws IOException {
-		String report_id = (String)req.getSession().getAttribute("loginId");
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
 		int type_idx = Integer.parseInt(req.getParameter("type_idx"));
 		int report_idx = Integer.parseInt(req.getParameter("report_idx"));
 		String content = req.getParameter("content");
 		
-		System.out.println(report_id + " / " + type_idx + " / " + report_idx + " / " + content);
+		System.out.println(myLoginId + " / " + type_idx + " / " + report_idx + " / " + content);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
@@ -530,7 +583,7 @@ public class ReviewService {
 		String msg = "신고에 실패했습니다.";
 		
 		ReportDTO dto = new ReportDTO();
-		dto.setReport_id(report_id);
+		dto.setReport_id(myLoginId);
 		dto.setType_idx(type_idx);
 		dto.setReport_idx(report_idx);
 		dto.setContent(content);
@@ -554,100 +607,116 @@ public class ReviewService {
 		
 		PrintWriter out = resp.getWriter();
 		out.println(json);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
+		}
 	}
 
 	public void reviewMovieSearch() throws ServletException, IOException {
-		String pageParam = req.getParameter("page");
-		String subName = req.getParameter("subName");
-		
-		int group = 1;
-		if(pageParam !=null) {
-			group = Integer.parseInt(pageParam);
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String pageParam = req.getParameter("page");
+			String subName = req.getParameter("subName");
+			
+			int group = 1;
+			if(pageParam !=null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
+			System.out.println(pageParam + subName);
+			
+			ReviewDAO dao = new ReviewDAO();
+			HashMap<String, Object> map = dao.reviewMovieSearch(subName, group);
+			dao.resClose();
+			
+			String page="review/movieSearch.jsp";
+			
+			req.setAttribute("subName", subName);
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("movie", map.get("list"));
+			req.setAttribute("currPage", group);
+			
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		
-		System.out.println(pageParam + subName);
-		
-		ReviewDAO dao = new ReviewDAO();
-		HashMap<String, Object> map = dao.reviewMovieSearch(subName, group);
-		dao.resClose();
-		
-		String page="review/movieSearch.jsp";
-		
-		req.setAttribute("subName", subName);
-		req.setAttribute("maxPage", map.get("maxPage"));
-		req.setAttribute("movie", map.get("list"));
-		req.setAttribute("currPage", group);
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
-		dis.forward(req, resp);
 	}
 
 	public void reviewMovieChoice() throws ServletException, IOException {
-		String movieCode = req.getParameter("movieCode");
-		String myLoginId = (String) req.getSession().getAttribute("myLoginId");
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		int success = 0;
-		int haveReview = 0;
-		
-		ReviewDAO dao = new ReviewDAO();
-		haveReview = dao.reviewMovieCheck(movieCode, myLoginId);
-		String movieName = dao.reviewMovieChoice(movieCode);
-		
-		dao.resClose();
-		
-		if(movieName != null) {
-			success = 1;
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String movieCode = req.getParameter("movieCode");
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			int success = 0;
+			int haveReview = 0;
+			
+			ReviewDAO dao = new ReviewDAO();
+			haveReview = dao.reviewMovieCheck(movieCode, myLoginId);
+			String movieName = dao.reviewMovieChoice(movieCode);
+			
+			dao.resClose();
+			
+			if(movieName != null) {
+				success = 1;
+			}
+			System.out.println(movieCode + movieName);
+			
+			map.put("haveReview", haveReview);
+			map.put("moiveCode",movieCode);
+			map.put("movieName", movieName);
+			map.put("success", success);
+			
+			Gson gson = new Gson(); 
+			String json = gson.toJson(map); 
+			System.out.println(json);
+			
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*"); 
+			
+			PrintWriter out = resp.getWriter();
+			out.println(json);	
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		System.out.println(movieCode + movieName);
-		
-		map.put("haveReview", haveReview);
-		map.put("moiveCode",movieCode);
-		map.put("movieName", movieName);
-		map.put("success", success);
-		
-		Gson gson = new Gson(); 
-		String json = gson.toJson(map); 
-		System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*"); 
-		
-		PrintWriter out = resp.getWriter();
-		out.println(json);
 	}
 
 	public void reviewSearchList() throws ServletException, IOException {
-		String pageParam = req.getParameter("page");
-		String search = req.getParameter("search");
-		String keyword = req.getParameter("keyword");
-		
-		if(search == null) {
-			search = "movieName";
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String pageParam = req.getParameter("page");
+			String search = req.getParameter("search");
+			String keyword = req.getParameter("keyword");
+			
+			if(search == null) {
+				search = "movieName";
+			}
+			if(keyword == null) {
+				keyword = "";
+			}
+			System.out.println(search + keyword);
+			
+			int group = 1;
+			if(pageParam !=null) {
+				group = Integer.parseInt(pageParam);
+			}
+			
+			ReviewDAO dao = new ReviewDAO();
+			HashMap<String, Object> map = dao.reviewSearchList(group,search,keyword);
+			dao.resClose();
+			
+			String page="review/reviewSearchList.jsp";
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("review", map.get("list"));
+			req.setAttribute("currPage", group);
+			req.setAttribute("search", search);
+			req.setAttribute("keyword", keyword);
+			
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		if(keyword == null) {
-			keyword = "";
-		}
-		System.out.println(search + keyword);
-		
-		int group = 1;
-		if(pageParam !=null) {
-			group = Integer.parseInt(pageParam);
-		}
-		
-		ReviewDAO dao = new ReviewDAO();
-		HashMap<String, Object> map = dao.reviewSearchList(group,search,keyword);
-		dao.resClose();
-		
-		String page="review/reviewSearchList.jsp";
-		req.setAttribute("maxPage", map.get("maxPage"));
-		req.setAttribute("review", map.get("list"));
-		req.setAttribute("currPage", group);
-		req.setAttribute("search", search);
-		req.setAttribute("keyword", keyword);
-		
-		RequestDispatcher dis = req.getRequestDispatcher(page);
-		dis.forward(req, resp);
 	}
-
 }
