@@ -87,7 +87,7 @@ a:link, a:hover, a:visited, a:active {
 				<a href="reviewMovieSearch?subName=${subName}&page=${currPage-1}"><i
 					class="fas fa-angle-left"></i></a>
 			</c:if> <c:if test="${currPage == 1 && maxPage != 0}">
-				<i class="fas fa-angle-left"></i>
+				<i  style="color: gray;" class="fas fa-angle-left"></i>
 			</c:if>
 		</span>
 
@@ -110,7 +110,7 @@ a:link, a:hover, a:visited, a:active {
 				<a href="reviewMovieSearch?subName=${subName}&page=${currPage+1}"><i
 					class="fas fa-angle-right"></i></a>
 			</c:if> <c:if test="${currPage == maxPage}">
-				<i class="fas fa-angle-right"></i>
+				<i  style="color: gray;" class="fas fa-angle-right"></i>
 			</c:if>
 		</span>
 	</div>

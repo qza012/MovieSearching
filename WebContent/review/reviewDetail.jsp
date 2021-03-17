@@ -284,13 +284,13 @@ function reviewLike(review_idx){
 		,success: function(data){
 			console.log(data);
 			if(data.success == 1){
-				var reviewLike ="${reviewLike}";
-				if(reviewLike == 0){ //좋아요 안한 경우
+				if(data.reviewLikeState == 0){ //좋아요 안한 경우
 					$('.like').html(' <i style="color: red; font-size: 23px;" class="fas fa-heart"></i> ');
+					$('#reviewCntLike').html(data.reviewCntLike);
 				}else{ //좋아요 한경우
 					$('.like').html(' <i style="font-size: 23px;" class="far fa-heart"></i> ');
+					$('#reviewCntLike').html(data.reviewCntLike);
 				}
-				location.href=" ./reviewDetail?Idx="+${review.idx};
 			}
 		}
 		,error: function(e){
