@@ -34,7 +34,6 @@ li {
 }
 
 #basic {
-	width: 1095px;
 	position: relative;
 	min-height: 100%;
 	margin: 0 auto;
@@ -67,7 +66,6 @@ li {
 .movie_main {
 	overflow: hidden;
 	position: relative;
-	height: 600px;
 	padding: 30px;
 }
 </style>
@@ -82,30 +80,30 @@ li {
 					<div class="naviscroll-content" style="top: 0px; width: 180px;">
 						<div class="naviscroll-in">
 							<ul class="navi">
-								<li><a href="../movie/home" id="moviehome" title="영화홈"><h3>영화 홈</h3></a></li>
-								<li><a href="../movie/movieList" id="movieList" title="영화 리스트"><h3>영화리스트</h3></a></li>
-								<li><a href="../reviewList" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
-								<li><a href="../member/member" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
+								<li><a href="/MovieSearching/movie/home" id="moviehome" title="영화홈"><h3>영화 홈</h3></a></li>
+								<li><a href="/MovieSearching/movie/movieList" id="movieList" title="영화 리스트"><h3>영화리스트</h3></a></li>
+								<li><a href="/MovieSearching/reviewList" id="reviewboard" title="리뷰 게시판"><h3>리뷰게시판</h3></a></li>
+								<li><a href="/MovieSearching/member/member" id="userlist" title="회원 리스트"><h3>회원리스트</h3></a></li>
 								<li><a href="https://serieson.naver.com/movie/home.nhn" id="moviedownload" title="영화 다운로드"><h3>영화다운로드</h3></a></li>
 								<li><a href="#" id="mypage" title="마이페이지"><h3>마이페이지</h3></a>
 									<ul class="navi_sub1" style="display: none;">
-										<li><a href="../myPage/updateMF?id=${sessionScope.myLoginId}" title="회원정보수정"> 회원정보수정 </a></li>
-										<li><a href="../myPage/withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
-										<li><a href="../myPage/myReviewList?id=${sessionScope.myLoginId}" title="작성한 리뷰"> 작성한 리뷰 </a></li>
-										<li><a href="../myPage/iLikeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
-										<li><a href="../myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
-										<li><a href="../myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
-										<li><a href="../myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
-										<li><a href="alram.jsp" title="알람"> 알람 </a></li>
+										<li><a href="/MovieSearching/myPage/updateMF?id=${sessionScope.myLoginId}" title="회원정보수정"> 회원정보수정 </a></li>
+										<li><a href="/MovieSearching/myPage/withdraw.jsp" title="회원탈퇴"> 회원탈퇴 </a></li>
+										<li><a href="/MovieSearching/myPage/myReviewList?id=${sessionScope.myLoginId}" title="작성한 리뷰"> 작성한 리뷰 </a></li>
+										<li><a href="/MovieSearching/myPage/iLikeMovie?id=${sessionScope.myLoginId}" title="좋아요한 영화"> 좋아요한 영화 </a></li>
+										<li><a href="/MovieSearching/myPage/iLikeReview?id=${sessionScope.myLoginId}" title="좋아요한 리뷰"> 좋아요한 리뷰 </a></li>
+										<li><a href="/MovieSearching/myPage/followerList?id=${sessionScope.myLoginId}" title="팔로워"> 팔로워 </a></li>
+										<li><a href="/MovieSearching/myPage/followingList?id=${sessionScope.myLoginId}" title="팔로잉"> 팔로잉 </a></li>
+										<li><a href="/MovieSearching/member/alram.jsp" title="알람"> 알람 </a></li>
 									</ul>
 								</li>
 								<li><a href="#" id="adminpage" title="관리자페이지"><h3>관리자페이지</h3></a>
 									<ul class="navi_sub2" style="display: none;">
-										<li><a href="../admin/movieList" title="영화관리"> 영화관리 </a></li>
-										<li><a href="../admin/memberDisableList" title="회원관리"> 회원관리 </a></li>
-										<li><a href="../admin/reviewList" title="리뷰관리"> 리뷰관리 </a></li>
-										<li><a href="../admin/commentList" title="댓글관리"> 댓글관리 </a></li>
-										<li><a href="../admin/reportReviewList" title="신고관리"> 신고관리 </a></li>
+										<li><a href="/MovieSearching/admin/movieList" title="영화관리"> 영화관리 </a></li>
+										<li><a href="/MovieSearching/admin/memberDisableList" title="회원관리"> 회원관리 </a></li>
+										<li><a href="/MovieSearching/admin/reviewList" title="리뷰관리"> 리뷰관리 </a></li>
+										<li><a href="/MovieSearching/admin/commentList" title="댓글관리"> 댓글관리 </a></li>
+										<li><a href="/MovieSearching/admin/reportReviewList" title="신고관리"> 신고관리 </a></li>
 									</ul>
 								</li>
 							</ul>
@@ -138,15 +136,15 @@ li {
 	}
 
 	$("#btn1").click(function() {
-		location.href = "../join/index.jsp";
+		location.href = "/MovieSearching/join/index.jsp";
 	});
 
 	$("#btn2").click(function() {
-		location.href = "join.jsp";
+		location.href = "/MovieSearching/join/joinForm.jsp";
 	});
 
 	$("#btn3").click(function() {
-		location.href = "../join/logout";
+		location.href = "/MovieSearching/join/logout";
 	});
 
 	$("#movielist").click(function() {
