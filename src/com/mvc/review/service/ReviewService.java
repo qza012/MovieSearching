@@ -96,8 +96,8 @@ public class ReviewService {
 		System.out.println(reviewIdx);
 		
 		//테스트용
-		req.getSession().setAttribute("loginId", "relike");
-		String loginId = (String)req.getSession().getAttribute("loginId");
+		req.getSession().setAttribute("myLoginId", "relike");
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
 		
 		ReviewDTO dto = new ReviewDTO();
 		ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
@@ -107,13 +107,16 @@ public class ReviewService {
 		
 		//현재 로그인한 회원이 이 리뷰에 좋아요 눌렀는지 가져오기
 		int reviewLike = 0;
-		if(dao.reviewLikeCheck(reviewIdx, loginId)) {
+		if(dao.reviewLikeCheck(reviewIdx, myLoginId)) {
 			reviewLike = 1;	
 		}
 		req.setAttribute("reviewLike", reviewLike);
 
 		//댓글 가져오기
 		list = dao.commentList(reviewIdx);
+		
+		//댓글 갯수 가져오기
+		int cntComment = dao.cntComment(reviewIdx);
 		dao.resClose();
 		
 		if(dto!=null) {
@@ -124,6 +127,7 @@ public class ReviewService {
 		}
 		req.setAttribute("br", "<br/>");
 		req.setAttribute("cn", "\n");
+		req.setAttribute("cntComment", cntComment);
 		req.getRequestDispatcher("review/reviewDetail.jsp").forward(req, resp);
 	}
 	
@@ -451,7 +455,7 @@ public class ReviewService {
 
 	public void reviewLike() throws IOException {
 		//테스트용
-		String loginId = (String)req.getSession().getAttribute("loginId");
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
 		int review_idx = Integer.parseInt(req.getParameter("review_idx"));
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -460,15 +464,15 @@ public class ReviewService {
 		int success = 0;
 		
 		ReviewDAO dao = new ReviewDAO();
-		if(dao.reviewLikeCheck(review_idx, loginId)) {
+		if(dao.reviewLikeCheck(review_idx, myLoginId)) {
 			reviewLikeState = 1;
 		}
 		if(reviewLikeState == 0) {
-			if(dao.reviewLikeUp(review_idx, loginId)) {
+			if(dao.reviewLikeUp(review_idx, myLoginId)) {
 				success = 1;
 			}
 		}else if(reviewLikeState == 1){
-			if(dao.reviewLikeDown(review_idx, loginId)) {
+			if(dao.reviewLikeDown(review_idx, myLoginId)) {
 				success = 1;
 			}
 		}
@@ -488,16 +492,16 @@ public class ReviewService {
 	}
 	
 	public void reportForm() throws ServletException, IOException {
-		String loginId = (String)req.getSession().getAttribute("loginId");
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
 		int idx = Integer.parseInt(req.getParameter("idx"));
 		int type_idx = Integer.parseInt(req.getParameter("type_idx"));
 		
-		System.out.println(loginId + " / " + idx + " / " + type_idx);
+		System.out.println(myLoginId + " / " + idx + " / " + type_idx);
 		
 		//이미 신고 했는지 확인
 		String msg = "";
 		ReviewDAO dao = new ReviewDAO();
-		if(dao.reportCheck(loginId, idx, type_idx) == false) {
+		if(dao.reportCheck(myLoginId, idx, type_idx) == false) {
 			dao.resClose();
 		}else {
 			if(type_idx == 2001) {
@@ -580,14 +584,14 @@ public class ReviewService {
 
 	public void reviewMovieChoice() throws ServletException, IOException {
 		String movieCode = req.getParameter("movieCode");
-		String loginId = (String) req.getSession().getAttribute("loginId");
+		String myLoginId = (String) req.getSession().getAttribute("myLoginId");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		int success = 0;
 		int haveReview = 0;
 		
 		ReviewDAO dao = new ReviewDAO();
-		haveReview = dao.reviewMovieCheck(movieCode, loginId);
+		haveReview = dao.reviewMovieCheck(movieCode, myLoginId);
 		String movieName = dao.reviewMovieChoice(movieCode);
 		
 		dao.resClose();

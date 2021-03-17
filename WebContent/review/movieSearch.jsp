@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
         table{
             width: 100%;
@@ -52,14 +53,19 @@
 	</form>
 	
     <table>
-        <tr>
-            <th>영화제목</th>
-            <th>장르</th>
-            <th>감독</th>
-            <th>국가</th>
-            <th>개봉일</th>
-        </tr>
-        
+    <c:if test="${maxPage != 0}">
+    		<tr>
+	            <th style="width: 37%;">영화제목</th>
+	            <th style="width: 10%;">장르</th>
+	            <th style="width: 20%;">감독</th>
+	            <th style="width: 7%;">국가</th>
+	            <th style="width: 8%;">개봉일</th>
+        	</tr>
+    </c:if>
+    <c:if test="${maxPage == 0}">
+    	<p style="text-align: center;">검색결과가 없습니다.</p>
+    </c:if>
+    
         <c:forEach items="${movie}" var="movie">
         	<tr style="cursor: pointer;" onclick="movieChoice(${movie.movieCode})">
 	            <td>${movie.movieName}</td>
@@ -74,10 +80,10 @@
     <div class="paging">
     		<span>
 			<c:if test="${currPage>1}">
-				<a href="reviewMovieSearch?subName=${subName}&page=${currPage-1}">이전</a>
+				<a href="reviewMovieSearch?subName=${subName}&page=${currPage-1}"><i class="fas fa-angle-left"></i></a>
 			</c:if>
 			<c:if test="${currPage == 1 && maxPage != 0}">
-			이전
+			<i class="fas fa-angle-left"></i>
 			</c:if>
 		</span>
 		
@@ -98,10 +104,10 @@
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
-				<a href="reviewMovieSearch?subName=${subName}&page=${currPage+1}">다음</a>
+				<a href="reviewMovieSearch?subName=${subName}&page=${currPage+1}"><i class="fas fa-angle-right"></i></a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
-			다음
+			<i class="fas fa-angle-right"></i>
 			</c:if>
 		</span>
     </div>

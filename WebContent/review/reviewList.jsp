@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
         table{
             width: 100%;
@@ -73,13 +74,13 @@
     <h2>전체 리뷰</h2>
     <table>
         <tr>
-            <th>순번</th>
-            <th>제목</th>
-            <th>영화명</th>
-            <th>평점</th>
-            <th>작성자</th>
-            <th>좋아요</th>
-            <th>작성일</th>
+            <th style="width: 8%;">순번</th>
+            <th style="width: 40%">제목</th>
+            <th style="width: 20%">영화명</th>
+            <th style="width: 8%;">평점</th>
+            <th style="width: 8%;" >작성자</th>
+            <th style="width: 8%;">좋아요</th>
+            <th style="width: 8%;">작성일</th>
         </tr>
 	
 		<c:forEach items="${review}" var="review">
@@ -98,10 +99,10 @@
     <div class="paging">
 		<span>
 			<c:if test="${currPage>1}">
-				<a href="reviewList?page=${currPage-1}">이전</a>
+				<a href="reviewList?page=${currPage-1}"><i class="fas fa-angle-left"></i></a>
 			</c:if>
 			<c:if test="${currPage == 1 && maxPage != 0}">
-				<a style="color: gray;">이전</a>
+				<a style="color: gray;"><i class="fas fa-angle-left"></i></a>
 			</c:if>
 		</span>
 		
@@ -123,10 +124,10 @@
 		
 		<span>
 			<c:if test="${currPage < maxPage}">
-				<a href="reviewList?page=${currPage+1}">다음</a>
+				<a href="reviewList?page=${currPage+1}"><i class="fas fa-angle-right"></i></a>
 			</c:if>
 			<c:if test="${currPage == maxPage}">
-				<a style="color: gray;">다음</a>
+				<a style="color: gray;"><i class="fas fa-angle-right"></i></a>
 			</c:if>
 		</span>
     </div>
