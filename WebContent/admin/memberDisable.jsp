@@ -7,14 +7,20 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
-			
-			/* table{
-				// border: 1px solid black;
-				//border-collapse: collapse;
-				//padding: 5px 10px; 
-				margin : auto;
-				text-align : center;
+			table {
+				width: 100%;
+				color: white;
 			}
+			table, th, td{
+				border: 1px solid black;
+				border-collapse: collapse;
+				padding: 5px 10px;
+				text-align: center;
+			}
+			#basic {
+				color: white;
+			}
+			/*
 			select{
 					width : 100px;
 					height : 26px;
@@ -81,7 +87,7 @@
 				<div class="movie_main">
 					<input id="storeCurStandard" type="hidden" value="${standard}"/>
 					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
-					<h3>회원리스트</h3>
+					<h3>회원 관리</h3>
 					<div>
 						<button value="move">회원 비활성화 관리</button>
 						<button value="move" onclick="location.href='pwQuestionList'">비밀번호 찾기 질문 관리</button>
@@ -218,8 +224,8 @@
 			case "gender" :
 				searchInput.replaceWith(
 						"<select class='searchInput' name='keyWord'>"
-				    	+"<option value='남'>남</option>"
-				    	+"<option value='여'>여</option>"
+				    	+"<option value='male'>남</option>"
+				    	+"<option value='female'>여</option>"
 				    	+"</select>"
 				);
 				break;

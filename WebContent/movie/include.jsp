@@ -158,7 +158,7 @@ li {
 	
 	$("#reviewboard").click(function() {
 		if (loginId == "") {
-			alert("로그인후 이용해주세요.");
+			alert("로그인후 이용해주세요.");S
 		}
 	});
 	
@@ -178,8 +178,12 @@ li {
 	});
 
 	$("#adminpage").click(function() {
-		$(".navi_sub2").slideToggle('slow');
-		$(".navi_sub2").css('display', 'block');
+		if (loginId == "") {
+			alert("로그인후 이용해주세요.");
+		} else {			
+			$(".navi_sub2").slideToggle('slow');
+			$(".navi_sub2").css('display', 'block');
+		}
 	});
 	
 	

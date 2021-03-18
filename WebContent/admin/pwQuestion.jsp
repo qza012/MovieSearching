@@ -10,7 +10,10 @@
 			table, th, td{
 				border: 1px solid black;
 				border-collapse: collapse;
-				padding: 5px 10px;
+				padding: 10px 10px;
+			}
+			#basic {
+				color: white;
 			}
 		</style>
 	</head>
@@ -61,7 +64,10 @@
 			idx = this.value;
 			questionBox = $('#'+idx);
 
-			window.open("pwQuestionPopUp.jsp", "_blank", "height=300px, width=300px");
+			var popupX = (window.screen.width / 2) - (150 / 2);
+			var popupY= (window.screen.height / 2) - (470 / 2);
+			
+			window.open("pwQuestionPopUp.jsp", "_blank", "height=150px, width=470px, left="+popupX+", top="+popupY);
 		});
 	
 		// 내용 변경 비동기 버튼

@@ -10,10 +10,9 @@
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 			<style>
-				/*table {
+				table {
 					width: 100%;
 					color: white;
-					font-size: 13px;
 				}
 				
 				table, th, td {
@@ -26,8 +25,13 @@
 				th, td {
 					padding: 10px;
 				}
+
+				#basic {
+					color: white;
+				}
 				
-				 select{
+				/*
+				select {
 					width : 100px;
 					height : 26px;
 					margin-right: 8px ;
@@ -53,6 +57,7 @@
 		            line-height:25px;
 		            margin-top : 50px;
        		 	}
+       		 	*/
        		 	#back{
        		 		border-bottom-left-radius: 4px;
             		border-top-left-radius: 4px;
@@ -71,9 +76,6 @@
 				a:visited,a:link{
 					color: #000000;
        			}
-				h3{
-					padding: 40px 180px 0px;
-				}*/
 				
 			</style>
 	</head>
@@ -183,7 +185,11 @@
 				moveUrl = "moviePosterUrl.jsp";
 			}
 			
-			window.open(moveUrl, "_blank", "height=100px, width=470px");
+			var popupX = (window.screen.width / 2) - (150 / 2);
+			var popupY= (window.screen.height / 2) - (470 / 2);
+			//console.log(popupX + "  " + popupY);
+			
+			window.open(moveUrl, "_blank", "height=150px, width=470px, left="+popupX+", top="+popupY);
 		});
 		
 		function updateUrl(url, boxSelector) {

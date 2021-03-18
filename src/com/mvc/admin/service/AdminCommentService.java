@@ -14,96 +14,105 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.admin.dao.AdminDAO;
 import com.mvc.admin.util.AdminSql;
+import com.mvc.admin.util.AdminUtil;
 import com.mvc.comment.dto.CommentDTO;
 
-public class AdminCommentService{
+public class AdminCommentService {
 
 	private HttpServletRequest req = null;
 	private HttpServletResponse resp = null;
-	
+
 	public AdminCommentService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
 		this.resp = resp;
 	}
-	
+
 	public void commentList() throws ServletException, IOException {
-		String nextPage = "list";
-		// 최종 도착 페이지 설정.
-		String finalPage = "comment.jsp";
-		req.setAttribute("finalPage", finalPage);
-		
-		String standard = req.getParameter("standard");
-		String keyWord = req.getParameter("keyWord");
-		String strCurPage = req.getParameter("curPage");
-		String strRowsPerPage = req.getParameter("rowsPerPage");
-		//AdminUtil.log(keyWord);
-		// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
-		int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
-		int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
-		
-		List<CommentDTO> commentList = null;
+		if (AdminUtil.IsLogin(req)) {
+			String nextPage = "list";
+			// 최종 도착 페이지 설정.
+			String finalPage = "comment.jsp";
+			req.setAttribute("finalPage", finalPage);
 
-		AdminDAO dao = new AdminDAO();
-		try {
+			String standard = req.getParameter("standard");
+			String keyWord = req.getParameter("keyWord");
+			String strCurPage = req.getParameter("curPage");
+			String strRowsPerPage = req.getParameter("rowsPerPage");
+			// AdminUtil.log(keyWord);
+			// 값이 request에 존재하면 가져옴. default : curPage 1, rowsPerPage 10
+			int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
+			int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;
 
-			if(keyWord == null || keyWord.equals("")) {
-				commentList = dao.getCommentList(curPage, rowsPerPage);
-				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE)/rowsPerPage + 1);
-				req.removeAttribute("keyWord");
-			} else {
-				commentList = dao.getCommentList(curPage, rowsPerPage, standard, keyWord);
-				req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE, standard, keyWord)/rowsPerPage + 1);
-				req.setAttribute("keyWord", keyWord);
+			List<CommentDTO> commentList = null;
+
+			AdminDAO dao = new AdminDAO();
+			try {
+
+				if (keyWord == null || keyWord.equals("")) {
+					commentList = dao.getCommentList(curPage, rowsPerPage);
+					req.setAttribute("maxPage", dao.getRowCount(AdminSql.COMMENT_TABLE) / rowsPerPage + 1);
+					req.removeAttribute("keyWord");
+				} else {
+					commentList = dao.getCommentList(curPage, rowsPerPage, standard, keyWord);
+					req.setAttribute("maxPage",
+							dao.getRowCount(AdminSql.COMMENT_TABLE, standard, keyWord) / rowsPerPage + 1);
+					req.setAttribute("keyWord", keyWord);
+				}
+
+				req.setAttribute("curPage", curPage);
+				req.setAttribute("standard", standard);
+				req.setAttribute("list", commentList);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				dao.resClose();
 			}
-			
-			
-			req.setAttribute("curPage", curPage);
-			req.setAttribute("standard", standard);
-			req.setAttribute("list", commentList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
+
+			RequestDispatcher dis = req.getRequestDispatcher(nextPage);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		
-		RequestDispatcher dis = req.getRequestDispatcher(nextPage);
-		dis.forward(req, resp);	
 	}
-	
-	public void  toggleDelType() throws ServletException, IOException {
-		String strIdx = req.getParameter("idx");
-		int idx = 0;
-		if(strIdx != null) {
-			idx = Integer.parseInt(strIdx);
-		}
-		
-		CommentDTO comDto = null;
-		AdminDAO comDao = new AdminDAO();
-		try {
-			comDto = comDao.getComment(idx);
-			if(comDto != null) {
-				int result = comDao.toggleDelType(comDto);
-				comDto = comDao.getComment(idx);	// 토글한 데이터로 갱신
+
+	public void toggleDelType() throws ServletException, IOException {
+		if (AdminUtil.IsLogin(req)) {
+			String strIdx = req.getParameter("idx");
+			int idx = 0;
+			if (strIdx != null) {
+				idx = Integer.parseInt(strIdx);
 			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			comDao.resClose();
+
+			CommentDTO comDto = null;
+			AdminDAO comDao = new AdminDAO();
+			try {
+				comDto = comDao.getComment(idx);
+				if (comDto != null) {
+					int result = comDao.toggleDelType(comDto);
+					comDto = comDao.getComment(idx); // 토글한 데이터로 갱신
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				comDao.resClose();
+			}
+
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			if (comDto != null) {
+				map.put("del_type", comDto.getDel_type());
+			}
+
+			Gson gson = new Gson();
+			String json = gson.toJson(map);
+			// System.out.println(json);
+
+			resp.setContentType("text/html; charset=UTF-8");
+			resp.setHeader("Access-Control-Allow", "*");
+			resp.getWriter().print(json);
+		} else {
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if(comDto != null) {
-			map.put("del_type", comDto.getDel_type());
-		}
-		
-		Gson gson =  new Gson();
-		String json = gson.toJson(map);
-		//System.out.println(json);
-		
-		resp.setContentType("text/html; charset=UTF-8");
-		resp.setHeader("Access-Control-Allow", "*");
-		resp.getWriter().print(json);
 	}
 }

@@ -7,11 +7,18 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
+			table {
+					width: 100%;
+					color: white;
+			}
 			table, th, td{
 				border: 1px solid black;
 				border-collapse: collapse;
-				padding: 5px 10px;
+				padding: 5px 15px;
 			}
+			#basic {
+				color: white;
+			}	
 		</style>
 	</head>
 	<body>
@@ -24,7 +31,7 @@
 					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
 					<h3>리뷰 관리 </h3>
 					<hr/>
-					<div>
+					<div align="center">
 						<form action="reviewList" method="GET">
 						    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
 						    	<option value="all">전체</option>
@@ -61,7 +68,7 @@
 					</tr>
 					</c:forEach>
 					</table>
-					<div>
+					<div align="center">
 						<span>
 							<c:if test="${curPage == 1 }">이전</c:if>
 							<c:if test="${curPage > 1 }">
