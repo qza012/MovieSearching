@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>ID찾기</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
@@ -53,62 +54,71 @@ input {
 </style>
 </head>
 <body>
-	<table>
-		
-		<tr>
-			
-			<td align="left" ><a href="idFind.jsp" id="Findid">아이디 찾기</a> <a
-				href="../pwQuestionList" id="Findpw">비밀번호 찾기</a></td>
-		</tr>
-		<tr>
-			<td align="center">
-				<div>
-					<label>아이디 찾기</label><br>
+	<jsp:include page="../movie/include.jsp" />
+		<div id="basic" class="basic">
+			<div id="container">
+				<div id="content">
+					<div class="movie_main">
+						<table>
+							
+							<tr>
+								
+								<td align="left" ><a href="idFind.jsp" id="Findid">아이디 찾기</a> <a
+									href="../pwQuestionList" id="Findpw">비밀번호 찾기</a></td>
+							</tr>
+							<tr>
+								<td align="center">
+									<div>
+										<label>아이디 찾기</label><br>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="left">이름
+									<div>
+										<input type="text" name="name" id="name" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="left">이메일
+									<div>
+										<input type="email" name="email" id="email" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div>
+										<input type="submit" value="아이디 찾기" onclick="idFind()" />
+									</div>
+								</td>
+							</tr>
+					
+							<tr>
+								<td align="left">아이디
+									<div>
+										<!-- <p id="idFind"></p> -->
+										<input type="text" id="idFind">
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<div>
+										<a href="index.jsp">로그인 하러 가기</a>
+									</div>
+								</td>
+							</tr>
+							
+						</table>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">이름
-				<div>
-					<input type="text" name="name" id="name" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="left">이메일
-				<div>
-					<input type="email" name="email" id="email" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<div>
-					<input type="submit" value="아이디 찾기" onclick="idFind()" />
-				</div>
-			</td>
-		</tr>
-
-		<tr>
-			<td align="left">아이디
-				<div>
-					<!-- <p id="idFind"></p> -->
-					<input type="text" id="idFind">
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">
-				<div>
-					<a href="index.jsp">로그인 하러 가기</a>
-				</div>
-			</td>
-		</tr>
-		
-	</table>
-
+			</div>
+		</div>
+	</div>
 </body>
 <script>
+$("div").remove("#login");
 	function idFind() {
 		var name = document.getElementById("name");
 		var email = document.getElementById("email");
@@ -139,6 +149,7 @@ input {
 						$('#idFind').val(obj.userID);
 					} else {
 						alert("등록된 회원 정보가 없습니다.");
+						$('#idFind').val("");
 					}
 					
 					

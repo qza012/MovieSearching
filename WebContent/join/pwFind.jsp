@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>PW찾기</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
@@ -62,66 +63,76 @@ select{
 </style>
 </head>
 <body>
-	<table>
-		<tr>
-			<td align="left"><a href="join/idFind.jsp" id="Findid">아이디 찾기</a> <a
-				href="" id="Findpw">비밀번호 찾기</a></td>
-		</tr>
-		<tr>
-			<td>
-				<div>
-					<label>아이디</label><br> <input type="text" id="id" name="id" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<div>
-					<lable>비밀번호 찾기 질문</lable>
-					<br> <select id="pw_q" >
-						<!-- <option value="">선택</option> -->
-						<c:forEach items="${pwQuestionList}" var="pwQuestionList">
+	<jsp:include page="../movie/include.jsp" />
+		<div id="basic" class="basic">
+			<div id="container">
+				<div id="content">
+					<div class="movie_main">
 
-							<option value="${pwQuestionList.idx}">${pwQuestionList.content}</option>
-						</c:forEach>
+						<table>
+							<tr>
+								<td align="left"><a href="join/idFind.jsp" id="Findid">아이디 찾기</a> <a
+									href="" id="Findpw">비밀번호 찾기</a></td>
+							</tr>
+							<tr>
+								<td>
+									<div>
+										<label>아이디</label><br> <input type="text" id="id" name="id" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div>
+										<lable>비밀번호 찾기 질문</lable>
+										<br> <select id="pw_q" >
+											<!-- <option value="">선택</option> -->
+											<c:forEach items="${pwQuestionList}" var="pwQuestionList">
+					
+												<option value="${pwQuestionList.idx}">${pwQuestionList.content}</option>
+											</c:forEach>
+					
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div>
+										<label>비밀번호 찾기 답변</label><br> <input type="text"
+											name="pw_answer" id="pw_answer" />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3"><input type="submit" value="비밀번호 찾기" 
+									onclick="pwFind()" /> <!-- <input type="submit" value="비밀번호 찾기" onclick="location.href='../pwFind'" /> -->
+								</td>
+							</tr>
+							<tr>
+								<td>비밀번호
+									<div>
+										<input type="text" id="pwFind">
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">
+									<div>
+										<a href="join/index.jsp">로그인 하러 가기</a>
+									</div>
+								</td>
+							</tr>
+					
+						</table>
 
-					</select>
 				</div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<div>
-					<label>비밀번호 찾기 답변</label><br> <input type="text"
-						name="pw_answer" id="pw_answer" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3"><input type="submit" value="비밀번호 찾기" 
-				onclick="pwFind()" /> <!-- <input type="submit" value="비밀번호 찾기" onclick="location.href='../pwFind'" /> -->
-			</td>
-		</tr>
-		<tr>
-			<td>비밀번호
-				<div>
-					<input type="text" id="pwFind">
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td align="right">
-				<div>
-					<a href="join/index.jsp">로그인 하러 가기</a>
-				</div>
-			</td>
-		</tr>
-
-	</table>
-
-
+			</div>
+		</div>
+	</div>
 </body>
 <script>
+	$("div").remove("#login");
 	function pwFind() {
 		var id = document.getElementById("id");
 		var A = document.getElementById("pw_answer");
@@ -149,6 +160,7 @@ select{
 						$('#pwFind').val(obj.userPW);
 					} else {
 						alert("입력한 정보와 일치하는 회원이 없습니다.");
+						$('#pwFind').val("");
 					}
 					
 					
