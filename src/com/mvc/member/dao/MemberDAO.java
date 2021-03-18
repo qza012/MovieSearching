@@ -504,7 +504,7 @@ public class MemberDAO {
 			rs = ps.executeQuery();
 			List<String> tarlist = new ArrayList<String>();
 			while(rs.next()) {
-//				System.out.println(rs.getString("target_id"));
+				System.out.println(rs.getString("target_id"));
 				tarlist.add(rs.getString("target_id"));
 			}
 			for(String tarid : tarlist) {
