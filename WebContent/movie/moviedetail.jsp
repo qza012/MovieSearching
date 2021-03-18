@@ -92,14 +92,14 @@ table, th, td {
 								<c:forEach items="${review}" var="review">
 									<tr>
 										<td>${review.idx}</td>
-										<td class="reviewDetail" onclick="location.href='./reviewDetail?Idx=${review.idx}'">${review.subject}</td>
+										<td class="reviewDetail" onclick="location.href='/MovieSearching/reviewDetail?Idx=${review.idx}'">${review.subject}</td>
 										<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
 										<td>${review.reg_date}</td>
 									</tr>
 								</c:forEach>
 							</table>
 							<div class="review_Write">
-								<input type="button" value="리뷰 작성" onclick="location.href='./reviewWrite.jsp'">
+								<input type="button" value="리뷰 작성" onclick="location.href='../movieReviewWriteForm?movieCode=${movie.movieCode}&movieName=${movie.movieName}' ">
 							</div>
 						</li>
 					</ul>
@@ -109,5 +109,9 @@ table, th, td {
 	</div>
 </body>
 <script>
+var msg="${msg}";
+if(msg!=""){
+	alert(msg);
+}
 </script>
 </html>
