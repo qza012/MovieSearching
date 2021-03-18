@@ -20,8 +20,8 @@ import com.mvc.member.dto.MemberDTO;
 
 public class AdminMemberService {
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 
 	public AdminMemberService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -30,10 +30,7 @@ public class AdminMemberService {
 
 	public void memberList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {			
-			String nextPage = "list";
-			// 최종 도착 페이지 설정.
-			String finalPage = "memberDisable.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "memberDisable.jsp";
 	
 			String standard = req.getParameter("standard");
 			String keyWord = req.getParameter("keyWord");
@@ -83,10 +80,6 @@ public class AdminMemberService {
 		}
 	}
 
-	private boolean IsMale(String keyWord) {
-		return keyWord.equals("남") || keyWord.equals("male") ? true : false;
-	}
-
 	public void toggleDisable() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
 			String id = req.getParameter("id");
@@ -127,6 +120,10 @@ public class AdminMemberService {
 		} else {
 			resp.sendRedirect("/MovieSearching/movie/home");
 		}
+	}
+	
+	private boolean IsMale(String keyWord) {
+		return keyWord.equals("남") || keyWord.equals("male") ? true : false;
 	}
 
 }

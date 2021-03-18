@@ -48,8 +48,8 @@
 					<h3>댓글 신고 관리</h3>
 					<hr/>
 					<div>
-						<button value="move" onclick="location.href='reportReviewList'">신고된 리뷰 관리</button>
-						<button value="move">신고된 댓글 관리</button>
+						<button value="move" onclick="location.href='reportReviewList'">리뷰 신고 관리</button>
+						<button value="move">댓글 신고 관리</button>
 					</div>
 					<hr/>
 					<div align="center">

@@ -19,8 +19,8 @@ import com.mvc.comment.dto.CommentDTO;
 
 public class AdminCommentService {
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 
 	public AdminCommentService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -29,10 +29,7 @@ public class AdminCommentService {
 
 	public void commentList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
-			String nextPage = "list";
-			// 최종 도착 페이지 설정.
-			String finalPage = "comment.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "comment.jsp";
 
 			String standard = req.getParameter("standard");
 			String keyWord = req.getParameter("keyWord");

@@ -23,8 +23,8 @@ import com.mvc.review.dto.ReviewDTO;
 
 public class AdminReportCommentService {
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 	
 	public AdminReportCommentService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -33,16 +33,13 @@ public class AdminReportCommentService {
 
 	public void reportCommentList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
-			String nextPage = "list";
-			// 최종 도착 페이지 설정.
-			String finalPage = "reportComment.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "reportComment.jsp";
 			
 			String standard = req.getParameter("standard");
 			String keyWord = req.getParameter("keyWord");
 			String strCurPage = req.getParameter("curPage");
 			String strRowsPerPage = req.getParameter("rowsPerPage");
-			//AdminUtil.log(standard);
+			// AdminUtil.log(standard);
 			// 값이 request에 존재하면 가져옴.  default : curPage 1, rowsPerPage 10
 			int curPage = (strCurPage != null) ? Integer.parseInt(strCurPage) : 1;
 			int rowsPerPage = (strRowsPerPage != null) ? Integer.parseInt(strRowsPerPage) : 10;

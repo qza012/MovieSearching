@@ -12,11 +12,10 @@
 					width: 100%;
 					color: white;
 			}
-			table{
+			table, th, td {
 				border: 1px solid black;
 				border-collapse: collapse;
 				padding: 5px 10px;
-				text-align: center;
 			}
 			#basic {
 				color: white;
@@ -49,8 +48,8 @@
 					<h3>리뷰 신고 관리</h3>
 					<hr/>
 					<div>
-						<button value="move">신고된 리뷰 관리</button>
-						<button value="move" onclick="location.href='reportCommentList'">신고된 댓글 관리</button>
+						<button value="move">리뷰 신고 관리</button>
+						<button value="move" onclick="location.href='reportCommentList'">댓글 신고 관리</button>
 					</div>
 					<hr/>
 					<div align="center">

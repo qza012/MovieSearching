@@ -19,8 +19,8 @@ import com.mvc.movie.dto.MovieDTO;
 
 public class AdminMovieService {
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 	
 	public AdminMovieService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -29,10 +29,7 @@ public class AdminMovieService {
 	
 	public void movieList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
-			String nextPage = "list";
-			// 최종 도착 페이지 설정.
-			String finalPage = "movie.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "movie.jsp";
 			
 			String standard = req.getParameter("standard");
 			String keyWord = req.getParameter("keyWord");

@@ -21,8 +21,8 @@ import com.mvc.review.dto.ReviewDTO;
 
 public class AdminReviewService{
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 	
 	public AdminReviewService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -31,10 +31,7 @@ public class AdminReviewService{
 
 	public void reviewList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
-			String nextPage = "list";
-			// 최종 도착 페이지 설정
-			String finalPage = "review.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "review.jsp";
 			
 			String standard = req.getParameter("standard");
 			String keyWord = req.getParameter("keyWord");

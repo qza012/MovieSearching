@@ -147,7 +147,7 @@ li {
 	});
 	
 	$("#btn4").click(function() {
-		location.href = "/MovieSearching/myPage/alarmList?id=${sessionScope.myLoginId}";
+		location.href = "/MovieSearching/myPage/alarm?id=${sessionScope.myLoginId}";
 	});
 
 	$("#movielist").click(function() {

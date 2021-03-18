@@ -19,8 +19,8 @@ import com.mvc.question.dto.QuestionDTO;
 
 public class AdminPwFindService {
 
-	private HttpServletRequest req = null;
-	private HttpServletResponse resp = null;
+	private final HttpServletRequest req;
+	private final HttpServletResponse resp;
 	
 	public AdminPwFindService(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -29,10 +29,7 @@ public class AdminPwFindService {
 
 	public void pwQuestionList() throws ServletException, IOException {
 		if (AdminUtil.IsLogin(req)) {
-			String nextPage = "list";
-			// 최종 도착 페이지 설정.
-			String finalPage = "pwQuestion.jsp";
-			req.setAttribute("finalPage", finalPage);
+			String nextPage = "pwQuestion.jsp";
 			
 			ArrayList<QuestionDTO> list = null;
 			
