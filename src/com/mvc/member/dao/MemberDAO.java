@@ -338,20 +338,46 @@ public class MemberDAO {
 	 * @return 입력받은 id가 포함된 memberDTO들.
 	 * @throws SQLException
 	 */
-	public ArrayList<MemberDTO> searchList(String keyWord, String search) throws SQLException {
-		ArrayList<MemberDTO> search_list = new ArrayList<MemberDTO>();
+	public HashMap<String, Object> searchList(int page, String keyWord, String search, String loginId) throws SQLException {
+		int pagePerCnt = 10;
+		int end = page * pagePerCnt;	
+		int start = end-(pagePerCnt-1);
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();
+		//이 회원을 내가 팔로우 하고 있는지 체크하는 쿼리로 수정 21.03.18  - 이주원
 		if(search.equals("id")) {
-			String sql = "SELECT id,name,age,gender,genre FROM member3 WHERE id LIKE ?";
+			String sql = "SELECT * FROM " + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM" + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
+					"(SELECT * FROM (SELECT target_id, id loginId FROM follow3 WHERE id=?)f RIGHT OUTER JOIN " + 
+					"(SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N')) m on f.target_id = m.id" + 
+					")t WHERE id LIKE ?)WHERE rnum BETWEEN ? AND ?)";
 			ps = conn.prepareStatement(sql);	
 		}else if(search.equals("name")) {
-			String nameSql = "SELECT id,name,age,gender,genre FROM member3 WHERE name LIKE ?";
+			String nameSql = "SELECT * FROM " + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM" + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
+					"(SELECT * FROM (SELECT target_id, id loginId FROM follow3 WHERE id=?)f RIGHT OUTER JOIN " + 
+					"(SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N')) m on f.target_id = m.id" + 
+					")t WHERE name LIKE ?)WHERE rnum BETWEEN ? AND ?)";
 			ps = conn.prepareStatement(nameSql);	
 		}else if(search.equals("age")) {
-			String ageSql = "SELECT id,name,age,gender,genre FROM member3 WHERE age LIKE ?";
+			String ageSql = "SELECT * FROM " + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM" + 
+					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
+					"(SELECT * FROM (SELECT target_id, id loginId FROM follow3 WHERE id=?)f RIGHT OUTER JOIN " + 
+					"(SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N')) m on f.target_id = m.id" + 
+					")t WHERE age LIKE ?)WHERE rnum BETWEEN ? AND ?)";
 			ps = conn.prepareStatement(ageSql);	
 		}
-		ps.setString(1, "%" + keyWord + "%");
+		
+		ps.setString(1, loginId);
+		ps.setString(2,  "%" + keyWord + "%");
+		ps.setInt(3, start);
+		ps.setInt(4, end);
 		rs = ps.executeQuery();
+		
 		while (rs.next()) {
 			MemberDTO dto = new MemberDTO();
 			dto.setId(rs.getString("id"));
@@ -359,24 +385,44 @@ public class MemberDAO {
 			dto.setAge(rs.getInt("age"));
 			dto.setGender(rs.getString("gender"));
 			dto.setGenre(rs.getString("genre"));
-			search_list.add(dto);
+			if(rs.getString("target_id") != null) {
+				dto.setFollow_check(1);
+			}else {
+				dto.setFollow_check(0);
+			}
+			list.add(dto);
 		}
-		return search_list;
+		System.out.println("list size : "+list.size());
+		
+		int maxPage = getSearchMaxPage(pagePerCnt, keyWord, search);
+		map.put("list", list);
+		map.put("maxPage", maxPage);
+		System.out.println("max page : "+maxPage);	
+		
+	return map;	
 	}
 
-	public HashMap<String, Object> memberList(int page) throws SQLException {
+	public HashMap<String, Object> memberList(int page, String myId) throws SQLException {
 		int pagePerCnt = 10;
 		int end = page * pagePerCnt;	
 		int start = end-(pagePerCnt-1);
-		String sql = "SELECT id, name, age, gender, genre,reg_date FROM "
-				+ "(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id, name, age, gender, genre,reg_date FROM member3)"
-				+ " WHERE rnum BETWEEN ? AND ?";
+		//이 회원을 내가 팔로우 하고 있는지 체크하는 쿼리로 수정 21.03.18  - 이주원
+		String sql = "SELECT target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
+				" (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
+				" (SELECT * FROM (SELECT target_id, id loginId FROM follow3 WHERE id=?)f RIGHT OUTER JOIN " + 
+				" (SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N') "
+				+ "WHERE rnum BETWEEN ? AND ?) m on f.target_id = m.id) t WHERE rnum BETWEEN ? AND ?)";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();				
+			
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, start);
-			ps.setInt(2, end);
+			ps.setString(1, myId);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
+			ps.setInt(4, start);
+			ps.setInt(5, end);
 			rs = ps.executeQuery();
+			
 			while(rs.next()) {
 				MemberDTO dto = new MemberDTO();
 				dto.setId(rs.getString("id"));
@@ -384,9 +430,15 @@ public class MemberDAO {
 				dto.setAge(rs.getInt("age"));
 				dto.setGender(rs.getString("gender"));
 				dto.setGenre(rs.getString("genre"));
+				if(rs.getString("target_id") != null) {
+					dto.setFollow_check(1);
+				}else {
+					dto.setFollow_check(0);
+				}
 				list.add(dto);
 			}
-			System.out.println("list size : "+list.size());			
+			System.out.println("list size : "+list.size());
+			
 			int maxPage = getMaxPage(pagePerCnt);
 			map.put("list", list);
 			map.put("maxPage", maxPage);
@@ -407,6 +459,32 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
+		return max;
+	}
+	
+	private int getSearchMaxPage(int pagePerCnt, String keyWord, String search) {		
+		String sql = null;
+		
+		if(search.equals("id")) {
+			sql = "SELECT COUNT(id) FROM member3 WHERE withdraw='N' AND disable='N' AND id LIKE ?";
+		}else if(search.equals("name")) {
+			sql = "SELECT COUNT(id) FROM member3 WHERE withdraw='N' AND disable='N' AND name LIKE ?";
+		}else if(search.equals("age")) {
+			sql = "SELECT COUNT(id) FROM member3 WHERE withdraw='N' AND disable='N' AND age LIKE ?";
+		}
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, "%"+keyWord+"%");
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);//첫번째 컬럼 가져오기
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+				System.out.println("마지막페이지" + max);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return max;
 	}
 
@@ -665,6 +743,7 @@ public class MemberDAO {
 //		}
 //		return fChk;
 //	}
+	//팔로우 체크 (내가 팔로우하고 있는 사람목록 가져오기)
 	public ArrayList<FollowDTO> followCheck(String myId) throws SQLException {
 		String sql="SELECT id, target_id FROM follow3 WHERE id=?";
 		ArrayList<FollowDTO> list = new ArrayList<FollowDTO>();
@@ -751,6 +830,61 @@ public class MemberDAO {
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, idx);
 		ps.executeUpdate();
+		return success;
+	}
+	
+	//마이페이지에서 팔로우 누르면 팔로우 되어있는지 체크 21.03.18 -- 이주원
+	public int myFollowCheck(String loginId, String target_id) {
+		int follow_check = 0;
+		
+		String sql = "SELECT * FROM follow3 WHERE id=? AND target_id=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setString(2, target_id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				follow_check = 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return follow_check;
+	}
+
+	public boolean memberFollow(String loginId, String target_id) {
+		boolean success = false;
+		String sql = "INSERT INTO follow3(idx,target_id,id) VALUES(follow3_seq.NEXTVAL, ?,?)";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, target_id);
+			ps.setString(2, loginId);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean memberUnFollow(String loginId, String target_id) {
+		boolean success = false;
+		String sql = "DELETE FROM follow3 WHERE target_id=? AND id=?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, target_id);
+			ps.setString(2, loginId);
+			if(ps.executeUpdate()>0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return success;
 	}
 

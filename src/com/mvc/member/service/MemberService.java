@@ -1,6 +1,7 @@
 package com.mvc.member.service;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -233,7 +234,7 @@ public class MemberService {
 		resp.getWriter().print(json);
 	}
 
-	//회원 목록 불러오기+입력한 키워드가 포함된 아이디 검색기능
+	//회원 목록 불러오기
 	public void getMemberList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
@@ -241,6 +242,7 @@ public class MemberService {
 			String target_id = req.getParameter("target_id");
 			String pageParam = req.getParameter("page");
 			System.out.println("page : "+pageParam);	
+			
 			int group = 1;
 			if(pageParam != null) {
 				group = Integer.parseInt(pageParam);
@@ -249,17 +251,22 @@ public class MemberService {
 			try {
 //			FollowDTO dto = dao.followCheck(myId);
 //			req.setAttribute("follow", dto);
-				ArrayList<FollowDTO> list = dao.followCheck(myId);
-				req.setAttribute("follow_list", list);
-				HashMap<String, Object> map = dao.memberList(group);
+				
+				//내가 팔로우하고있는 사람 가져오기   - 주석처리(21.03.18/이주원)
+//				ArrayList<FollowDTO> list = dao.followCheck(myId);
+//				req.setAttribute("follow_list", list);
+//				System.out.println(list);
+				
+				//모든 회원들의 정보 가져오기&최대 페이지 수 가져오기
+				HashMap<String, Object> map = dao.memberList(group, myId);
+				
+				dao = new MemberDAO();
+				//리뷰 평점 기준 7개 가져오기
 				ArrayList<ReviewDTO> top_list = dao.top();
-				if (req.getAttribute("search_list")== null) {
-					req.setAttribute("maxPage", map.get("maxPage"));
-					req.setAttribute("member_list", map.get("list"));
-					req.setAttribute("currPage", group);
-				} else {
-					req.setAttribute("member_list", req.getAttribute("search_list"));
-				}
+				
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("member_list", map.get("list"));
+				req.setAttribute("currPage", group);
 				req.setAttribute("top_list", top_list);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -279,19 +286,41 @@ public class MemberService {
 		System.out.println("search값:"+search);
 		String keyWord = req.getParameter("keyWord");
 		System.out.println("검색 요청한 키워드:" + keyWord);
+		String pageParam = req.getParameter("page");
+		System.out.println("page : "+pageParam);
+		
+		if(search == null) {
+			search = "id";
+		}
+		if(keyWord == null) {
+			keyWord = "";
+		}
+		System.out.println(search + keyWord);
+		
+		int group = 1;
+		if(pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}		
+		
 		MemberDAO dao = new MemberDAO();
 		try {
-			ArrayList<MemberDTO> search_list = dao.searchList(keyWord,search);
-			if(search_list!=null) {
-				req.setAttribute("search_list", search_list);
-				System.out.println(search_list.size());
-			}
+			ArrayList<ReviewDTO> top_list = dao.top();
+			HashMap<String, Object> map = dao.searchList(group,keyWord,search,loginId);
+			
+			req.setAttribute("search", search);
+			req.setAttribute("keyword", keyWord);
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("member_list", map.get("list"));
+			req.setAttribute("currPage", group);
+			req.setAttribute("top_list", top_list);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
 			dao.resClose();
 		}
-		RequestDispatcher dis = req.getRequestDispatcher("member");
+		
+		RequestDispatcher dis = req.getRequestDispatcher("memberSearch.jsp");
 		dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
@@ -626,5 +655,49 @@ public class MemberService {
 			resp.sendRedirect("../movie/home");
 		}
 	}
+	
+	//비동기화로 회원리스트에서 팔로우 또는 언팔로우 추가 21.03.19 -- 이주원
+		public void memberFollow() throws IOException {
+			String loginId = (String) req.getSession().getAttribute("myLoginId");
+			if(loginId != null) {
+				String target_id = req.getParameter("target_id");
+				System.out.println(target_id);
+				
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				
+				int success = 0;
+				int follow_check = 0;
+				
+				MemberDAO dao = new MemberDAO();
+				follow_check = dao.myFollowCheck(loginId, target_id);
+				
+				if(follow_check == 1) {//팔로우 되어있음
+					if(dao.memberUnFollow(loginId, target_id)){
+						success = 1;
+					}
+				}else { //팔로우 안되어있음
+					if(dao.memberFollow(loginId, target_id)) {
+						success = 1;
+					}
+				}
+				dao.resClose();
+				
+				map.put("success",success);
+				map.put("follow_check", follow_check);
+				
+				Gson gson = new Gson();
+				String json = gson.toJson(map);
+				System.out.println(json);
+				
+				resp.setContentType("text/html; charset=UTF-8");
+				resp.setHeader("Access-Control-Allow", "*"); 
+				
+				PrintWriter out = resp.getWriter();
+				out.println(json);
+			}
+			else {
+				resp.sendRedirect("../movie/home");
+			}
+		}
 
 }
