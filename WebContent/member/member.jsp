@@ -188,12 +188,17 @@
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
 	           		<td>
-	               		<c:if test="${member3.follow_check eq 0}">
-	     					<button id="${member3.id}" onclick="follow('${member3.id}')">팔로우</button>
-	     				</c:if>
-	           			<c:if test="${member3.follow_check eq 1}">
-	           				<button id="${member3.id}" onclick="follow('${member3.id}')" >팔로우 취소</button>
+	           			<c:if test="${member3.id eq sessionScope.myLoginId}">
 	           			</c:if>
+	           			<c:if test="${member3.id ne sessionScope.myLoginId}">
+	           				<c:if test="${member3.follow_check eq 0}">
+	     						<button id="${member3.id}" onclick="follow('${member3.id}')">팔로우</button>
+	     					</c:if>
+	           				<c:if test="${member3.follow_check eq 1}">
+	           					<button id="${member3.id}" onclick="follow('${member3.id}')" >팔로우 취소</button>
+	           				</c:if>
+	           			</c:if>
+	               		
 	                </td>
                 </tr>
             </c:forEach>
