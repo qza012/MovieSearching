@@ -723,4 +723,28 @@ public class ReviewService {
 			resp.sendRedirect("/MovieSearching/movie/home");
 		}
 	}
+
+	public void movieReviewWriteForm() throws IOException, ServletException {
+		String myLoginId = (String)req.getSession().getAttribute("myLoginId");
+		if(myLoginId != null) {
+			String movieName = req.getParameter("movieName");
+			String movieCode = req.getParameter("movieCode");
+			
+			String page="";
+			String msg="";
+			if(movieName != null || movieCode != null) {
+				page="./review/reviewWrite.jsp";
+			}else {
+				page="moviedetail?movieCode="+movieCode;
+				msg="리뷰작성 페이지 가져오기에 실패했습니다.";
+			}
+			req.setAttribute("movieName", movieName);
+			req.setAttribute("movieCode", movieCode);
+			req.setAttribute("msg", msg);
+			RequestDispatcher dis = req.getRequestDispatcher(page);
+			dis.forward(req, resp);
+		}else {
+			resp.sendRedirect("/MovieSearching/movie/home");
+		}
+	}
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.file.service.FileService;
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
@@ -236,6 +237,8 @@ public class MemberService {
 	public void getMemberList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String target_id = req.getParameter("target_id");
 			String pageParam = req.getParameter("page");
 			System.out.println("page : "+pageParam);	
 			int group = 1;
@@ -244,6 +247,10 @@ public class MemberService {
 			}		
 			MemberDAO dao = new MemberDAO();
 			try {
+//			FollowDTO dto = dao.followCheck(myId);
+//			req.setAttribute("follow", dto);
+				ArrayList<FollowDTO> list = dao.followCheck(myId);
+				req.setAttribute("follow_list", list);
 				HashMap<String, Object> map = dao.memberList(group);
 				dao = new MemberDAO();
 				ArrayList<ReviewDTO> top_list = dao.top();
@@ -384,33 +391,32 @@ public class MemberService {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			String myId = (String) req.getSession().getAttribute("myLoginId");
-			String targetId = req.getParameter("targetId");
+			String targetId = req.getParameter("id");
 			String follow = req.getParameter("btn");
 			System.out.println(myId+"님이, "+targetId+"님을 팔로우");	
 			System.out.println("follow 상황:"+follow+"좋아요 할 아이디:"+targetId);
 			MemberDAO dao = new MemberDAO();
 			try {
-				if(follow=="팔로우") {
+//				if(follow=="팔로우") {
 					dao.follow(myId,targetId);
 					System.out.println("팔로우 신청!");
 					dao.alarm(targetId,myId);
 					System.out.println("알람 전송");
-				}else{
-					dao.notFollow(myId,targetId);
-					System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
-				}
+//				}else{
+//					dao.notFollow(myId,targetId);
+//					System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
+//				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/member");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
 		}
 	}
-	
 	
 	public void followingList() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
@@ -537,23 +543,23 @@ public class MemberService {
 		}
 	}
 
-	public void followCheck() throws ServletException, IOException {
-		String id = (String) req.getSession().getAttribute("myLoginId");
-		String target_id = req.getParameter("target_id");
-		System.out.println(id+"는 "+target_id+"를 팔로우 하나?");
-		
-		MemberDAO dao = new MemberDAO();
-		boolean fChk = dao.followCheck(id, target_id);
-		System.out.println(fChk);
-		
-		if(fChk) {
-			req.setAttribute("fChk", fChk);
-			req.setAttribute("target", target_id);
-		}
-		dao.resClose();
-		RequestDispatcher dis = req.getRequestDispatcher("/follow?target_id="+target_id);
-		dis.forward(req, resp);
-	}
+//	public void followCheck() throws ServletException, IOException {
+//		String id = (String) req.getSession().getAttribute("myLoginId");
+//		String target_id = req.getParameter("target_id");
+//		System.out.println(id+"는 "+target_id+"를 팔로우 하나?");
+//		
+//		MemberDAO dao = new MemberDAO();
+//		boolean fChk = dao.followCheck(id, target_id);
+//		System.out.println(fChk);
+//		
+//		if(fChk) {
+//			req.setAttribute("fChk", fChk);
+//			req.setAttribute("target", target_id);
+//		}
+//		dao.resClose();
+//		RequestDispatcher dis = req.getRequestDispatcher("/follow?target_id="+target_id);
+//		dis.forward(req, resp);
+//	}
 
 	public void alramChk() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");

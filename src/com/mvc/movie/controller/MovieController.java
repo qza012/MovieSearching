@@ -54,7 +54,7 @@ public class MovieController extends HttpServlet {
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.likeMovie();
 			break;
-
+			
 		case "/myPage/iLikeMovie":
 			System.out.println("마이페이지 좋아요한 영화 리스트");
 			service.iLikeMovie();
@@ -64,6 +64,11 @@ public class MovieController extends HttpServlet {
 			System.out.println("마이페이지 영화 좋아요 취소");
 			service.notLikeMovie();
 			break;	
+
+//		case "/myPage/iLikeMovie":
+//			System.out.println("임시 url");
+//			resp.sendRedirect("./likeMovie.jsp");
+//			break;
 
 		case "/movie/movieSearch":
 			System.out.println("검색 요청");

@@ -274,7 +274,8 @@ public class MovieDAO {
 			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
 			while(rs.next()) {
 				MovieDTO dto = new MovieDTO();
-//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문에 추가해야 함
+//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문,jsp에 추가해야 함
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setGenre(rs.getString("genre"));
 				dto.setDirector(rs.getString("director"));
@@ -299,6 +300,8 @@ public class MovieDAO {
 		return map;
 	}
 
+
+	
 	public boolean notLikeMovie(String loginId, String idx) {
 		boolean success = false;
 		String sql="DELETE movie_like3 WHERE id=?, idx=?";

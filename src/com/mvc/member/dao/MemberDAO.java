@@ -648,22 +648,36 @@ public class MemberDAO {
 		return success;
 	}
 
-	public boolean followCheck(String id, String target_id) {
-		boolean fChk = false;
-		String sql="SELECT id, target_id FROM follow3 WHERE id=? AND target_id=?";
-		try {
+//	public boolean followCheck(String id, String target_id) {
+//		boolean fChk = false;
+//		String sql="SELECT id, target_id FROM follow3 WHERE id=? AND target_id=?";
+//		try {
+//			ps = conn.prepareStatement(sql);
+//			ps.setString(1, id);
+//			ps.setString(2, target_id);
+//			rs = ps.executeQuery();
+//			if(rs.next()) {
+//				fChk = true;
+//				System.out.println(rs.getString("id")+", "+rs.getString("target_id"));
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return fChk;
+//	}
+	public ArrayList<FollowDTO> followCheck(String myId) throws SQLException {
+		String sql="SELECT id, target_id FROM follow3 WHERE id=?";
+		ArrayList<FollowDTO> list = new ArrayList<FollowDTO>();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, id);
-			ps.setString(2, target_id);
+			ps.setString(1, myId);
 			rs = ps.executeQuery();
-			if(rs.next()) {
-				fChk = true;
-				System.out.println(rs.getString("id")+", "+rs.getString("target_id"));
+			while(rs.next()) {
+				FollowDTO dto = new FollowDTO();
+				dto.setId(rs.getString("id"));
+				dto.setTarget_id(rs.getString("target_id"));
+				list.add(dto);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return fChk;
+		return list;
 	}
 
 	public HashMap<String, Object> alarmChk(String myId, int group) {

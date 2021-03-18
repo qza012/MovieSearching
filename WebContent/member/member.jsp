@@ -187,7 +187,14 @@
 	                <td>${member3.name}</td>
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
-	                <td><input type="button" value="팔로우"></td>
+	                <td>
+	                	<c:if test="${follow_list.get(id) == member3.id}">
+		                	<input id="cancelBtn" type="button" value="팔로우 취소" onclick="cancelBtn()">
+		                </c:if>
+		                <c:if test="${follow_list.get(id) != member3.id}">
+		                	<input id="followBtn" type="button" value="팔로우" onclick="followBtn()">
+		                </c:if>
+	                </td>
 	            </tr>
             </c:forEach>
         </table>
@@ -209,6 +216,15 @@
 		</div>
 </body>
 <script>
-
+	function cancelBtn()  {
+		  const btnElement = document.getElementById('cancelBtn');
+		  btnElement.value = "팔로우";
+		  location.href = "/MovieSearching/member/follow";
+		}
+	function followBtn()  {
+		  const btnElement = document.getElementById('followBtn');
+		  btnElement.value = "팔로우 취소";
+		  location.href = "/MovieSearching/follow?id="+${member3.id};
+		}
 </script>
 </html>

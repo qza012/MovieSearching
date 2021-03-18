@@ -140,10 +140,10 @@ public class MemberController extends HttpServlet {
 				service.pwQuestionList();
 				break;
 
-			case "/member/fChk":
-				System.out.println("팔로우 체크");
-				service.followCheck();
-				break;
+//			case "/member/fChk":
+//				System.out.println("팔로우 체크");
+//				service.follow();
+//				break;
 				
 			case "/myPage/alarm":
 				System.out.println("알람 체크");

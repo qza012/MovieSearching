@@ -57,12 +57,14 @@ th, td {
 					<table>
 						<tr>
 							<th>리뷰 영화</th>
-							<td colspan="5"><c:if test="${review.posterURL ne null}">
+							<td colspan="5" style="cursor: pointer;" onclick="location.href='/MovieSearching/movie/moviedetail?movieCode=${review.movieCode}' ">
+							<c:if test="${review.posterURL ne null}">
 									<div>
 										<img src="${review.posterURL}" />
 									</div>
-								</c:if>
-								<div>${review.movieName}</div></td>
+							</c:if>
+								<div>${review.movieName}</div>
+							</td>
 						</tr>
 						<tr>
 							<th>제목</th>
@@ -96,10 +98,11 @@ th, td {
 							</c:if>
 							<td id="reviewCntLike">${review.cntLike}</td>
 							<!-- 세션에서 아이디 가져와서 작성자와 다르면 보여야함 -->
-							<td colspan="2"><c:if
-									test="${sessionScope.myLoginId ne review.id}">
+							<td colspan="2">
+								<c:if test="${sessionScope.myLoginId ne review.id}">
 									<a  class="aClickGo" onclick="reportOpen(${review.idx},2001)" style="cursor: pointer;">신고</a>
-								</c:if></td>
+								</c:if>
+							</td>
 							<th>작성일</th>
 							<td>${review.reg_date}</td>
 						</tr>

@@ -56,9 +56,9 @@ textarea {
 
 						<tr>
 							<th>영화제목</th>
-							<td><input type="hidden" id="movieCode" /> <input
-								type="text" id="movieName" style="width: 80%;" /> <input
-								type="button" value="검색" onclick="movieSearchOpen()" /></td>
+							<td><input type="hidden"  value="${movieCode}" id="movieCode" /> 
+							<input type="text" id="movieName" value="${movieName}"  style="width: 80%;" /> 
+							<input type="button" value="검색" onclick="movieSearchOpen()" /></td>
 
 							<th>평점</th>
 							<td><select style="width: 20%;" id="score" class="star">
@@ -149,7 +149,7 @@ function movieSearchOpen(){
 function cancel(){
 	var check = confirm('이미 작성한 내용은 모두 지워집니다. 취소하시겠습니까?');
 	if(check){
-		location.href='../reviewList' 
+		location.href='/MovieSearching/reviewList'
 	}
 }
 </script>
