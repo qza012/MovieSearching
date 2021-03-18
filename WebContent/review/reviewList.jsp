@@ -106,7 +106,7 @@ a:link, a:hover, a:visited, a:active {
 							<tr>
 								<td>${review.idx}</td>
 								<td class="reviewDetail" onclick="location.href='reviewDetail?Idx=${review.idx}' ">${review.subject}</td>
-								<td class="movieDetail" onclick="location.href='#' ">${review.movieName}</td>
+								<td class="movieDetail" onclick="location.href='/MovieSearching/movie/moviedetail?movieCode=${review.movieCode}' ">${review.movieName}</td>
 								<td>${review.score}</td>
 								<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
 								<td>${review.cntLike}</td>
