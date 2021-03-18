@@ -165,4 +165,27 @@ public class MovieService {
 		dis.forward(req, resp);
 	}
 
+	public void nlikeMovie() throws IOException, ServletException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String idx = req.getParameter("idx");
+			System.out.println("좋아요 취소할 영화:"+idx);
+			MovieDAO dao = new MovieDAO();
+			try {
+				if(dao.nlikeMovie(idx)==1) {
+					System.out.println("삭제 성공");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				dao.resClose();
+			}
+			RequestDispatcher dis = req.getRequestDispatcher("/member/likeMovie");
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("../movie/home");
+		}
+	}
+	
+
 }

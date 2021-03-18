@@ -286,7 +286,7 @@ public class MovieDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT m.movieName, m.genre, m.director, m.openDate FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		String sql="SELECT m.movieName, m.genre, m.director, m.openDate, l.idx FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {	
@@ -296,7 +296,8 @@ public class MovieDAO {
 			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
 			while(rs.next()) {
 				MovieDTO dto = new MovieDTO();
-//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문에 추가해야 함
+//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문,jsp에 추가해야 함
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setGenre(rs.getString("genre"));
 				dto.setDirector(rs.getString("director"));
@@ -318,6 +319,15 @@ public class MovieDAO {
 			e.printStackTrace();
 		}
 		return map;
+	}
+
+	public int nlikeMovie(String idx) throws SQLException {
+		String sql = "DELETE FROM movie_like3 WHERE idx=?";
+		int success = 0;
+		ps=conn.prepareStatement(sql);
+		ps.setString(1, idx);
+		success = ps.executeUpdate();	
+		return success;
 	}
 
 }
