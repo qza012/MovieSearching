@@ -20,8 +20,5 @@
 	<button onclick="location.href='reportCommentList'">댓글 신고 이동</button>
 </body>
 <script>
-	/*
-	 탈퇴 여부 , 비활성화 여부 클릭 후 검색 시 버그.
-	*/
 </script>
 </html>

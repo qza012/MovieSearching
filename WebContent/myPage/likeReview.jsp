@@ -22,9 +22,6 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
-            	float: left;
-            }
             .likeReview {
                 font-family: Verdana;
                 width: 70%;

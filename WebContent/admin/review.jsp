@@ -20,6 +20,8 @@
 		<div id="container">
 			<div id="content">
 				<div class="movie_main">
+					<input id="storeCurStandard" type="hidden" value="${standard}"/>
+					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
 					<h3>리뷰 관리 </h3>
 					<hr/>
 					<div>
@@ -150,16 +152,16 @@
 		
 		// next 함수
 		function nextFunc() {
-			var standard = $(".standard").val();
-			var keyWord = $(".searchInput").val();
+			var standard = $("#storeCurStandard").val();
+			var keyWord = $("#storeCurKeyWord").val();
 
 			location.href="reviewList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
 		// prev 함수
 		function prevFunc() {
-			var standard = $(".standard").val();
-			var keyWord = $(".searchInput").val();
+			var standard = $("#storeCurStandard").val();
+			var keyWord = $("#storeCurKeyWord").val();
 
 			location.href="reviewList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
 		}

@@ -11,7 +11,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.movielike.dto.MovieLikeDTO;
+import com.mvc.rank.dto.RankDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieDAO {
@@ -47,19 +50,20 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> main(String week) throws SQLException {
-		String sql = "SELECT * FROM (SELECT * FROM rank3 WHERE week=?), movie3 ORDER BY rank";
+	public ArrayList<MovieDTO> rankList(String week) throws SQLException {
+		String sql = "SELECT idx, moviecode, rank, week FROM rank3 WHERE week=?";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, week);
 			rs = ps.executeQuery();
+			
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
-				dto.setRank(rs.getInt("rank"));
-				dto.setPosterUrl(rs.getString("posterUrl"));
-				dto.setMovieName(rs.getString("movieName"));
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieCode(rs.getString("movieCode"));
+				dto.setRank(rs.getInt("rank"));
+				dto.setWeek(rs.getString("week"));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -122,32 +126,6 @@ public class MovieDAO {
 			e.printStackTrace();
 		}
 		return dto;
-	}
-
-	/***
-	 * 영화 목록 API에게 한 번에 가져올 수 있는 데이터가 movieCd, movieNm, prdtYear, openDt
-	 * 
-	 * @return
-	 */
-	public int insertMovie(MovieDTO dto) throws SQLException {
-		int result = 0;
-		String sql = "INSERT INTO movie3(movieCode, movieName, openDate, genre, director, country) VALUES(?, ?, to_date(?, 'yyyy-mm-dd'), ?, ?, ?)";
-
-		// System.out.println(dto.getCode() + " / " + dto.getTitle() + " / " +
-		// dto.getOpeningDate() + " / " + dto.getGenre() + " / " + dto.getDirector() + "
-		// / " + dto.getCountry());
-
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, dto.getMovieCode());
-		ps.setString(2, dto.getMovieName());
-		ps.setDate(3, dto.getOpenDate()); // 코드 수정해야함
-		ps.setString(4, dto.getGenre());
-		ps.setString(5, dto.getDirector());
-		ps.setString(6, dto.getCountry());
-
-		result = ps.executeUpdate();
-		ps.close();
-		return result;
 	}
 
 	public int setYoutubeUrl(String movieCode, String youtubeUrl) throws SQLException {
@@ -286,7 +264,7 @@ public class MovieDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT m.movieName, m.genre, m.director, m.openDate, l.idx FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		String sql="SELECT m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {	
@@ -302,6 +280,7 @@ public class MovieDAO {
 				dto.setGenre(rs.getString("genre"));
 				dto.setDirector(rs.getString("director"));
 				dto.setOpenDate(rs.getDate("openDate"));
+				dto.setPosterUrl(rs.getString("posterUrl"));
 				list.add(dto);
 			}
 			for(int i=start-1; i<end; i++) {
@@ -321,12 +300,23 @@ public class MovieDAO {
 		return map;
 	}
 
-	public int nlikeMovie(String idx) throws SQLException {
-		String sql = "DELETE FROM movie_like3 WHERE idx=?";
-		int success = 0;
-		ps=conn.prepareStatement(sql);
-		ps.setString(1, idx);
-		success = ps.executeUpdate();	
+
+	
+	public boolean notLikeMovie(String loginId, String idx) {
+		boolean success = false;
+		String sql="DELETE movie_like3 WHERE id=?, idx=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, Integer.parseInt(idx));
+			int count = ps.executeUpdate();
+			if(count>0) {
+				success = true;
+			}
+			System.out.println("deleteIdx : "+idx+", "+success);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return success;
 	}
 

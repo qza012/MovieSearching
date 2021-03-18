@@ -84,7 +84,7 @@
                 		<td id="alarmContent">${alarm.content}</td>
                 		<td id="alarmDate">${alarm.reg_date}</td>
                 		<td id="deleteAlarm">
-                			<button onclick="location.href='./deleteAlarm?id=${follow.id}'">삭제</button>
+                			<button onclick="location.href='./alarmDel?idx=${alarm.idx}'">삭제</button>
                 		</td>
                 	</tr>	
                 </c:forEach>

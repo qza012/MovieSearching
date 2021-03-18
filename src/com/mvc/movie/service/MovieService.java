@@ -29,15 +29,22 @@ public class MovieService {
 	public ArrayList<MovieDTO> main() throws ServletException, IOException {
 		MovieDAO dao = new MovieDAO();
 		ArrayList<MovieDTO> top = null;
-//		try {
-//			String week = "202102";
-//			top = dao.main(week);
-			top = new ArrayList<MovieDTO>();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			dao.resClose();
-//		}
+		try {
+			String week = "202102";
+			top = dao.rankList(week);	// MovieDTO에 rank 정보만 포함.
+			
+			ArrayList<MovieDTO> topTemp = new ArrayList<MovieDTO>();
+			for(MovieDTO dto : top) {
+				MovieDTO movieDTO = dao.detail(dto.getMovieCode());
+				topTemp.add(movieDTO);
+			}
+			top = topTemp;
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dao.resClose();
+		}
 		System.out.println("영화 갯수 : " + top.size());
 		req.setAttribute("top", top);
 		dis = req.getRequestDispatcher("index.jsp");
@@ -165,27 +172,51 @@ public class MovieService {
 		dis.forward(req, resp);
 	}
 
-	public void nlikeMovie() throws IOException, ServletException {
+	public void iLikeMovie() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
-			String idx = req.getParameter("idx");
-			System.out.println("좋아요 취소할 영화:"+idx);
+			String pageParam = req.getParameter("page");
+			System.out.println("page : "+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}
 			MovieDAO dao = new MovieDAO();
 			try {
-				if(dao.nlikeMovie(idx)==1) {
-					System.out.println("삭제 성공");
+				HashMap<String, Object> map = dao.likeMovie(loginId,group);
+				if(map != null) {
+					req.setAttribute("movie_list", map.get("list"));
+					req.setAttribute("maxPage", map.get("maxPage"));
+					req.setAttribute("currPage", group);
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member/likeMovie");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/likeMovie.jsp");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
 		}
 	}
-	
+
+	public void notLikeMovie() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String idx = req.getParameter("idx");
+			System.out.println("삭제할 idx : "+idx);
+			
+			MovieDAO dao = new MovieDAO();
+			boolean success = dao.notLikeMovie(loginId,idx);
+			if(success) {
+				req.setAttribute("msg","영화 좋아요 취소!");
+			}
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/iLikeMovie?id="+loginId);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("../movie/home");
+		}	
+	}
 
 }

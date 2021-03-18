@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.movie.service.MovieService;
 
 @WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/member/likeMovie", "/movie/movieSearch",
-		"/myPage/iLikeMovie","/member/nlikeMovie" })
+		"/myPage/iLikeMovie","/myPage/notLikeMovie" })
 
 public class MovieController extends HttpServlet {
 
@@ -55,10 +55,15 @@ public class MovieController extends HttpServlet {
 			service.likeMovie();
 			break;
 			
-		case "/member/nlikeMovie":
-			System.out.println("좋아요한 영화 좋아요 취소 요청");
-			service.nlikeMovie();
+		case "/myPage/iLikeMovie":
+			System.out.println("마이페이지 좋아요한 영화 리스트");
+			service.iLikeMovie();
 			break;
+			
+		case "/myPage/notLikeMovie":
+			System.out.println("마이페이지 영화 좋아요 취소");
+			service.notLikeMovie();
+			break;	
 
 //		case "/myPage/iLikeMovie":
 //			System.out.println("임시 url");

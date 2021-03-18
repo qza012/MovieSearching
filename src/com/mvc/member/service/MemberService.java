@@ -538,7 +538,7 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarmList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarm?id="+loginId);
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
