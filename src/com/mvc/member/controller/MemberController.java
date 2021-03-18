@@ -135,6 +135,11 @@ public class MemberController extends HttpServlet {
 				service.deleteFollower();
 				break;
 				
+			case "/myPage/notFollow":
+				System.out.println("팔로우 취소");
+				service.notFollow();
+				break;
+				
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();

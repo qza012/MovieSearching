@@ -59,7 +59,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");			
+			resp.sendRedirect("../movie/home");			
 		}
 	}
 
@@ -89,7 +89,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 
@@ -108,7 +108,7 @@ public class MemberService {
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="./main.jsp";
+				page="../movie/home";
 				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
@@ -116,7 +116,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 	
@@ -494,7 +494,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followerList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 	
@@ -593,6 +593,28 @@ public class MemberService {
 		} else {
 			resp.sendRedirect("/movie/home");
 		}	
+	}
+
+	public void notFollow() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String targetId = req.getParameter("target_id");
+			System.out.println(myId+"님이 "+targetId+"님 팔로우 취소");
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.notFollow(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로워 삭제!");
+			}
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("../movie/home");
+		}
 	}
 
 }

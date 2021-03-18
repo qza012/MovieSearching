@@ -22,14 +22,11 @@
             ::marker {
                 font-size: 0px;
             }
-            div{
-            	float: left;
-            }
             .followerList {
                 font-family: Verdana;
                 width:65%;
                 margin-top: 5%;
-                margin-left: 30%;
+                margin-left: 25%;
             } 
             #table{
             	padding: 1%;
@@ -61,8 +58,8 @@
             .pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 25px;
-				margin-left: 40%;
+				margin-top: 30px;
+				margin-left: 30%;
 			}
 			.pageArea span{
 				font-size:16px;
