@@ -345,8 +345,6 @@ public class MemberService {
 		}finally {
 			dao.resClose();
 		}
-		RequestDispatcher dis = req.getRequestDispatcher("./pwFind.jsp");
-		dis.forward(req, resp);
 	}
 	
 	public void pwQuestionList() throws ServletException, IOException {
