@@ -57,7 +57,7 @@ public class MovieDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, week);
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
 				dto.setIdx(rs.getInt("idx"));
@@ -259,20 +259,20 @@ public class MovieDAO {
 		return max;
 	}
 
-	public HashMap<String, Object> likeMovie(String loginId, int group) {	
+	public HashMap<String, Object> likeMovie(String loginId, int group) {
 		int pagePerCnt = 10;
-		int end = group*pagePerCnt;
-		int start = end-(pagePerCnt-1);
-		
-		String sql="SELECT l.idx, m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		int end = group * pagePerCnt;
+		int start = end - (pagePerCnt - 1);
+
+		String sql = "SELECT l.idx, m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
-		try {	
+		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
 			rs = ps.executeQuery();
 			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
-			while(rs.next()) {
+			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieName(rs.getString("movieName"));
@@ -282,41 +282,108 @@ public class MovieDAO {
 				dto.setPosterUrl(rs.getString("posterUrl"));
 				list.add(dto);
 			}
-			for(int i=start-1; i<end; i++) {
-				if(i<list.size()) {
+			for (int i = start - 1; i < end; i++) {
+				if (i < list.size()) {
 					System.out.println(i);
 					likeMovie_list.add(list.get(i));
 				}
 			}
-			System.out.println("listSize : "+likeMovie_list.size());
-			int maxPage = (int) Math.ceil(list.size()/(double)pagePerCnt);
+			System.out.println("listSize : " + likeMovie_list.size());
+			int maxPage = (int) Math.ceil(list.size() / (double) pagePerCnt);
 			map.put("list", likeMovie_list);
 			map.put("maxPage", maxPage);
-			System.out.println("maxPage : "+maxPage);
+			System.out.println("maxPage : " + maxPage);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return map;
 	}
 
-
-	
 	public boolean notLikeMovie(String loginId, String idx) {
 		boolean success = false;
-		String sql="DELETE movie_like3 WHERE id=? AND idx=?";
+		String sql = "DELETE movie_like3 WHERE id=? AND idx=?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
 			ps.setInt(2, Integer.parseInt(idx));
 			int count = ps.executeUpdate();
-			if(count>0) {
+			if (count > 0) {
 				success = true;
 			}
-			System.out.println("deleteIdx : "+idx+", "+success);
+			System.out.println("deleteIdx : " + idx + ", " + success);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return success;
+	}
+
+	public boolean movieLike_Check(String id, String movieCode) {
+		String sql = "SELECT * FROM movie_like3 WHERE id = ? AND movieCode = ?";
+		boolean success = false;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean movieLike_Up(String id, String movieCode) {
+		boolean success = false;
+		String sql = "INSERT INTO movie_like3(idx, id, movieCode) VALUES(movie_like3_seq.NEXTVAL,?,?)";
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			if (ps.executeUpdate() > 0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean movieLike_Down(String id, String movieCode) {
+		boolean success = false;
+		String sql = "DELETE FROM movie_like3 WHERE id=? AND movieCode=?";
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			if (ps.executeUpdate() > 0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public int getmovieLike_Count(String movieCode) {
+		String sql = "SELECT COUNT(movieCode) FROM movie_like3 WHERE movieCode=?";
+
+		int movieLike_Count = 0;
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				movieLike_Count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return movieLike_Count;
 	}
 
 }
