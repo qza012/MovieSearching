@@ -188,10 +188,10 @@
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
 	                <td>
-	                	<c:if test="${follow_list.get(id) == member3.id}">
+	                	<c:if test="${follow_list.get(target_id) == member3.id}">
 		                	<input id="cancelBtn" type="button" value="팔로우 취소" onclick="cancelBtn()">
 		                </c:if>
-		                <c:if test="${follow_list.get(id) != member3.id}">
+		                <c:if test="${follow_list.get(target_id) != member3.id}">
 		                	<input id="followBtn" type="button" value="팔로우" onclick="followBtn()">
 		                </c:if>
 	                </td>

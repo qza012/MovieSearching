@@ -396,6 +396,19 @@ public class MemberService {
 			System.out.println(myId+"님이, "+targetId+"님을 팔로우");	
 			System.out.println("follow 상황:"+follow+"좋아요 할 아이디:"+targetId);
 			MemberDAO dao = new MemberDAO();
+			/* 1. ui적인 부분
+			 * 이미 팔로우 되있는 상태인 사람은 화원리스트를 호출하면 버튼 쪽에서 "팔로우" 가 아닌 "팔로우 취소"가 떠야 하기 때문에 
+			 * 	팔로우 여부를 체크하기 위해 dto에 target_id 를 넣고 member.jsp의 190행 에서 비교해서 버튼을 
+			 * 뛰우고 싶지만 되지않음 ( 정확히는 dto다 보니 하나만 비교가 가능해서 한명에 대한 팔로우 여부만 테스트 되고 2번째 부터는 동작하지 않음)
+			 * (list는 여러개 가져와 보기 위해 테스트 해본것)
+			 *  2. 기능적인 부분
+			 *  팔로우 버튼을 누르면 해당 아이디를 가져와 자신의 아이디와 같이 DB에 넣어야 하는데 아이디를 가져오지 못하기에 
+			 *  뒷부분이 어디까지 동작하는지 알 수 없음
+			 * */
+//			FollowDTO dto = dao.followCheck(myId);
+//			req.setAttribute("follow", dto);
+//			ArrayList<FollowDTO> list = dao.followCheck(myId);
+//			req.setAttribute("follow_list", list);
 			try {
 //				if(follow=="팔로우") {
 					dao.follow(myId,targetId);
