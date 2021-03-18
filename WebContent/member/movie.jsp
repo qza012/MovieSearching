@@ -53,17 +53,23 @@
     </div>
     <table class="table">
         <tr>
+        	<th>순번</th>
             <th>영화 제목</th>
             <th>장르</th>
             <th>감독</th>
             <th>개봉일</th>
+            <th>좋아요</th>
         </tr>
         <c:forEach items="${movie_list}" var="movie3">
 	        <tr>
+	        	<td>${movie3.idx}</td>
 	            <td>${movie3.movieName}</td>
 	            <td>${movie3.genre}</td>
 	            <td>${movie3.director}</td>
 	            <td>${movie3.openDate}</td>
+	            <td>
+	            	<a href="./nlikeMovie?idx=${movie3.idx}">좋아요 취소</a>	      
+	            </td>
 	        </tr>
         </c:forEach>
     </table>

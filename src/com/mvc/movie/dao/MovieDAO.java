@@ -264,7 +264,7 @@ public class MovieDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		String sql="SELECT l.idx, m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {	
@@ -274,7 +274,7 @@ public class MovieDAO {
 			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
 			while(rs.next()) {
 				MovieDTO dto = new MovieDTO();
-//				dto.setPosterUrl(rs.getString("posterUrl")); m.posterUrl 쿼리문에 추가해야 함
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setGenre(rs.getString("genre"));
 				dto.setDirector(rs.getString("director"));
@@ -299,9 +299,11 @@ public class MovieDAO {
 		return map;
 	}
 
+
+	
 	public boolean notLikeMovie(String loginId, String idx) {
 		boolean success = false;
-		String sql="DELETE movie_like3 WHERE id=?, idx=?";
+		String sql="DELETE movie_like3 WHERE id=? AND idx=?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);

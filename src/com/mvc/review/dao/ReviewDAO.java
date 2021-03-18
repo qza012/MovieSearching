@@ -81,8 +81,8 @@ public class ReviewDAO {
 		int end = group*pagePerCnt; //페이지의 끝 rnum
 		int start = end-(pagePerCnt-1); //페이지의 시작 rnum
 		
-		String sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
-					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
+		String sql = "SELECT RNUM, IDX, ID, SUBJECT, SCORE, REG_DATE, DEL_TYPE, MOVIENAME, MOVIECODE, CNTLIKE FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) "
+					+ "AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, movieCode, cntlike FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName, m.movieCode "
 					+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r " 
 					+ "JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
 					+ "ON r.IDX = l.IDX WHERE del_type='N' ORDER BY IDX DESC) WHERE rnum BETWEEN ? AND ?";
@@ -100,6 +100,7 @@ public class ReviewDAO {
 				dto.setScore(rs.getInt("score"));
 				dto.setReg_date(rs.getDate("reg_date"));
 				dto.setDel_type(rs.getString("del_type"));
+				dto.setMovieCode(rs.getString("movieCode"));
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setCntLike(rs.getInt("cntLike"));
 				list.add(dto);
@@ -135,7 +136,7 @@ public class ReviewDAO {
 	public ReviewDTO detail(int idx) {
 		ReviewDTO dto = new ReviewDTO();
 		
-		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.content, r.score, r.reg_date, r.del_type, m.movieName, m.posterurl FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike   " + 
+		String sql="SELECT * FROM (SELECT r.idx, r.id, r.subject, r.content, r.score, r.reg_date, r.del_type, m.movieName, m.movieCode, m.posterurl FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike   " + 
 				"FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l ON r.IDX = l.IDX WHERE r.idx=?";
 
 		try {
@@ -149,6 +150,7 @@ public class ReviewDAO {
 				dto.setContent(rs.getString("content"));
 				dto.setScore(rs.getInt("score"));
 				dto.setReg_date(rs.getDate("reg_date"));
+				dto.setMovieCode(rs.getString("movieCode"));
 				dto.setMovieName(rs.getString("movieName"));
 				dto.setPosterURL(rs.getString("posterURL"));
 				dto.setCntLike(rs.getInt("cntLike"));
