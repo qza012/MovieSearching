@@ -7,14 +7,20 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
-			
-			/* table{
-				// border: 1px solid black;
-				//border-collapse: collapse;
-				//padding: 5px 10px; 
-				margin : auto;
-				text-align : center;
+			table {
+				width: 100%;
+				color: white;
 			}
+			table, th, td{
+				border: 1px solid black;
+				border-collapse: collapse;
+				padding: 5px 10px;
+				text-align: center;
+			}
+			#basic {
+				color: white;
+			}
+			/*
 			select{
 					width : 100px;
 					height : 26px;
@@ -51,26 +57,33 @@
 		            line-height:25px;
 		            margin-top : 50px;
        		 	}
-       		 	#back{
-       		 		border-bottom-left-radius: 4px;
-            		border-top-left-radius: 4px;
+			*/
        		 	}
        		 	#page{
-					border-radius: 0px;	
-					font-weight: bold;
-					margin-right:-5px;
-					margin-left:-5px;
+					border-radius: 4px;	
+					padding : 10px;
+					margin : 10px;
 				}
-       		 	#next{
-       		 		border-bottom-right-radius: 4px;
-            		border-top-right-radius: 4px;
-       		 	}
-       		 	a:visited,a:link{
-					color: #000000;
+				#pageNum{
+					padding : 10px;
+					margin : 10px;
+				}
+				#curPageNum{
+					padding : 10px;
+					margin : 10px;
+					font-weight: bold;
+					font-size: 30px;
+				}
+
+       		 	a:link{
+					color: red;
+					font-weight: bold;
        			}
+       			
        			a:hover {
+       				color : blue;
 					text-decoration: underline;
-				} */
+				}
 		</style>
 	</head>
 	<body>
@@ -78,10 +91,10 @@
 	<div id="basic" class="basic">
 		<div id="container">
 			<div id="content">
-				<div class="movie_main">
+				<div class="main">
 					<input id="storeCurStandard" type="hidden" value="${standard}"/>
 					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
-					<h3>회원리스트</h3>
+					<h3>회원 관리</h3>
 					<div>
 						<button value="move">회원 비활성화 관리</button>
 						<button value="move" onclick="location.href='pwQuestionList'">비밀번호 찾기 질문 관리</button>
@@ -128,18 +141,30 @@
 						</tr>
 						</c:forEach>
 					</table>
-					<div align="center">
-						<span id="back">
+					<div id='paging' align="center">
+						<span>
 							<c:if test="${curPage == 1 }">이전</c:if>
 							<c:if test="${curPage > 1 }">
-								<a href="javascript:prevFunc();">이전</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage-1}');">이전</a>
+							</c:if>
+							<c:if test="${curPage - 4 > 1}">
+								<a id='pageNum' href="javascript:pageMove(1);">1</a>
+								...
 							</c:if>
 						</span>
-						<span id="page">${curPage }</span>
-						<span id="next">
+						
+						<span id="page">
+	
+						</span>
+						
+						<span>
+							<c:if test="${curPage + 4 < maxPage}">
+								...
+								<a id='pageNum' href="javascript:pageMove('${maxPage}');">${maxPage}</a>
+							</c:if>
 							<c:if test="${curPage == maxPage }">다음</c:if>
 							<c:if test="${curPage < maxPage }">
-								<a href="javascript:nextFunc();">다음</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage+1}');">다음</a>
 							</c:if>
 						</span>
 					</div>	
@@ -158,6 +183,7 @@
 		$(document).ready(function() {
 			staySelectBoxValue();
 			changeSearchInput($(".standard").val());
+			setPageNum();
 		});
 		
 		// 활성화 버튼 비동기 통신.
@@ -218,8 +244,8 @@
 			case "gender" :
 				searchInput.replaceWith(
 						"<select class='searchInput' name='keyWord'>"
-				    	+"<option value='남'>남</option>"
-				    	+"<option value='여'>여</option>"
+				    	+"<option value='male'>남</option>"
+				    	+"<option value='female'>여</option>"
 				    	+"</select>"
 				);
 				break;
@@ -236,21 +262,35 @@
 			}
 		};
 		
-		// next 함수
-		function nextFunc() {
+		// 페이지 이동 함수
+		function pageMove(pageNum) {
 			var standard = $("#storeCurStandard").val();
 			var keyWord = $("#storeCurKeyWord").val();
-
-			location.href="memberDisableList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
-		};
-		
-		// prev 함수
-		function prevFunc() {
-			var standard = $("#storeCurStandard").val();
-			var keyWord = $("#storeCurKeyWord").val();
+			//console.log(pageNum);
 			
-			location.href="memberDisableList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
-		};
+			location.href="memberDisableList?curPage=" + pageNum + "&standard=" + standard + "&keyWord=" + keyWord;
+		}
+
+		// page 번호 매기기
+		function setPageNum() {
+			var page$ = $("#page");
+			var resultHtml = "";
+			
+			for(var i=-4; i<5; ++i) {
+
+				var curNum = ${curPage} + i;
+				if(1 <= curNum && curNum <= ${maxPage}) {	
+					if(i == 0) {
+						resultHtml += "<b id='curPageNum'>" + curNum + "</b>";
+					} else {
+						resultHtml += "<a id='pageNum' href='javascript:pageMove(" + curNum + ")'>" + curNum + "</a>";					
+					}
+					
+				}
+			}
+
+			page$.html(resultHtml);
+		}
 		
 		// 셀렉트 박스 속성 유지시키기
 		function staySelectBoxValue() {

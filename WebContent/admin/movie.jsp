@@ -10,10 +10,9 @@
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 			<style>
-				/*table {
+				table {
 					width: 100%;
 					color: white;
-					font-size: 13px;
 				}
 				
 				table, th, td {
@@ -26,8 +25,13 @@
 				th, td {
 					padding: 10px;
 				}
+
+				#basic {
+					color: white;
+				}
 				
-				 select{
+				/*
+				select {
 					width : 100px;
 					height : 26px;
 					margin-right: 8px ;
@@ -53,27 +57,27 @@
 		            line-height:25px;
 		            margin-top : 50px;
        		 	}
-       		 	#back{
-       		 		border-bottom-left-radius: 4px;
-            		border-top-left-radius: 4px;
-       		 	}
+       		 	*/
+       		 	
        		 	#page{
-					border-radius: 0px;	
-					font-weight: bold;
-					margin-right:-5px;
-					margin-left:-5px;
+					border-radius: 4px;
+					padding : 10px;
+					margin : 10px;
 				}
-       		 	#next{
-       		 		border-bottom-right-radius: 4px;
-            		border-top-right-radius: 4px;
-       		 	}
+				#pageNum{
+					padding : 10px;
+					margin : 10px;
+				}
+				#curPageNum{
+					padding : 10px;
+					margin : 10px;
+					font-weight: bold;
+					font-size: 30px;
+				}
 				
 				a:visited,a:link{
 					color: #000000;
        			}
-				h3{
-					padding: 40px 180px 0px;
-				}*/
 				
 			</style>
 	</head>
@@ -82,7 +86,7 @@
 	<div id="basic" class="basic">
 		<div id="container">
 			<div id="content">
-				<div class="movie_main">
+				<div class="main">
 					<input id="storeCurStandard" type="hidden" value="${standard}"/>
 					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
 					<h3>영화 관리</h3>
@@ -127,17 +131,29 @@
 					</c:forEach>
 					</table>
 					<div align="center">
-						<span id="back">
+						<span>
 							<c:if test="${curPage == 1 }">이전</c:if>
 							<c:if test="${curPage > 1 }">
-								<a href="javascript:prevFunc();">이전</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage-1}');">이전</a>
+							</c:if>
+							<c:if test="${curPage - 4 > 1}">
+								<a id='pageNum' href="javascript:pageMove(1);">1</a>
+								...
 							</c:if>
 						</span>
-						<span id="page">${curPage }</span>
-						<span id="next">
+						
+						<span id="page">
+	
+						</span>
+						
+						<span>
+							<c:if test="${curPage + 4 < maxPage}">
+								...
+								<a id='pageNum' href="javascript:pageMove('${maxPage}');">${maxPage}</a>
+							</c:if>
 							<c:if test="${curPage == maxPage }">다음</c:if>
 							<c:if test="${curPage < maxPage }">
-								<a href="javascript:nextFunc();">다음</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage+1}');">다음</a>
 							</c:if>
 						</span>
 					</div>
@@ -156,6 +172,7 @@
 		$(document).ready(function() {
 			staySelectBoxValue();
 			changeSearchInput($(".standard").val());
+			setPageNum();
 		});
 		
 		// 팝업 창으로 전달할 값.
@@ -183,7 +200,11 @@
 				moveUrl = "moviePosterUrl.jsp";
 			}
 			
-			window.open(moveUrl, "_blank", "height=100px, width=470px");
+			var popupX = (window.screen.width / 2) - (150 / 2);
+			var popupY= (window.screen.height / 2) - (470 / 2);
+			//console.log(popupX + "  " + popupY);
+			
+			window.open(moveUrl, "_blank", "height=150px, width=470px, left="+popupX+", top="+popupY);
 		});
 		
 		function updateUrl(url, boxSelector) {
@@ -252,20 +273,34 @@
 			}
 		};
 
-		// next 함수
-		function nextFunc() {
+		// 페이지 이동 함수
+		function pageMove(pageNum) {
 			var standard = $("#storeCurStandard").val();
 			var keyWord = $("#storeCurKeyWord").val();
-
-			location.href="movieList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
+			//console.log(pageNum);
+			
+			location.href="movieList?curPage=" + pageNum + "&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
-		// prev 함수
-		function prevFunc() {
-			var standard = $("#storeCurStandard").val();
-			var keyWord = $("#storeCurKeyWord").val();
+		// page 번호 매기기
+		function setPageNum() {
+			var page$ = $("#page");
+			var resultHtml = "";
+			
+			for(var i=-4; i<5; ++i) {
 
-			location.href="movieList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
+				var curNum = ${curPage} + i;
+				if(1 <= curNum && curNum <= ${maxPage}) {	
+					if(i == 0) {
+						resultHtml += "<b id='curPageNum'>" + curNum + "</b>";
+					} else {
+						resultHtml += "<a id='pageNum' href='javascript:pageMove(" + curNum + ")'>" + curNum + "</a>";					
+					}
+					
+				}
+			}
+
+			page$.html(resultHtml);
 		}
 		
 		function staySelectBoxValue() {

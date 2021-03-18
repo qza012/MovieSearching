@@ -1,5 +1,7 @@
 package com.mvc.admin.util;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class AdminUtil {
 	
 	public static void log(Object... arrObj) {
@@ -12,4 +14,7 @@ public class AdminUtil {
 		System.out.println(sb);
 	}
 	
+	public static boolean IsLogin(HttpServletRequest req) {
+		return req.getSession().getAttribute("myLoginId") != null ? true : false;
+	}
 }
