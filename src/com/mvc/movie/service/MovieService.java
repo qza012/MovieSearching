@@ -64,7 +64,6 @@ public class MovieService {
 		MovieDAO dao = new MovieDAO();
 		try {
 			HashMap<String, Object> map = dao.movieList(group);
-			dao = new MovieDAO();
 			req.setAttribute("maxPage", map.get("maxPage"));
 			if (req.getAttribute("search_list") == null) {
 				req.setAttribute("movie_list", map.get("list"));
@@ -94,7 +93,6 @@ public class MovieService {
 //			resp.sendRedirect("home");
 //		} else {
 		String movieCode = req.getParameter("movieCode");
-		dao = new MovieDAO();
 		ArrayList<ReviewDTO> review = null;
 		try {
 			dto = dao.detail(movieCode);

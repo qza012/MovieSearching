@@ -66,19 +66,16 @@ public class AdminReportCommentService {
 					
 					req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE)/rowsPerPage + 1);
 					req.removeAttribute("keyWord");
-				} else {
-					if(standard.equals("subject") || standard.equals("id")) {
-						System.out.println("업데이트 바람.");
-					} else {		
-						reportList = dao.getReportList(curPage, rowsPerPage, standard, keyWord);
-						// 타입 번호가 2001인 것만 추출.
-						filteredReportList = reportList.stream()
-											.filter(dto -> dto.getType_idx() == 2002)
-											.collect(Collectors.toList());
-						
-						req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE, standard, keyWord)/rowsPerPage + 1);
-						req.setAttribute("keyWord", keyWord);
-					}
+				} else {	
+					reportList = dao.getReportList(curPage, rowsPerPage, standard, keyWord);
+					// 타입 번호가 2001인 것만 추출.
+					filteredReportList = reportList.stream()
+										.filter(dto -> dto.getType_idx() == 2002)
+										.collect(Collectors.toList());
+					
+					req.setAttribute("maxPage", dao.getRowCount(AdminSql.REPORT_TABLE, standard, keyWord)/rowsPerPage + 1);
+					req.setAttribute("keyWord", keyWord);
+					
 				}
 				
 				commentList = new ArrayList<CommentDTO>();

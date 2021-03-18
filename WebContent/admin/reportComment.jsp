@@ -58,10 +58,8 @@
 						    	<option value="all">전체</option>
 						    	<option value="idx">신고번호</option>    	
 						        <option value="report_idx">댓글번호</option>
-						        <option value="review_idx">리뷰번호</option>
 						        <option value="content">사유</option>
 						        <option value="report_id">신고한 회원ID</option>
-						        <option value="id">신고당한 회원ID</option>
 						        <option value="reg_date">신고날짜</option>
 						        <option value="complete">처리 유무</option>
 						    </select>
@@ -183,10 +181,8 @@
 				
 			case "idx" :
 			case "report_idx" :
-			case "review_idx" :
 			case "content" :
 			case "report_id" :
-			case "id" :
 			case "reg_date" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord'/>"

@@ -252,7 +252,6 @@ public class MemberService {
 				ArrayList<FollowDTO> list = dao.followCheck(myId);
 				req.setAttribute("follow_list", list);
 				HashMap<String, Object> map = dao.memberList(group);
-				dao = new MemberDAO();
 				ArrayList<ReviewDTO> top_list = dao.top();
 				if (req.getAttribute("search_list")== null) {
 					req.setAttribute("maxPage", map.get("maxPage"));

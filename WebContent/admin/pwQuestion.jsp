@@ -37,7 +37,7 @@
 					<tr>
 						<td>${question.idx }</td>
 						<td>
-							<a id="${question.idx}">${question.content }</a>
+							<span id="${question.idx}">${question.content }</span>
 						</td>
 						<td>
 							<button value="${question.idx}">변경</button>
