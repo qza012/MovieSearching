@@ -18,7 +18,22 @@
 			}
 			#basic {
 				color: white;
-			}	
+			}
+			#page{
+				border-radius: 4px;	
+				padding : 10px;
+				margin : 10px;
+			}
+			#pageNum{
+				padding : 10px;
+				margin : 10px;
+			}
+			#curPageNum{
+				padding : 10px;
+				margin : 10px;
+				font-weight: bold;
+				font-size: 30px;
+			}
 		</style>
 	</head>
 	<body>
@@ -26,7 +41,7 @@
 	<div id="basic" class="basic">
 		<div id="container">
 			<div id="content">
-				<div class="movie_main">
+				<div class="main">
 					<input id="storeCurStandard" type="hidden" value="${standard}"/>
 					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
 					<h3>리뷰 관리 </h3>
@@ -72,17 +87,29 @@
 						<span>
 							<c:if test="${curPage == 1 }">이전</c:if>
 							<c:if test="${curPage > 1 }">
-								<a href="javascript:prevFunc();">이전</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage-1}');">이전</a>
+							</c:if>
+							<c:if test="${curPage - 4 > 1}">
+								<a id='pageNum' href="javascript:pageMove(1);">1</a>
+								...
 							</c:if>
 						</span>
-						<span id="page">${curPage }</span>
+						
+						<span id="page">
+	
+						</span>
+						
 						<span>
+							<c:if test="${curPage + 4 < maxPage}">
+								...
+								<a id='pageNum' href="javascript:pageMove('${maxPage}');">${maxPage}</a>
+							</c:if>
 							<c:if test="${curPage == maxPage }">다음</c:if>
 							<c:if test="${curPage < maxPage }">
-								<a href="javascript:nextFunc();">다음</a>
+								<a id='pageNum' href="javascript:pageMove('${curPage+1}');">다음</a>
 							</c:if>
 						</span>
-					</div>	
+					</div>
 				</div>
 			</div>
 		</div>
@@ -98,6 +125,7 @@
 		$(document).ready(function() {
 			staySelectBoxValue();
 			changeSearchInput($(".standard").val());
+			setPageNum();
 		});
 		
 		$('button').click(function() {
@@ -157,20 +185,34 @@
 			}
 		}
 		
-		// next 함수
-		function nextFunc() {
+		// 페이지 이동 함수
+		function pageMove(pageNum) {
 			var standard = $("#storeCurStandard").val();
 			var keyWord = $("#storeCurKeyWord").val();
-
-			location.href="reviewList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
+			//console.log(pageNum);
+			
+			location.href="reviewList?curPage=" + pageNum + "&standard=" + standard + "&keyWord=" + keyWord;
 		}
 		
-		// prev 함수
-		function prevFunc() {
-			var standard = $("#storeCurStandard").val();
-			var keyWord = $("#storeCurKeyWord").val();
+		// page 번호 매기기
+		function setPageNum() {
+			var page$ = $("#page");
+			var resultHtml = "";
+			
+			for(var i=-4; i<5; ++i) {
 
-			location.href="reviewList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
+				var curNum = ${curPage} + i;
+				if(1 <= curNum && curNum <= ${maxPage}) {	
+					if(i == 0) {
+						resultHtml += "<b id='curPageNum'>" + curNum + "</b>";
+					} else {
+						resultHtml += "<a id='pageNum' href='javascript:pageMove(" + curNum + ")'>" + curNum + "</a>";					
+					}
+					
+				}
+			}
+
+			page$.html(resultHtml);
 		}
 		
 		// 셀렉트 박스 속성 유지시키기
