@@ -9,9 +9,6 @@
 <title>로그인</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
-	/* #btn1,#btn2{
-		display:none;
-	} */
 	table{
 		margin : auto;
 		width : 300px;
@@ -76,8 +73,8 @@
 									<td colspan="3" align="right" style="color:lightgray"><a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a></td>
 								</tr>
 								<tr>
-									<td colspan="3"><input type="button" value="로그인"  id="login"/> </br> 
-									<input type="button" value="회원가입" onclick="location.href='../questionList'" /></td>
+									<td colspan="3" ><input type="button" value="로그인"  id="login"/> </br> 
+									<input type="button" value="회원가입" onclick="location.href='../questionList'"/></td>
 								</tr>
 			
 					</table>
@@ -88,8 +85,7 @@
 </body>
 <script>
 	 $("div").remove("#login");
-	 $('button').remove();
-	 /*$("button").remove("#btn1,btn2");*/
+
 	 
 	var id = document.getElementById("id");
 	var pw = document.getElementById("pw");

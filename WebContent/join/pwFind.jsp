@@ -13,6 +13,7 @@ table {
 	width: 300px;
 	margin: auto;
 	margin-top : 100px;
+	color : white;
 }
 
 input {
@@ -73,6 +74,13 @@ select{
 							<tr>
 								<td align="left"><a href="join/idFind.jsp" id="Findid">아이디 찾기</a> <a
 									href="" id="Findpw">비밀번호 찾기</a></td>
+							</tr>
+							<tr>
+								<td align="center">
+									<div>
+										<label>비밀번호 찾기</label><br>
+									</div>
+								</td>
 							</tr>
 							<tr>
 								<td>

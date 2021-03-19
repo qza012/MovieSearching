@@ -12,6 +12,7 @@
 table {
 	margin: auto;
 	margin-top : 100px;
+	color : white;
 }
 
 
