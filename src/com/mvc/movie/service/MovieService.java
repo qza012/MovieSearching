@@ -32,7 +32,7 @@ public class MovieService {
 		MovieDAO dao = new MovieDAO();
 		ArrayList<MovieDTO> top = null;
 		try {
-			String week = "202102";
+			String week = "202107";
 			top = dao.rankList(week); // MovieDTO에 rank 정보만 포함.
 
 			ArrayList<MovieDTO> topTemp = new ArrayList<MovieDTO>();

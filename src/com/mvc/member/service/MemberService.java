@@ -249,18 +249,9 @@ public class MemberService {
 			}		
 			MemberDAO dao = new MemberDAO();
 			try {
-//			FollowDTO dto = dao.followCheck(myId);
-//			req.setAttribute("follow", dto);
-				
-				//내가 팔로우하고있는 사람 가져오기   - 주석처리(21.03.18/이주원)
-//				ArrayList<FollowDTO> list = dao.followCheck(myId);
-//				req.setAttribute("follow_list", list);
-//				System.out.println(list);
 				
 				//모든 회원들의 정보 가져오기&최대 페이지 수 가져오기
 				HashMap<String, Object> map = dao.memberList(group, myId);
-				
-				dao = new MemberDAO();
 				//리뷰 평점 기준 7개 가져오기
 				ArrayList<ReviewDTO> top_list = dao.top();
 				
@@ -279,6 +270,7 @@ public class MemberService {
 			resp.sendRedirect("../movie/home");
 		}
 	}
+	
 	public void search() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
