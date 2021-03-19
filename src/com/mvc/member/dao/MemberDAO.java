@@ -569,7 +569,7 @@ public class MemberDAO {
 		FollowDTO dto = null;
 		String sql=null;
 		
-		int pagePerCnt = 10;
+		int pagePerCnt = 8;
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
@@ -616,7 +616,7 @@ public class MemberDAO {
 				follow3List.add(dto);
 			}	
 				System.out.println("listSize : "+follow3List.size());
-				int maxPage = (int) Math.ceil(follow3List.size()/(double)pagePerCnt);
+				int maxPage = getFollowingMaxPage(pagePerCnt,loginId);
 				map.put("list", follow3List);
 				map.put("maxPage", maxPage);
 				System.out.println("maxPage : "+maxPage);
@@ -626,13 +626,31 @@ public class MemberDAO {
 			return map;
 	}
 
+	private int getFollowingMaxPage(int pagePerCnt, String loginId) {
+		String sql= "SELECT COUNT(target_id) FROM follow3 WHERE id=?";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				System.out.println(cnt);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
+	}
+
 	public HashMap<String, Object> followerList(String loginId, int group) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		ArrayList<FollowDTO> follow3List = new ArrayList<FollowDTO>();
 		FollowDTO dto = null;
 		String sql=null;
 		
-		int pagePerCnt = 10;
+		int pagePerCnt = 8;
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
@@ -680,7 +698,7 @@ public class MemberDAO {
 				follow3List.add(dto);
 			}
 			System.out.println("listSize : "+follow3List.size());
-			int maxPage = (int) Math.ceil(follow3List.size()/(double)pagePerCnt);
+			int maxPage = getFollowerMaxPage(pagePerCnt,loginId);
 			map.put("list", follow3List);
 			map.put("maxPage", maxPage);
 			System.out.println("maxPage : "+maxPage);
@@ -688,6 +706,24 @@ public class MemberDAO {
 			e.printStackTrace();
 		}
 		return map;
+	}
+
+	private int getFollowerMaxPage(int pagePerCnt, String loginId) {
+		String sql= "SELECT COUNT(id) FROM follow3 WHERE target_id=?";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				System.out.println(cnt);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
 	}
 
 	public boolean notFollow(String myId, String targetId) {
