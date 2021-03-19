@@ -797,14 +797,20 @@ public class MemberDAO {
 		return map;
 	}
 	
-	public int alarm(String targetId, String myId) throws SQLException {
+	public int alarm(String target_id, String loginId) {
 		String sql = "INSERT INTO alarm3(idx,reg_date,content,target_id,id)VALUES(alarm3_seq.NEXTVAL,SYSDATE,?,?,?)";
 		int success = 0;
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, "팔로우+1");
-		ps.setString(2, targetId);
-		ps.setString(3, myId);
-		success = ps.executeUpdate();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, "팔로우+1");
+			ps.setString(2, target_id);
+			ps.setString(3, loginId);
+			success = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			resClose();
+		}
 		return success;
 	}
 	
