@@ -105,11 +105,6 @@ public class MemberController extends HttpServlet {
 				service.search();
 				break;
 				
-			case "/follow":
-				System.out.println("팔로우/팔로우 취소 요청");
-				service.follow();
-				break;
-				
 			case "/join/idFind":
 				System.out.println("아이디 찾기 요청");
 				service.idFind();
