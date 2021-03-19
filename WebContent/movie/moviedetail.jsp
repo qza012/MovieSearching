@@ -13,6 +13,10 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
+td {
+	height: 25px;
+}
+
 th {
 	width: 100%;
 	height: 440px;
@@ -36,9 +40,16 @@ table, th, td {
 .movie_main>ul {
 	padding: 0px;
 }
+
+.review>ul {
+	padding: 0px;
+}
+
 .review>ul li table tr td {
-	width: 182px;
-	height: 50px;
+	width: auto;
+	border: 5px solid white;
+	border-collapse: collapse;
+	height: 40px;
 }
 
 .review_Write {
@@ -47,10 +58,6 @@ table, th, td {
 	font-weight: bold;
 	text-align: right;
 }
-
-#movieLike {
-	wid
-}
 </style>
 </head>
 <body>
@@ -58,8 +65,7 @@ table, th, td {
 	<div id="container">
 		<div id="content">
 			<div class="movie_main">
-				<ul
-					style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
+				<ul style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
 					<li>
 						<table>
 							<tr>
@@ -84,7 +90,7 @@ table, th, td {
 					</li>
 				</ul>
 			</div>
-			<table id="movieLike">
+			<table>
 				<tr>
 					<c:if test="${sessionScope.myLoginId == null}">
 						<td>
@@ -106,24 +112,32 @@ table, th, td {
 				</tr>
 				<tr><td id="movieLike_Count">${movieLike_Count}</td></tr>
 			</table>
-			<h3 style="padding-left: 40px">이 영화의 최신 리뷰</h3>
+			<h3 style="padding-left: 40px; color: white;">이 영화의 최신 리뷰</h3>
 			<div class="review">
 				<ul>
 					<li>
 						<table>
+							<tr>
+								<td>번호</td>
+								<td>제목</td>
+								<td>평점</td>
+								<td>작성자</td>
+								<td>좋아요</td>
+								<td>작성일</td>
+							</tr>
 							<c:forEach items="${review}" var="review">
 								<tr>
 									<td>${review.idx}</td>
-									<td class="reviewDetail"
-										onclick="location.href='/MovieSearching/reviewDetail?Idx=${review.idx}'">${review.subject}</td>
-									<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
+									<td class="reviewDetail" onclick="location.href='/MovieSearching/reviewDetail?Idx=${review.idx}'">${review.subject}</td>
+									<td>${review.score}</td>
+									<td class="memberDetail" onclick="location.href='#'">${review.id}</td>
+									<td>${review.cntLike}</td>
 									<td>${review.reg_date}</td>
 								</tr>
 							</c:forEach>
 						</table>
 						<div class="review_Write">
-							<input type="button" value="리뷰 작성"
-								onclick="location.href='../movieReviewWriteForm?movieCode=${movie.movieCode}&movieName=${movie.movieName}' ">
+							<input type="button" value="리뷰 작성" onclick="location.href='../movieReviewWriteForm?movieCode=${movie.movieCode}&movieName=${movie.movieName}' ">
 						</div>
 					</li>
 				</ul>
@@ -132,34 +146,33 @@ table, th, td {
 	</div>
 </body>
 <script>
-function movieLike(movieCode){
-	var id = "${sessionScope.myLoginId}";
-	$.ajax({
-		type:'post' 
-		,url:'movieLike' 
-		,data:{
-			'id':id,
-			'movieCode':movieCode
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			if(data.success == 1){
-				if(data.movieLikeState == 0){
-					$('.movieLike').html('<i style="color: red; font-size: 23px;" class="fas fa-heart"></i>');
-					$('#movieLike_Count').html(data.movieLike_Count);
-				}else{
-					$('.movieLike').html('<i style="font-size: 23px;" class="far fa-heart"></i>');
-					$('#movieLike_Count').html(data.movieLike_Count);
+	function movieLike(movieCode){
+		var id = "${sessionScope.myLoginId}";
+		$.ajax({
+			type:'post' 
+			,url:'movieLike' 
+			,data:{
+				'id':id,
+				'movieCode':movieCode
+			}
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				if(data.success == 1){
+					if(data.movieLikeState == 0){
+						$('.movieLike').html('<i style="color: red; font-size: 23px;" class="fas fa-heart"></i>');
+						$('#movieLike_Count').html(data.movieLike_Count);
+					}else{
+						$('.movieLike').html('<i style="font-size: 23px;" class="far fa-heart"></i>');
+						$('#movieLike_Count').html(data.movieLike_Count);
+					}
 				}
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
-	movieLike_Count;
-}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 	var msg = "${msg}";
 	if (msg != "") {
 		alert(msg);
