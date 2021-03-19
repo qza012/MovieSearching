@@ -386,4 +386,8 @@ public class MovieDAO {
 		return movieLike_Count;
 	}
 
+	public HashMap<String, Object> myLikeMovie(String loginId, int group) {
+		return null;
+	}
+
 }

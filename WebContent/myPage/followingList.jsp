@@ -17,24 +17,29 @@
 				font-weight: 600;
 			}
             a:active{/*링크 실행 시*/
-                color: cornflowerblue;
+           		color: cornflowerblue;
             }
             ::marker {
                 font-size: 0px;
             }
             .followingList {
             	font-family: Verdana;
-                width:65%;
+                width:70%;
                 margin-top: 4%;
-                margin-left: 25%;
-            } 
+              	margin-left: 22%;  
+           	} 
             #table{
             	padding: 1%;
             	margin: 1%;
-            	width: 40%;
+            	width: 18%;
             	border: 1px solid black;
             	background-color: white;
             	float: left;
+            }
+            img{
+            	width:100px; 
+            	height:100px;
+            	margin-left: 30%;
             }
             #followingId{
             	color: red;
@@ -51,16 +56,17 @@
             	padding: 1%;
             	margin-top: 3%;
             	margin-left: 10px;
-            }
+ 			}
             #notLike{
+            	text-align:center;
             	margin-top: 5%;
             	margin-left: 15px;
             }
-            .pageArea{
+			.pageArea{
 				width:700px;
 				text-align: center;
 				margin-top: 40%;
-				margin-left: 30%;
+				margin-left: 35%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -85,7 +91,7 @@
 	       	<h2>팔로잉</h2>
          	<c:forEach items="${fList}" var="follow">
             	<div id="table">
-	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}" width="80px" height="80px"/></div>
+	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
                 	<span>
 	                	&nbsp;<div id="followingId">${follow.target_id}</div>	
 	                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>

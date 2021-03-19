@@ -8,6 +8,7 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
        	<style>
  			h2{
+ 				margin-top: 5%;
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/

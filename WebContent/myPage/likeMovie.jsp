@@ -8,6 +8,7 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
         	h2{
+				margin-top: 5%;
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -17,24 +18,21 @@
 				font-weight: 600;
 			}
             a:active{/*링크 실행 시*/
-                color: cornflowerblue;
-            }
+               	color: cornflowerblue;
+           	}
             ::marker {
-                font-size: 0px;
-            }
+               	font-size: 0px;
+           	}
             .likeMovie {
-                font-family: Verdana;
+               	font-family: Verdana;
                 width: 70%;
-                margin-top: 5%;
+               	margin-top: 5%;
                 margin-left: 22%;
             } 
             table {
-                text-align: center;
+               	text-align: center;
                 width: 100%;
-            }
-            th, td{
-                background-color: whitesmoke;
-            }
+           	}
             th, td{
                 padding: 10px;
                 background-color: whitesmoke;
@@ -46,8 +44,8 @@
             .pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 25px;
-				margin-left: 30%;
+				margin-top: 30px;
+				margin-left: 38%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -64,26 +62,26 @@
     </head>
     <body>
 		<jsp:include page="/movie/include.jsp" />
-        <div class="likeMovie">
-            <h2>좋아요한 영화</h2>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>영화제목</th>
-                    <th>장르</th>
-                    <th>감독</th>
-                    <th>개봉일</th>
-                    <th></th>
-                </tr>
-                <c:forEach items="${movie_list}" var="movie">
+		<div class="likeMovie">
+    		<h2>좋아요한 영화</h2>
+    		<table>
+     	   		<tr>
+           			<th></th>
+        	        <th>영화제목</th>
+            	    <th>장르</th>
+           	     	<th>감독</th>
+           	   		<th>개봉일</th>
+           			<th></th>
+				</tr>
+				<c:forEach items="${movie_list}" var="movie">
                 	<tr>
                 		<td><img src="${movie.posterUrl}" width="100px"></td>
                 		<td> ${movie.movieName}</td><td>${movie.genre}</td><td>${movie.director}</td>
                 		<td>${movie.openDate}</td><td><button id="notLike" onclick="location.href='./notLikeMovie?idx=${movie.idx}'">좋아요 취소</button></td>
                 	</tr>
-                </c:forEach>
-            </table>
-        </div>
+				</c:forEach>
+			</table>
+		</div>
         <div class="pageArea">
 			<span id="btn">
 				<c:if test="${currPage == 1}"> 이전</c:if>
