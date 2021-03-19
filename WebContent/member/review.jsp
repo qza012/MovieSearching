@@ -57,7 +57,7 @@
             <c:forEach items="${review_list}" var="review3">
 	            <tr>
 	                <td>${review3.idx}</td>
-	                <td><a href="#">${review3.subject}</a></td>
+	                <td><a href="../reviewDetail?Idx=${review3.idx}">${review3.subject}</a></td>
 	                <td>${review3.movieCode}</td>
 	                <td>${review3.score}</td>
 	                <td></td>

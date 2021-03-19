@@ -5,12 +5,14 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>회원가입</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
 
 div{
 	margin : 5px;
+	color :lightgray;
 }
 h2{
 	text-align : center;
@@ -19,7 +21,6 @@ h2{
 table{
 		margin : auto;
 		margin-top : 100px;
-		
 	}
 label{
 	text-align : center;
@@ -27,127 +28,170 @@ label{
 :focus{
     	outline-color: black;
     }
+#img{
+	display : none;
+	padding : 0px 5px;
+	height : 18px;
+}
 </style>
 </head>
 
 
 <body>
-		<table>
-			<tr>
-				<td>
-					<h2>회원가입</h2>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div>
-						<label>아이디</label><br> <input type="text" name="id" id="id" />
-						<input type="button" value="중복 확인" id="idChk" /> <span
-							id="id_span"></span> <span id="fail"></span>
-					</div>
-
-					<div>
-						<label>비밀번호</label><br>
-						<input type="password" name="pw" id="pw" onchange="check_pw()" width="400px"/>
-
-					</div>
-					<div>
-						<label>비밀번호 확인</label><br> <input type="password" name="pw2"
-							id="pw2" onkeyup="check_pw()" /> <span id="check"></span>
-					</div>
-
-
-
-					<div>
-						<lable>비밀번호 찾기 질문</lable>
-						<br> <select id="pw_q">
-							<!-- <option value="">선택</option> -->
-						<c:forEach items="${questionList}" var="questionList" >
-							
-							<option value="${questionList.idx}">${questionList.content}</option>
-						</c:forEach>
-							
-						</select>
-					</div>
-					<div>
-						<label>비밀번호 찾기 답변</label><br> <input type="text"
-							name="pw_answer" id="pw_answer" />
-					</div>
-					<div>
-						<label>이름</label><br> <input type="text" name="name"
-							id="name" />
-					</div>
-					<div>
-						<label>나이</label><br> <input type="number" min="15" max="100"
-							name="age" id="age" />
-					</div>
-					<div>
-						<label>성별</label> <input type="radio" name="gender" value="male"
-							id="male" /> 남 <input type="radio" name="gender" value="female"
-							id="female" /> 여
-					</div>
-					<div>
-						<label>이메일</label><br>
-						<input type="text" name="email" id="email_id" size="10px"/>@
-						
-						<span id="email_span"></span>
-						 <select
-							name="email_sel" id="email_sel" onchange="change_email()" ">
-							<option value="선택" >선택</option>
-							<option value="직접 입력" >직접 입력</option>
-							<option value="naver.com">naver.com</option>
-							<option value="gmail.com">gmail.com</option>
-							<option value="daum.net">daum.net</option>
-							<option value="nate.com">nate.com</option>
-						</select>
-					</div>
-					<div>
-						<label>선호하는 영화 장르</label><br> <select id="genre">
-							<option value="액션">액션</option>
-							<option value="코미디">코미디</option>
-							<option value="스릴러">스릴러</option>
-							<option value="로맨스">로맨스</option>
-							<option value="애니메이션">애니메이션</option>
-							<option value="다큐">다큐</option>
-							<option value="드라마">드라마</option>
-							<option value="범죄">범죄</option>
-							<option value="SF">SF</option>
-						</select>
-					</div>
-					<div>
-						<button type="button" onclick="checkAll()">회원가입</button>
-					</div>
-
-				</td>
-			</tr>
-		</table>
-	
+	<jsp:include page="../movie/include.jsp" />
+		<div id="basic" class="basic">
+			<div id="container">
+				<div id="content">
+					<div class="movie_main">
+						<table>
+							<tr>
+								<td>
+									<h2>회원가입</h2>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div>
+										<label>아이디</label><br> <input type="text" name="id" id="id" />
+										<img src="https://img.icons8.com/android/24/000000/checkmark.png" id="img" />
+										<input type="button" value="중복 확인" id="idChk" /><!--  <span
+											id="id_span"></span> <span id="fail"></span> -->
+									</div>
+				
+									<div>
+										<label>비밀번호</label><br>
+										<input type="password" name="pw" id="pw" onchange="check_pw()" width="400px"/>
+				
+									</div>
+									<div>
+										<label>비밀번호 확인</label><br> <input type="password" name="pw2"
+											id="pw2" onkeyup="check_pw()" /> <span id="check"></span>
+									</div>
+				
+				
+				
+									<div>
+										<lable>비밀번호 찾기 질문</lable>
+										<br> <select id="pw_q">
+											<!-- <option value="">선택</option> -->
+										<c:forEach items="${questionList}" var="questionList" >
+											
+											<option value="${questionList.idx}">${questionList.content}</option>
+										</c:forEach>
+											
+										</select>
+									</div>
+									<div>
+										<label>비밀번호 찾기 답변</label><br> <input type="text"
+											name="pw_answer" id="pw_answer" />
+									</div>
+									<div>
+										<label>이름</label><br> <input type="text" name="name"
+											id="name" />
+									</div>
+									<div>
+										<label>나이</label><br> <input type="number" min="15" max="100"
+											name="age" id="age" />
+									</div>
+									<div>
+										<label>성별</label> <input type="radio" name="gender" value="male"
+											id="male" /> 남 <input type="radio" name="gender" value="female"
+											id="female" /> 여
+									</div>
+									<div>
+										<label>이메일</label><br>
+										<input type="text" name="email" id="email_id" size="10px"/>@
+										
+										<span id="email_span"></span>
+										 <select
+											name="email_sel" id="email_sel" onchange="change_email()">
+											<option value="선택" >선택</option>
+											<option value="직접 입력" >직접 입력</option>
+											<option value="naver.com">naver.com</option>
+											<option value="gmail.com">gmail.com</option>
+											<option value="daum.net">daum.net</option>
+											<option value="nate.com">nate.com</option>
+										</select>
+									</div>
+									<div>
+										<label>선호하는 영화 장르</label><br> <select id="genre">
+											<option value="액션">액션</option>
+											<option value="코미디">코미디</option>
+											<option value="스릴러">스릴러</option>
+											<option value="로맨스">로맨스</option>
+											<option value="애니메이션">애니메이션</option>
+											<option value="다큐">다큐</option>
+											<option value="드라마">드라마</option>
+											<option value="범죄">범죄</option>
+											<option value="SF">SF</option>
+										</select>
+									</div>
+									<div>
+										<input type="submit" value="회원가입" onclick="checkAll()" id="join"/>
+									</div>
+				
+								</td>
+							</tr>
+						</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 <script>
+$("button").remove("#btn2");
 var idChk = false;//중복 체크 여부
 
-$("#idChk").click(function(){			
-	$.ajax({
-		type:'get'
-		,url:'idChk'
-		,data:{"id":$("#id").val()}
-		,dataType:'JSON'
-		,success:function(obj){
-			console.log(obj);
-			if(obj.use){
-				alert('사용할 수 있는 아이디 입니다.');
-				idChk= true;
-			}else{
-				alert('이미 사용중인 아이디 입니다.');
-				$("#id").val('');
-			}
-		}
-		,error:function(e){
-			console.log(e);
-		}
-	});				
+//id 값 변경 -> 중복 체크 
+/* $("#id").on("propertychange change keyup paste input",function(){
+	if(idChk==false){
+		alert("아이디 중복체크를 해주세요.");
+		id.focus();
+		return false;
+	}
+}); 
+//아이디를 수정했을 때 
+	$('#id').change(function(){
+		$('#img').hide();
+		$('#idChk').show();
+	});
+*/
+
+$(function(){
+	$('#id').change(function(){
+		$('#img').hide();
+		$('#idChk').show();
+		idChk = false;
+	});
+
+	 $("#idChk").click(function(){
+		
+			$.ajax({
+				type:'get'
+				,url:'idChk'
+				,data:{"id":$("#id").val()}
+				,dataType:'JSON'
+				,success:function(obj){
+					console.log(obj);
+					if(obj.use){
+						alert('사용할 수 있는 아이디 입니다.');
+						$('#img').show();
+						$('#idChk').hide();
+						idChk= true;
+					}else if(obj.use==false){
+						alert('이미 사용중인 아이디 입니다.');
+						$("#id").val('').focus();
+					}
+				}
+				,error:function(e){
+					console.log(e);
+				}
+			});				
+	});	 
 });	
 	
+
+			
 	function checkAll() {//빈칸 확인 
 		var id = document.getElementById("id");
 		var pw = document.getElementById("pw");
@@ -162,10 +206,10 @@ $("#idChk").click(function(){
 		var email = email_sel.value;
 		
 		
+		
 		if (id.value == "") {
 			alert("아이디를 입력하세요.")
 			id.focus()
-			
 		}else if (idChk==false) {
 			alert("아이디 중복체크를 해주세요.");
 			id.focus();
@@ -200,6 +244,14 @@ $("#idChk").click(function(){
 				alert("올바른 도메인을 입력해주세요.");
 				email_add.focus();
 			}
+		
+			$("#id").on("propertychange change keyup paste input",function(){
+				alert('중복 체크를 해주세요.');
+				$('#img').hide();
+				$('#idChk').show();
+				idChk= false;
+			});
+			
 		}else{
 			$.ajax({
 				type:'post'
@@ -252,7 +304,6 @@ $("#idChk").click(function(){
 			document.getElementById('check').innerHTML = '<font color=red>비밀번호가 일치하지 않습니다.</font>';
 		}
 	} 
-	
 	
 	
 </script>

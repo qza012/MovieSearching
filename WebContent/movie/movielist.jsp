@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -11,6 +10,14 @@
 <title>영화</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <style>
+.movie_main {
+	overflow: hidden;
+	position: relative;
+	height: 600px;
+	padding: 30px;
+	text-align: center;
+}
+
 .search {
 	text-align: center;
 	padding-top: 10px;
@@ -75,12 +82,16 @@ select, input[type=submit] {
 				<div class="pageArea">
 					<span>
 						<c:if test="${currPage == 1}">이전</c:if>
-						<c:if test="${currPage > 1}"><a href="movieList?page=${currPage-1}">이전</a></c:if>
+						<c:if test="${currPage > 1}">
+							<a href="movieList?page=${currPage-1}">이전</a>
+						</c:if>
 					</span>
 					<span id="page">${currPage}</span>
 					<span>
 						<c:if test="${currPage == maxPage}">다음</c:if>
-						<c:if test="${currPage < maxPage}"><a href="movieList?page=${currPage+1}">다음</a></c:if>
+						<c:if test="${currPage < maxPage}">
+							<a href="movieList?page=${currPage+1}">다음</a>
+						</c:if>
 					</span>
 				</div>
 			</div>

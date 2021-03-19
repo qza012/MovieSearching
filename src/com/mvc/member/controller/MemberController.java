@@ -13,8 +13,8 @@ import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
-	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/member/alarmDel","/myPage/alarm"})
-
+	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/myPage/alarmDel","/myPage/alarm",
+	"/member/memberFollow"})
 
 public class MemberController extends HttpServlet {
 
@@ -136,29 +136,41 @@ public class MemberController extends HttpServlet {
 				service.deleteFollower();
 				break;
 				
+			case "/myPage/notFollow":
+				System.out.println("팔로우 취소");
+				service.notFollow();
+				break;
+				
 			case "/pwQuestionList":
 				System.out.println("비밀번호 질문지 요청");
 				service.pwQuestionList();
 				break;
-				
-			case "/member/fChk":
-				System.out.println("팔로우 체크");
-				service.followCheck();
-				break;
+
+//			case "/member/fChk":
+//				System.out.println("팔로우 체크");
+//				service.follow();
+//				break;
 				
 			case "/myPage/alarm":
 				System.out.println("알람 체크");
 				service.alramChk();
 
-			case "/member/alarmList":
+			case "/myPage/alarmList":
 				System.out.println("알람보기 요청");
-				service.alarmList();
+				/*service.alarmList();*/
 				break;
 				
-			case "/member/alarmDel":
+			case "/myPage/alarmDel":
 				System.out.println("알람 삭제 요청");
 				service.alarmDel();
 				break;
+				
+			//팔로우와 언팔부분 추가 21.03.18 -- 이주원
+			case "/member/memberFollow":
+				System.out.println("회원 검색에서 팔로우");
+				service.memberFollow();
+				break;
+				
 		}
 		
 	}

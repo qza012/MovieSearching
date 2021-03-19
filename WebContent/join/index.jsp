@@ -5,9 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>로그인</title>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <style>
+	/* #btn1,#btn2{
+		display:none;
+	} */
 	table{
 		margin : auto;
 		width : 300px;
@@ -16,70 +20,76 @@
 	}
 	h3{
 		text-align : center;
-		color : black;
+		color : lightgray;
 	}
 	div{
 		text-align : left;
+		color : lightgray;
 	}
 	input{
 		width : 300px;
 		margin : 5px;
 	}
-	a{
-		text-align : right;
-	}
-	a:link{
-                color: black;
+	a:link,a:visited{
+                color: lightgray;
                 text-decoration: none;
                 font-size: 14px;
                 font-weight: 600;
     }
-    a:visited{
-                color: rgb(58, 55, 55);
-                text-decoration: none;
-                font-size: 14px;
-                font-weight: 600;
-    }
+    
     a:hover{
                 text-decoration: underline;
     }
     :focus{
-    	outline-color: black;
+    	outline-color: lightgray;
     }
+    
 </style>
 </head>
 <body>
-	<table>
-		<tr>
-			<td>
-				<h3>movier</h3>
-			</td>
-		
-		</tr>
-		<tr>
-			<td>
-				<form action="" method="post">
-					<div>
-						<label>아이디</label><br> <input type="text" id="id" name="id"  />
-
-					</div>
-
-					<div>
-						<label>비밀번호</label><br> <input type="password" id="pw" name="pw" />
-					</div>
-
-				</form>
-				<tr>
-					<td colspan="3" align="right"><a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a></td>
-				</tr>
-				<tr>
-					<td colspan="3"><input type="button" value="로그인"  id="login"/> </br> 
-					<input type="button" value="회원가입" onclick="location.href='../questionList'" /></td>
-				</tr>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<table>
+						<tr>
+							<td>
+								<h3>movier</h3>
+							</td>
+						
+						</tr>
+						<tr>
+							<td>
+								<form action="" method="post">
+									<div>
+										<label>아이디</label><br> <input type="text" id="id" name="id"  />
+				
+									</div>
+				
+									<div>
+										<label>비밀번호</label><br> <input type="password" id="pw" name="pw" />
+									</div>
+				
+								</form>
+								<tr>
+									<td colspan="3" align="right" style="color:lightgray"><a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a></td>
+								</tr>
+								<tr>
+									<td colspan="3"><input type="button" value="로그인"  id="login"/> </br> 
+									<input type="button" value="회원가입" onclick="location.href='../questionList'" /></td>
+								</tr>
 			
-	</table>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 <script>
+	 $("div").remove("#login");
+	 $('button').remove();
+	 /*$("button").remove("#btn1,btn2");*/
 	 
 	var id = document.getElementById("id");
 	var pw = document.getElementById("pw");
@@ -108,8 +118,9 @@
 					if(data=='{"use":true}'){
 						location.href="../movie/home";//임시
 					}else{
-						alert("아이디 또는 비밀번호를 확인하세요.")
+						alert("아이디 또는 비밀번호를 확인하세요.");
 					}
+					
 				},
 				error : function(e){
 					console.log(e);

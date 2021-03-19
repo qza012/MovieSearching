@@ -7,16 +7,16 @@
 		<title>UpdateMember</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
        	<style>
- 			h2{
- 				margin-top: 5%;
-				margin-left: 2%;
-			}            
-			a:link, a:visited{/*링크를 클릭 하기 전*/
-				color:darkslategrey;
-				text-decoration: none;
-				font-size: 14px;
-				font-weight: 600;
-			}
+ 	h2{
+ 		margin-top: 5%;
+		margin-left: 2%;
+	}            
+	a:link, a:visited{/*링크를 클릭 하기 전*/
+		color:darkslategrey;
+		text-decoration: none;
+		font-size: 14px;
+		font-weight: 600;
+	}
             a:active{/*링크 실행 시*/
                 color: cornflowerblue;
             }
@@ -32,7 +32,7 @@
             .updateMember {
                 font-family: Verdana;
                 width: 48%;
-                margin-top: 40px;
+                margin-top: 5%;
                 margin-left: 30%;
             }    
             table {

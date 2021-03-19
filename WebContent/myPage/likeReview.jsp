@@ -11,12 +11,12 @@
 				margin-top: 5%;
 				margin-left: 2%;
 			}             
-			a:link, a:visited{/*링크를 클릭 하기 전*/
-				color:darkslategrey;
-				text-decoration: none;
-				font-size: 14px;
-				font-weight: 600;
-			}
+	a:link, a:visited{/*링크를 클릭 하기 전*/
+		color:darkslategrey;
+		text-decoration: none;
+		font-size: 14px;
+		ont-weight: 600;
+	}
             a:active{/*링크 실행 시*/
                 color: cornflowerblue;
             }
@@ -26,8 +26,8 @@
             .likeReview {
                 font-family: Verdana;
                 width: 70%;
-                margin-top: 40px;
-                margin-left: 20%;
+                margin-top: 5%;
+                margin-left: 22%;
             }
             table {
                 text-align: center;
@@ -48,22 +48,22 @@
             	font-weight: 600;
             }   
             .pageArea{
-				width:700px;
-				text-align: center;
-				margin-top: 25px;
-				margin-left: 35%;
-			}
-			.pageArea span{
-				font-size:16px;
-				padding: 5px 10px;
-				margin: 5px;
-			}
-			#btn{
-				color:black;
-			}
-			#page{
-				color:red;
-			} 
+		width:700px;
+		text-align: center;
+		margin-top: 25px;
+		margin-left: 35%;
+	}
+	.pageArea span{
+		font-size:16px;
+		padding: 5px 10px;
+		margin: 5px;
+	}
+	#btn{
+		color:black;
+	}
+	#page{
+		color:red;
+	} 
         </style>
     </head>
     <body>

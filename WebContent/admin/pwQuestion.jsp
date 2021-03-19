@@ -10,29 +10,45 @@
 			table, th, td{
 				border: 1px solid black;
 				border-collapse: collapse;
-				padding: 5px 10px;
+				padding: 10px 10px;
+			}
+			#basic {
+				color: white;
 			}
 		</style>
 	</head>
 	<body>
-		<h3>질문리스트</h3>
-		<hr/>
-		<table>
-		<tr>
-			<th>순번</th><th>질문내용</th>
-		</tr>
-		<c:forEach items="${list }" var="question">
-		<tr>
-			<td>${question.idx }</td>
-			<td>
-				<a id="${question.idx}">${question.content }</a>
-			</td>
-			<td>
-				<button value="${question.idx}">변경</button>
-			</td>
-		</tr>
-		</c:forEach>
-		</table>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="movie_main">
+					<h3>질문리스트</h3>
+					<div>
+						<button value="move" onclick="location.href='memberDisableList'">회원 비활성화 관리</button>
+						<button value="move">비밀번호 찾기 질문 관리</button>
+					</div>
+					<hr/>
+					<table>
+					<tr>
+						<th>순번</th><th>질문내용</th>
+					</tr>
+					<c:forEach items="${list }" var="question">
+					<tr>
+						<td>${question.idx }</td>
+						<td>
+							<span id="${question.idx}">${question.content }</span>
+						</td>
+						<td>
+							<button value="${question.idx}">변경</button>
+						</td>
+					</tr>
+					</c:forEach>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 	</body>
 	<script>
 	
@@ -41,10 +57,17 @@
 		var questionBox;
 		
 		$('button').click(function() {
+			if(this.value == "move") {
+				return;
+			}
+			
 			idx = this.value;
 			questionBox = $('#'+idx);
 
-			window.open("pwQuestionPopUp.jsp", "_blank", "height=300px, width=300px");
+			var popupX = (window.screen.width / 2) - (150 / 2);
+			var popupY= (window.screen.height / 2) - (470 / 2);
+			
+			window.open("pwQuestionPopUp.jsp", "_blank", "height=150px, width=470px, left="+popupX+", top="+popupY);
 		});
 	
 		// 내용 변경 비동기 버튼
@@ -57,20 +80,9 @@
 						'content' : content}
 				,dataType:'JSON'
 				,success:function(data) {
-					console.log(data.content);
-					
+					//console.log(data.content);
+				
 					questionBox.html(data.content);
-					
-					/* 실시간으로 바뀌게 수정해야함. */
-					
-					/* if(data.disable == "Y") {
-						flag.html("Y");
-						button.html("비활성화");
-					} else {
-						flag.html("N");
-						button.html("활성화");
-					} */
-	
 				},error:function(e) {
 					console.log("변경 버튼 비동기 에러");
 				}

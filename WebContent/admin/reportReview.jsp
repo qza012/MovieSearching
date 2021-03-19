@@ -8,71 +8,120 @@
 		<title>Insert title here</title>
 		<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<style>
-			table, th, td{
+			table {
+					width: 100%;
+					color: white;
+			}
+			table, th, td {
 				border: 1px solid black;
 				border-collapse: collapse;
 				padding: 5px 10px;
 			}
+			#basic {
+				color: white;
+			}
+			#page{
+				border-radius: 4px;	
+				padding : 10px;
+				margin : 10px;
+			}
+			#pageNum{
+				padding : 10px;
+				margin : 10px;
+			}
+			#curPageNum{
+				padding : 10px;
+				margin : 10px;
+				font-weight: bold;
+				font-size: 30px;
+			}
 		</style>
 	</head>
 	<body>
-		<h3>리뷰 리포트</h3>
-		<hr/>
-		<div>
-			<form action="reportReviewList" method="GET">
-			    <select class="standard" name="standard">
-			    	<option value="all">전체</option>
-			        <option value="idx">신고 번호</option>
-			        <option value="subject">리뷰제목</option>
-			        <option value="content">사유</option>
-			        <option value="report_id">신고한 회원ID</option>
-			        <option value="id">신고당한 회원ID</option>
-			        <option value="reg_date">신고날짜</option>
-			        <option value="complete">처리 유무</option>
-			    </select>
-				<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
-			    <input type="submit" value="검색"/>
-			</form>
+	<jsp:include page="../movie/include.jsp" />
+	<div id="basic" class="basic">
+		<div id="container">
+			<div id="content">
+				<div class="main">
+					<input id="storeCurStandard" type="hidden" value="${standard}"/>
+					<input id="storeCurKeyWord" type="hidden" value="${keyWord}"/>
+					<h3>리뷰 신고 관리</h3>
+					<hr/>
+					<div>
+						<button value="move">리뷰 신고 관리</button>
+						<button value="move" onclick="location.href='reportCommentList'">댓글 신고 관리</button>
+					</div>
+					<hr/>
+					<div align="center">
+						<form action="reportReviewList" method="GET">
+						    <select class="standard" name="standard" onchange=changeSearchInput(this.value)>
+						    	<option value="all">전체</option>
+						        <option value="idx">신고 번호</option>
+						        <option value="report_idx">리뷰 번호</option>
+						        <option value="content">사유</option>
+						        <option value="report_id">신고한 회원ID</option>
+						        <option value="reg_date">신고날짜</option>
+						        <option value="complete">처리 유무</option>
+						    </select>
+							<input class="searchInput" type="text" name="keyWord" value="${keyWord }" readonly/>
+						    <input type="submit" value="검색"/>
+						</form>
+					</div>
+					<table>
+					<tr>
+						<th>신고번호</th><th>리뷰번호</th><th>사유</th><th>신고한 회원 ID</th><th>신고당한 회원 ID</th><th>신고날짜</th><th>처리 유무</th>
+					</tr>
+					<c:forEach items="${reportList }" var="report" varStatus="status">
+					<tr>
+						<td>${report.idx }</td>
+						<td><a href="/MovieSearching/reviewDetail?Idx=${report.report_idx }">${report.report_idx }</a></td>
+						<td>${report.content }</td>
+						<td>${report.report_id }</td>
+						<td>${reviewList[status.index].id }</td>
+						<td>${report.reg_date }</td>
+						<td id="${report.idx }">${report.complete }</td>
+						<td>
+							<c:if test="${report.complete == 'y' || report.complete == 'Y'}">
+								<button value="${report.idx }">처리중</button>
+							</c:if>
+							<c:if test="${report.complete == 'n' || report.complete == 'N'}">
+								<button value="${report.idx }">처리완료</button>
+							</c:if>
+						</td>
+					</tr>
+					</c:forEach>
+					</table>
+					<div align="center">
+						<span>
+							<c:if test="${curPage == 1 }">이전</c:if>
+							<c:if test="${curPage > 1 }">
+								<a id='pageNum' href="javascript:pageMove('${curPage-1}');">이전</a>
+							</c:if>
+							<c:if test="${curPage - 4 > 1}">
+								<a id='pageNum' href="javascript:pageMove(1);">1</a>
+								...
+							</c:if>
+						</span>
+						
+						<span id="page">
+	
+						</span>
+						
+						<span>
+							<c:if test="${curPage + 4 < maxPage}">
+								...
+								<a id='pageNum' href="javascript:pageMove('${maxPage}');">${maxPage}</a>
+							</c:if>
+							<c:if test="${curPage == maxPage }">다음</c:if>
+							<c:if test="${curPage < maxPage }">
+								<a id='pageNum' href="javascript:pageMove('${curPage+1}');">다음</a>
+							</c:if>
+						</span>
+					</div>
+				</div>
+			</div>
 		</div>
-		<table>
-		<tr>
-			<th>신고번호</th><th>리뷰번호</th><th>사유</th><th>신고한 회원 ID</th><th>신고당한 회원 ID</th><th>신고날짜</th><th>처리 유무</th>
-		</tr>
-		<c:forEach items="${reportList }" var="report" varStatus="status">
-		<tr>
-			<td>${report.idx }</td>
-			<td><a href="#?idx=${report.report_idx }">${report.report_idx }</a></td>
-			<td>${report.content }</td>
-			<td>${report.report_id }</td>
-			<td>${reviewList[status.index].id }</td>
-			<td>${report.reg_date }</td>
-			<td id="${report.idx }">${report.complete }</td>
-			<td>
-				<c:if test="${report.complete == 'y' || report.complete == 'Y'}">
-					<button value="${report.idx }">처리중</button>
-				</c:if>
-				<c:if test="${report.complete == 'n' || report.complete == 'N'}">
-					<button value="${report.idx }">처리완료</button>
-				</c:if>
-			</td>
-		</tr>
-		</c:forEach>
-		</table>
-		<div>
-			<span>
-				<c:if test="${curPage == 1 }">이전</c:if>
-				<c:if test="${curPage > 1 }">
-					<a href="javascript:prevFunc();">이전</a>
-				</c:if>
-			</span>
-			<span id="page">${curPage }</span>
-			<span>
-				<c:if test="${curPage == maxPage }">다음</c:if>
-				<c:if test="${curPage < maxPage }">
-					<a href="javascript:nextFunc();">다음</a>
-				</c:if>
-			</span>
-		</div>
+	</div>
 	</body>
 	<script>
 		var msg = "${msg}";
@@ -80,7 +129,18 @@
 			alert(msg);
 		}
 		
+		// 최초 불러올 때 실행하는 함수들.
+		$(document).ready(function() {
+			staySelectBoxValue();
+			changeSearchInput($(".standard").val());
+			setPageNum();
+		});
+		
 		$('button').click(function() {
+			if(this.value == "move") {
+				return;
+			}
+			
 			var button = $(this);
 			var flag = $("#"+this.value);
 			
@@ -105,12 +165,12 @@
 			})				
 		})
 		
-		// 셀렉박스 값에 따라 inputBox 교체
-		$('.standard').change(function(){
+		// input박스 자동 교체.
+		function changeSearchInput(value) {
 			var searchInput = $(".searchInput");
-			console.log(this.value);
+			console.log(value);
 			
-			switch(this.value) {
+			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord' readonly/>"
@@ -118,14 +178,13 @@
 				break;
 				
 			case "idx" :
-			case "subject" :
-			case "content" :		
-			case "id" :
+			case "report_idx" :		
 			case "reg_date" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord'/>"
 						);	
 				break;
+				
 			case "del_type" :
 			case "complete" :
 				searchInput.replaceWith(
@@ -136,33 +195,50 @@
 				);
 				break;
 			}
-		})
+		}
 		
-		// next 함수
-		function nextFunc() {
-			var standard = $(".standard").val();
-			var keyWord = $(".searchInput").val();
+		// 페이지 이동 함수
+		function pageMove(pageNum) {
+			var standard = $("#storeCurStandard").val();
+			var keyWord = $("#storeCurKeyWord").val();
+			//console.log(pageNum);
+			
+			location.href="reportReviewList?curPage=" + pageNum + "&standard=" + standard + "&keyWord=" + keyWord;
+		}
+		
+		// page 번호 매기기
+		function setPageNum() {
+			var page$ = $("#page");
+			var resultHtml = "";
+			
+			for(var i=-4; i<5; ++i) {
 
-			location.href="reportReviewList?curPage=${curPage + 1}&standard=" + standard + "&keyWord=" + keyWord;
-		}
-		
-		// prev 함수
-		function prevFunc() {
-			var standard = $(".standard").val();
-			var keyWord = $(".searchInput").val();
+				var curNum = ${curPage} + i;
+				if(1 <= curNum && curNum <= ${maxPage}) {	
+					if(i == 0) {
+						resultHtml += "<b id='curPageNum'>" + curNum + "</b>";
+					} else {
+						resultHtml += "<a id='pageNum' href='javascript:pageMove(" + curNum + ")'>" + curNum + "</a>";					
+					}
+					
+				}
+			}
 
-			location.href="reportReviewList?curPage=${curPage - 1}&standard=" + standard + "&keyWord=" + keyWord;
+			page$.html(resultHtml);
 		}
 		
-		var selectBox = $(".standard");
-		if("${standard}" == "") {
-			selectBox.val("all").prop("selected", true);
-		} else{
-			selectBox.val("${standard}").prop("selected", true);
+		// 셀렉트 박스 속성 유지시키기
+		function staySelectBoxValue() {
+			var selectBox = $(".standard");
+			if("${standard}" == "") {
+				selectBox.val("all").prop("selected", true);
+			} else{
+				selectBox.val("${standard}").prop("selected", true);
+			}
+			if(selectBox.val() != 'all') {
+				$('.searchInput').removeAttr("readonly");
+			} 
 		}
-		if(selectBox.val() != 'all') {
-			$('.searchInput').removeAttr("readonly");
-		} 
 		
 	</script>
 </html>

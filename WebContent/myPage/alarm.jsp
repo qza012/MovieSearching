@@ -7,7 +7,7 @@
 		<title>AlarmList</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<style>
-			h3{
+			h2{
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -25,7 +25,7 @@
             .alarmList {
                 font-family: Verdana;
                 width: 70%;
-                margin-top: 40px;
+                margin-top: 5%;
                 margin-left: 22%;
             }    
             table {
@@ -81,7 +81,7 @@
                 		<td id="alarmContent">${alarm.content}</td>
                 		<td id="alarmDate">${alarm.reg_date}</td>
                 		<td id="deleteAlarm">
-                			<button onclick="location.href='./deleteAlarm?id=${follow.id}'">삭제</button>
+                			<button onclick="location.href='./alarmDel?idx=${alarm.idx}'">삭제</button>
                 		</td>
                 	</tr>	
                 </c:forEach>

@@ -11,7 +11,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.movie.dto.MovieDTO;
+import com.mvc.movielike.dto.MovieLikeDTO;
+import com.mvc.rank.dto.RankDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieDAO {
@@ -32,11 +35,11 @@ public class MovieDAO {
 
 	public void resClose() {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (ps != null) {
+				ps.close();
 			}
-			if (conn != null) {
-				conn.close();
+			if (rs != null) {
+				rs.close();
 			}
 			if (conn != null) {
 				conn.close();
@@ -47,18 +50,20 @@ public class MovieDAO {
 
 	}
 
-	public ArrayList<MovieDTO> main() throws SQLException {
-		String sql = "SELECT DISTINCT * FROM rank3 r, movie3 m WHERE ROWNUM <= 10 ORDER BY rank";
+	public ArrayList<MovieDTO> rankList(String week) throws SQLException {
+		String sql = "SELECT idx, moviecode, rank, week FROM rank3 WHERE week=?";
 		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
+			ps.setString(1, week);
 			rs = ps.executeQuery();
+
 			while (rs.next()) {
 				MovieDTO dto = new MovieDTO();
-				dto.setRank(rs.getInt("rank"));
-				dto.setPosterUrl(rs.getString("posterUrl"));
-				dto.setMovieName(rs.getString("movieName"));
+				dto.setIdx(rs.getInt("idx"));
 				dto.setMovieCode(rs.getString("movieCode"));
+				dto.setRank(rs.getInt("rank"));
+				dto.setWeek(rs.getString("week"));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -123,32 +128,6 @@ public class MovieDAO {
 		return dto;
 	}
 
-	/***
-	 * 영화 목록 API에게 한 번에 가져올 수 있는 데이터가 movieCd, movieNm, prdtYear, openDt
-	 * 
-	 * @return
-	 */
-	public int insertMovie(MovieDTO dto) throws SQLException {
-		int result = 0;
-		String sql = "INSERT INTO movie3(movieCode, movieName, openDate, genre, director, country) VALUES(?, ?, to_date(?, 'yyyy-mm-dd'), ?, ?, ?)";
-
-		// System.out.println(dto.getCode() + " / " + dto.getTitle() + " / " +
-		// dto.getOpeningDate() + " / " + dto.getGenre() + " / " + dto.getDirector() + "
-		// / " + dto.getCountry());
-
-		ps = conn.prepareStatement(sql);
-		ps.setString(1, dto.getMovieCode());
-		ps.setString(2, dto.getMovieName());
-		ps.setDate(3, dto.getOpenDate()); // 코드 수정해야함
-		ps.setString(4, dto.getGenre());
-		ps.setString(5, dto.getDirector());
-		ps.setString(6, dto.getCountry());
-
-		result = ps.executeUpdate();
-		ps.close();
-		return result;
-	}
-
 	public int setYoutubeUrl(String movieCode, String youtubeUrl) throws SQLException {
 		int result = 0;
 		String sql = "UPDATE movie3 SET youtubeUrl=? WHERE movieCode=?";
@@ -176,7 +155,7 @@ public class MovieDAO {
 	}
 
 	public ArrayList<ReviewDTO> review(String movieCode) {
-		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=?";
+		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=? ORDER BY reg_date DESC";
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
@@ -280,9 +259,131 @@ public class MovieDAO {
 		return max;
 	}
 
-	public ArrayList<MovieDTO> likeMovie(String id) {
+	public HashMap<String, Object> likeMovie(String loginId, int group) {
+		int pagePerCnt = 10;
+		int end = group * pagePerCnt;
+		int start = end - (pagePerCnt - 1);
 
-		return null;
+		String sql = "SELECT l.idx, m.movieName, m.genre, m.director, m.openDate, m.posterUrl FROM movie3 m, movie_like3 l WHERE m.movieCode = l.movieCode AND l.id=?";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<MovieDTO> list = new ArrayList<MovieDTO>();
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			ArrayList<Object> likeMovie_list = new ArrayList<Object>();
+			while (rs.next()) {
+				MovieDTO dto = new MovieDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setMovieName(rs.getString("movieName"));
+				dto.setGenre(rs.getString("genre"));
+				dto.setDirector(rs.getString("director"));
+				dto.setOpenDate(rs.getDate("openDate"));
+				dto.setPosterUrl(rs.getString("posterUrl"));
+				list.add(dto);
+			}
+			for (int i = start - 1; i < end; i++) {
+				if (i < list.size()) {
+					System.out.println(i);
+					likeMovie_list.add(list.get(i));
+				}
+			}
+			System.out.println("listSize : " + likeMovie_list.size());
+			int maxPage = (int) Math.ceil(list.size() / (double) pagePerCnt);
+			map.put("list", likeMovie_list);
+			map.put("maxPage", maxPage);
+			System.out.println("maxPage : " + maxPage);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+
+	public boolean notLikeMovie(String loginId, String idx) {
+		boolean success = false;
+		String sql = "DELETE movie_like3 WHERE id=? AND idx=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			ps.setInt(2, Integer.parseInt(idx));
+			int count = ps.executeUpdate();
+			if (count > 0) {
+				success = true;
+			}
+			System.out.println("deleteIdx : " + idx + ", " + success);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean movieLike_Check(String id, String movieCode) {
+		String sql = "SELECT * FROM movie_like3 WHERE id = ? AND movieCode = ?";
+		boolean success = false;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean movieLike_Up(String id, String movieCode) {
+		boolean success = false;
+		String sql = "INSERT INTO movie_like3(idx, id, movieCode) VALUES(movie_like3_seq.NEXTVAL,?,?)";
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			if (ps.executeUpdate() > 0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public boolean movieLike_Down(String id, String movieCode) {
+		boolean success = false;
+		String sql = "DELETE FROM movie_like3 WHERE id=? AND movieCode=?";
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setString(2, movieCode);
+			if (ps.executeUpdate() > 0) {
+				success = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+
+	public int getmovieLike_Count(String movieCode) {
+		String sql = "SELECT COUNT(movieCode) FROM movie_like3 WHERE movieCode=?";
+
+		int movieLike_Count = 0;
+
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, movieCode);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				movieLike_Count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return movieLike_Count;
 	}
 
 	public HashMap<String, Object> myLikeMovie(String loginId, int group) {

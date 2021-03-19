@@ -15,6 +15,7 @@ public class MemberDTO {
 	private String disable;
 	private String type;
 	private int question_idx;
+	private int follow_check;
 	private Date reg_date;
 	
 	//프로필 사진
@@ -119,5 +120,11 @@ public class MemberDTO {
 		this.newFileName = newFileName;
 	}
 	
+	public int getFollow_check() {
+		return follow_check;
+	}
+	public void setFollow_check(int follow_check) {
+		this.follow_check = follow_check;
+	}
 	
 }

@@ -11,20 +11,31 @@
 	content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>영화</title>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://kit.fontawesome.com/abf52b8f21.js"></script>
 <style>
 th {
-	width: 790px;
-	height: 360px;
+	width: 100%;
+	height: 440px;
 }
 
 table, th, td {
-	border: 1px solid black;
+	width: 100%;
+	padding-top: 2px;
 	border-collapse: collapse;
-	padding: 5px 10px;
 	text-align: center;
 	color: white;
 }
 
+.movie_main {
+	overflow: hidden;
+	position: relative;
+	height: 600px;
+	text-align: center;
+}
+
+.movie_main>ul {
+	padding: 0px;
+}
 .review>ul li table tr td {
 	width: 182px;
 	height: 50px;
@@ -37,71 +48,121 @@ table, th, td {
 	text-align: right;
 }
 
-.movie_Like {
-	padding-right: 30px;
-	font-size: 15px;
-	font-weight: bold;
-	text-align: right;
+#movieLike {
+	wid
 }
 </style>
 </head>
 <body>
 	<jsp:include page="include.jsp" />
-	<div id="basic" class="basic">
-		<div id="container">
-			<div id="content">
-				<div class="movie_main">
-					<div class="movie_Like"><input type="button" class="like" value="좋아요"></div>
-					<ul style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
-						<li>
-							<table>
+	<div id="container">
+		<div id="content">
+			<div class="movie_main">
+				<ul
+					style="position: absolute; width: 100%; height: 100%; left: 0%; z-index: 1; display: block;">
+					<li>
+						<table>
+							<tr>
+								<th>${movie.youtubeUrl}</th>
+							</tr>
+							<tr>
+								<td>제목 : ${movie.movieName}</td>
+							</tr>
+							<tr>
+								<td>장르 : ${movie.genre}</td>
+							</tr>
+							<tr>
+								<td>나라 : ${movie.country}</td>
+							</tr>
+							<tr>
+								<td>개봉일 : ${movie.openDate}</td>
+							</tr>
+							<tr>
+								<td>감독 : ${movie.director}</td>
+							</tr>
+						</table>
+					</li>
+				</ul>
+			</div>
+			<table id="movieLike">
+				<tr>
+					<c:if test="${sessionScope.myLoginId == null}">
+						<td>
+							<i style="font-size: 23px;" class="far fa-heart"></i>
+						</td>
+					</c:if>
+					<c:if test="${sessionScope.myLoginId != null}">
+						<c:if test="${movieLike == 1}">
+							<td class="movieLike" style="cursor: pointer;" onclick="movieLike(${movie.movieCode})">
+								<i style="color: red; font-size: 23px;" class="fas fa-heart"></i>
+							</td>
+						</c:if>
+						<c:if test="${movieLike == 0}">
+							<td class="movieLike" style="cursor: pointer;" onclick="movieLike(${movie.movieCode})">
+								<i style="font-size: 23px;" class="far fa-heart"></i>
+							</td>
+						</c:if>
+					</c:if>
+				</tr>
+				<tr><td id="movieLike_Count">${movieLike_Count}</td></tr>
+			</table>
+			<h3 style="padding-left: 40px">이 영화의 최신 리뷰</h3>
+			<div class="review">
+				<ul>
+					<li>
+						<table>
+							<c:forEach items="${review}" var="review">
 								<tr>
-									<th>${movie.youtubeUrl}</th>
+									<td>${review.idx}</td>
+									<td class="reviewDetail"
+										onclick="location.href='/MovieSearching/reviewDetail?Idx=${review.idx}'">${review.subject}</td>
+									<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
+									<td>${review.reg_date}</td>
 								</tr>
-								<tr>
-									<td>제목 : ${movie.movieName}</td>
-								</tr>
-								<tr>
-									<td>장르 : ${movie.genre}</td>
-								</tr>
-								<tr>
-									<td>나라 : ${movie.country}</td>
-								</tr>
-								<tr>
-									<td>개봉일 : ${movie.openDate}</td>
-								</tr>
-								<tr>
-									<td>감독 : ${movie.director}</td>
-								</tr>
-							</table>
-						</li>
-					</ul>
-				</div>
-				<h3 style="padding-left: 40px">이 영화의 최신 리뷰</h3>
-				<div class="review">
-					<ul>
-						<li>
-							<table>
-								<c:forEach items="${review}" var="review">
-									<tr>
-										<td>${review.idx}</td>
-										<td class="reviewDetail" onclick="location.href='./reviewDetail?Idx=${review.idx}'">${review.subject}</td>
-										<td class="memberDetail" onclick="location.href='#' ">${review.id}</td>
-										<td>${review.reg_date}</td>
-									</tr>
-								</c:forEach>
-							</table>
-							<div class="review_Write">
-								<input type="button" value="리뷰 작성" onclick="location.href='./reviewWrite.jsp'">
-							</div>
-						</li>
-					</ul>
-				</div>
+							</c:forEach>
+						</table>
+						<div class="review_Write">
+							<input type="button" value="리뷰 작성"
+								onclick="location.href='../movieReviewWriteForm?movieCode=${movie.movieCode}&movieName=${movie.movieName}' ">
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>
 </body>
 <script>
-	
+function movieLike(movieCode){
+	var id = "${sessionScope.myLoginId}";
+	$.ajax({
+		type:'post' 
+		,url:'movieLike' 
+		,data:{
+			'id':id,
+			'movieCode':movieCode
+		}
+		,dataType: 'json' 
+		,success: function(data){
+			console.log(data);
+			if(data.success == 1){
+				if(data.movieLikeState == 0){
+					$('.movieLike').html('<i style="color: red; font-size: 23px;" class="fas fa-heart"></i>');
+					$('#movieLike_Count').html(data.movieLike_Count);
+				}else{
+					$('.movieLike').html('<i style="font-size: 23px;" class="far fa-heart"></i>');
+					$('#movieLike_Count').html(data.movieLike_Count);
+				}
+			}
+		}
+		,error: function(e){
+			console.log(e);
+		}
+	});
+	movieLike_Count;
+}
+	var msg = "${msg}";
+	if (msg != "") {
+		alert(msg);
+	}
 </script>
 </html>

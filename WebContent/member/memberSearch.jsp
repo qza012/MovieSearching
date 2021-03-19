@@ -164,11 +164,11 @@
     <div id="search">
         <form action="search" method="GET">
             <select id="select" name="search">
-                <option value="id">ID</option>
-                <option value="name">이름</option>
-                <option value="age">나이</option>
+                <option ${(search == "id")? "selected" : ""} value="id">ID</option>
+                <option ${(search == "name")? "selected" : ""} value="name">이름</option>
+                <option ${(search == "age")? "selected" : ""} value="age">나이</option>
             </select>
-            <input type="text" value="${param.keyWord}" name="keyWord" placeholder="검색어를 입력하세요">
+            <input type="text" value="${keyword}" name="keyWord" placeholder="검색어를 입력하세요">
             <input type="submit" value="검색">
         </form>
     </div>
@@ -188,7 +188,7 @@
 	                <td>${member3.age}</td>
 	                <td>${member3.genre}</td>
 	           		<td>
-	           			<c:if test="${member3.id eq sessionScope.myLoginId}">
+	               		<c:if test="${member3.id eq sessionScope.myLoginId}">
 	           			</c:if>
 	           			<c:if test="${member3.id ne sessionScope.myLoginId}">
 	           				<c:if test="${member3.follow_check eq 0}">
@@ -198,7 +198,6 @@
 	           					<button id="${member3.id}" onclick="follow('${member3.id}')" >팔로우 취소</button>
 	           				</c:if>
 	           			</c:if>
-	               		
 	                </td>
                 </tr>
             </c:forEach>
@@ -208,14 +207,14 @@
 			<span>
 				<c:if test="${currPage == 1}">이전</c:if>
 				<c:if test="${currPage > 1}">
-					<a href="member?page=${currPage-1}">이전</a>
+					<a href="search?page=${currPage-1}&search=${search}&keyWord=${keyword}">이전</a>
 				</c:if>				
 			</span>
-			<span id="page">${currPage}</span>
+			<span id="search?page=${currPage}&search=${search}&keyWord=${keyword}">${currPage}</span>
 			<span>
 				<c:if test="${currPage == maxPage}">다음</c:if>
 				<c:if test="${currPage < maxPage}">
-					<a href="member?page=${currPage+1}">다음</a>
+					<a href="search?page=${currPage+1}&search=${search}&keyWord=${keyword}">다음</a>
 				</c:if>				
 			</span>
 		</div>
@@ -240,7 +239,7 @@ function follow(id){
 				}else{ //팔로우 한경우
 					$("#"+id).html('팔로우');
 				}
-				location.href="/MovieSearching/member/member?page=${currPage}";
+				location.href="/MovieSearching/member/search?page=${currPage}&search=${search}&keyWord=${keyword}";
 			}
 		}
 		,error: function(e){

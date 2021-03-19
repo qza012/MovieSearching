@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mvc.movie.service.MovieService;
-import com.mvc.review.service.ReviewService;
 
-
-@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/likeMovie", "/movie/movieSearch", "/myPage/iLikeMovie" })
+@WebServlet({ "/movie/home", "/movie/movieList", "/movie/moviedetail", "/member/likeMovie", "/movie/movieSearch",
+		"/myPage/iLikeMovie","/myPage/notLikeMovie", "/movie/movieLike" })
 
 public class MovieController extends HttpServlet {
 
@@ -51,25 +50,30 @@ public class MovieController extends HttpServlet {
 			service.detail();
 			break;
 
-		case "/likeMovie":
+		case "/member/likeMovie":
 			System.out.println("회원이 좋아요한 영화 요청");
 			service.likeMovie();
 			break;
-
-
+			
 		case "/myPage/iLikeMovie":
-			System.out.println("임시 url");
+			System.out.println("마이페이지 좋아요한 영화 리스트");
 			service.iLikeMovie();
 			break;
+			
+		case "/myPage/notLikeMovie":
+			System.out.println("마이페이지 영화 좋아요 취소");
+			service.notLikeMovie();
+			break;	
 
 
 		case "/movie/movieSearch":
 			System.out.println("검색 요청");
-			service.movieSearch();;
+			service.movieSearch();
 			break;
-
-
+			
+		case "/movie/movieLike":
+			System.out.println("영화 좋아요 상태 변경");
+			service.movieLike();
 		}
 	}
-
 }

@@ -65,6 +65,26 @@ public class AdminDAO {
 
 		return result;
 	}
+	
+	public int getMemberCountByGender(boolean male) throws SQLException {
+		String sql = null;
+		
+		if(male) {
+			sql = "SELECT COUNT(*) FROM " + AdminSql.MEMBER_TABLE.getValue() + " WHERE gender='남' OR gender='male'";			
+		} else {
+			sql = "SELECT COUNT(*) FROM " + AdminSql.MEMBER_TABLE.getValue() + " WHERE gender='여' OR gender='female'";
+		}
+
+		int result = 0;
+
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		if (rs.next()) {
+			result = rs.getInt(1);
+		}
+
+		return result;
+	}
 
 	public List<MemberDTO> getMemberList() throws SQLException {
 		setRs(AdminSql.MEMBER_COLUMNS, AdminSql.MEMBER_TABLE);
@@ -102,8 +122,10 @@ public class AdminDAO {
 	 * @throws SQLException
 	 */
 	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-				.rnumSortColumn("id").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -133,11 +155,61 @@ public class AdminDAO {
 
 	public List<MemberDTO> getMemberList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
-				.rnumSortColumn("id").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.MEMBER_COLUMNS.getValue(), AdminSql.MEMBER_TABLE.getValue())
+				.rnumSortColumn("id")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord)
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
+		List<MemberDTO> list = new ArrayList<MemberDTO>();
+
+		while (rs.next()) {
+			MemberDTO dto = new MemberDTO();
+			dto = new MemberDTO();
+			dto.setId(rs.getString("id"));
+			dto.setPw(rs.getString("pw"));
+			dto.setName(rs.getString("name"));
+			dto.setAge(rs.getInt("age"));
+			dto.setGender(rs.getString("gender"));
+			dto.setEmail(rs.getString("email"));
+			dto.setGenre(rs.getString("genre"));
+			dto.setPw_answer(rs.getString("pw_answer"));
+			dto.setWithdraw(rs.getString("withdraw"));
+			dto.setDisable(rs.getString("disable"));
+			dto.setType(rs.getString("type"));
+			dto.setQuestion_idx(rs.getInt("question_Idx"));
+
+			list.add(dto);
+		}
+
+		return list;
+	}
+	
+	public List<MemberDTO> getMemberListByGender(int curPage, int rowsPerPage, boolean male) throws SQLException {
+		String sql = null;
+		
+		if(male) {
+			sql = "SELECT " + AdminSql.MEMBER_COLUMNS.getValue() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum "
+					+ ", " +  AdminSql.MEMBER_COLUMNS.getValue() + " FROM " + AdminSql.MEMBER_TABLE.getValue()
+					+ " WHERE gender='남' OR gender='male') WHERE rnum BETWEEN ? AND ?";
+		} else {
+			sql = "SELECT " + AdminSql.MEMBER_COLUMNS.getValue() + " FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum "
+					+ ", " +  AdminSql.MEMBER_COLUMNS.getValue() + " FROM " + AdminSql.MEMBER_TABLE.getValue()
+					+ " WHERE gender='여' OR gender='female') WHERE rnum BETWEEN ? AND ?";
+		}
+
+		int start = (curPage - 1) * rowsPerPage + 1;
+		int end = curPage * rowsPerPage;
+		
+		ps = conn.prepareStatement(sql);
+
+		ps.setInt(1, start);
+		ps.setInt(2, end);
+		rs = ps.executeQuery();
+		
 		List<MemberDTO> list = new ArrayList<MemberDTO>();
 
 		while (rs.next()) {
@@ -220,8 +292,10 @@ public class AdminDAO {
 	}
 
 	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-				.rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -245,8 +319,12 @@ public class AdminDAO {
 
 	public List<ReviewDTO> getReviewList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
-				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REVIEW_COLUMNS.getValue(), AdminSql.REVIEW_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord)
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -288,8 +366,10 @@ public class AdminDAO {
 	}
 
 	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
-				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -312,9 +392,11 @@ public class AdminDAO {
 
 	public List<CommentDTO> getCommentList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.COMMENT_COLUMNS.getValue(),
-				AdminSql.COMMENT_TABLE.getValue()).rnumSortColumn("idx").whereStandardColumn(standard)
-						.likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.COMMENT_COLUMNS.getValue(), AdminSql.COMMENT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord).build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -512,8 +594,10 @@ public class AdminDAO {
 	}
 
 	public List<ReportDTO> getReportList(int curPage, int rowsPerPage) throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-				.rnumSortColumn("idx").build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -537,8 +621,11 @@ public class AdminDAO {
 
 	public List<ReportDTO> getReportList(int curPage, int rowsPerPage, String standard, String keyWord)
 			throws SQLException {
-		AdminQuery query = new AdminQuery.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
-				.rnumSortColumn("idx").whereStandardColumn(standard).likeQuery(keyWord).build();
+		AdminQuery query = new AdminQuery
+				.Builder(AdminSql.REPORT_COLUMNS.getValue(), AdminSql.REPORT_TABLE.getValue())
+				.rnumSortColumn("idx")
+				.whereStandardColumn(standard)
+				.likeQuery(keyWord).build();
 
 		setRsPaging(curPage, rowsPerPage, query);
 
@@ -723,9 +810,9 @@ public class AdminDAO {
 					+ query.getTable() + ") " + "WHERE rnum BETWEEN ? AND ?";
 		}
 
-		int start = (curPage - 1) * rowsPerPage;
-		int end = curPage * rowsPerPage - 1;
-
+		int start = (curPage - 1) * rowsPerPage + 1;
+		int end = curPage * rowsPerPage;
+		
 		ps = conn.prepareStatement(sql);
 		if (condition) {
 			ps.setString(1, "%" + query.getLikeQuery() + "%");

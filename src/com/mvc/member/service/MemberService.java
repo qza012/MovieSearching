@@ -1,6 +1,7 @@
 package com.mvc.member.service;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.file.service.FileService;
+import com.mvc.follow.dto.FollowDTO;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
@@ -58,7 +60,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");			
+			resp.sendRedirect("../movie/home");			
 		}
 	}
 
@@ -88,7 +90,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 
@@ -107,7 +109,7 @@ public class MemberService {
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="./main.jsp";
+				page="../movie/home";
 				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
@@ -115,7 +117,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 	
@@ -232,28 +234,39 @@ public class MemberService {
 		resp.getWriter().print(json);
 	}
 
-	//회원 목록 불러오기+입력한 키워드가 포함된 아이디 검색기능
+	//회원 목록 불러오기
 	public void getMemberList() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String target_id = req.getParameter("target_id");
 			String pageParam = req.getParameter("page");
 			System.out.println("page : "+pageParam);	
+			
 			int group = 1;
 			if(pageParam != null) {
 				group = Integer.parseInt(pageParam);
 			}		
 			MemberDAO dao = new MemberDAO();
 			try {
-				HashMap<String, Object> map = dao.memberList(group);
+//			FollowDTO dto = dao.followCheck(myId);
+//			req.setAttribute("follow", dto);
+				
+				//내가 팔로우하고있는 사람 가져오기   - 주석처리(21.03.18/이주원)
+//				ArrayList<FollowDTO> list = dao.followCheck(myId);
+//				req.setAttribute("follow_list", list);
+//				System.out.println(list);
+				
+				//모든 회원들의 정보 가져오기&최대 페이지 수 가져오기
+				HashMap<String, Object> map = dao.memberList(group, myId);
+				
 				dao = new MemberDAO();
+				//리뷰 평점 기준 7개 가져오기
 				ArrayList<ReviewDTO> top_list = dao.top();
-				if (req.getAttribute("search_list")== null) {
-					req.setAttribute("maxPage", map.get("maxPage"));
-					req.setAttribute("member_list", map.get("list"));
-					req.setAttribute("currPage", group);
-				} else {
-					req.setAttribute("member_list", req.getAttribute("search_list"));
-				}
+				
+				req.setAttribute("maxPage", map.get("maxPage"));
+				req.setAttribute("member_list", map.get("list"));
+				req.setAttribute("currPage", group);
 				req.setAttribute("top_list", top_list);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -273,19 +286,41 @@ public class MemberService {
 		System.out.println("search값:"+search);
 		String keyWord = req.getParameter("keyWord");
 		System.out.println("검색 요청한 키워드:" + keyWord);
+		String pageParam = req.getParameter("page");
+		System.out.println("page : "+pageParam);
+		
+		if(search == null) {
+			search = "id";
+		}
+		if(keyWord == null) {
+			keyWord = "";
+		}
+		System.out.println(search + keyWord);
+		
+		int group = 1;
+		if(pageParam != null) {
+			group = Integer.parseInt(pageParam);
+		}		
+		
 		MemberDAO dao = new MemberDAO();
 		try {
-			ArrayList<MemberDTO> search_list = dao.searchList(keyWord,search);
-			if(search_list!=null) {
-				req.setAttribute("search_list", search_list);
-				System.out.println(search_list.size());
-			}
+			ArrayList<ReviewDTO> top_list = dao.top();
+			HashMap<String, Object> map = dao.searchList(group,keyWord,search,loginId);
+			
+			req.setAttribute("search", search);
+			req.setAttribute("keyword", keyWord);
+			req.setAttribute("maxPage", map.get("maxPage"));
+			req.setAttribute("member_list", map.get("list"));
+			req.setAttribute("currPage", group);
+			req.setAttribute("top_list", top_list);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
 			dao.resClose();
 		}
-		RequestDispatcher dis = req.getRequestDispatcher("member");
+		
+		RequestDispatcher dis = req.getRequestDispatcher("memberSearch.jsp");
 		dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
@@ -338,8 +373,6 @@ public class MemberService {
 		}finally {
 			dao.resClose();
 		}
-		RequestDispatcher dis = req.getRequestDispatcher("./pwFind.jsp");
-		dis.forward(req, resp);
 	}
 	
 	public void pwQuestionList() throws ServletException, IOException {
@@ -386,33 +419,45 @@ public class MemberService {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {
 			String myId = (String) req.getSession().getAttribute("myLoginId");
-			String targetId = req.getParameter("targetId");
+			String targetId = req.getParameter("id");
 			String follow = req.getParameter("btn");
 			System.out.println(myId+"님이, "+targetId+"님을 팔로우");	
 			System.out.println("follow 상황:"+follow+"좋아요 할 아이디:"+targetId);
 			MemberDAO dao = new MemberDAO();
+			/* 1. ui적인 부분
+			 * 이미 팔로우 되있는 상태인 사람은 화원리스트를 호출하면 버튼 쪽에서 "팔로우" 가 아닌 "팔로우 취소"가 떠야 하기 때문에 
+			 * 	팔로우 여부를 체크하기 위해 dto에 target_id 를 넣고 member.jsp의 190행 에서 비교해서 버튼을 
+			 * 뛰우고 싶지만 되지않음 ( 정확히는 dto다 보니 하나만 비교가 가능해서 한명에 대한 팔로우 여부만 테스트 되고 2번째 부터는 동작하지 않음)
+			 * (list는 여러개 가져와 보기 위해 테스트 해본것)
+			 *  2. 기능적인 부분
+			 *  팔로우 버튼을 누르면 해당 아이디를 가져와 자신의 아이디와 같이 DB에 넣어야 하는데 아이디를 가져오지 못하기에 
+			 *  뒷부분이 어디까지 동작하는지 알 수 없음
+			 * */
+//			FollowDTO dto = dao.followCheck(myId);
+//			req.setAttribute("follow", dto);
+//			ArrayList<FollowDTO> list = dao.followCheck(myId);
+//			req.setAttribute("follow_list", list);
 			try {
-				if(follow=="팔로우") {
+//				if(follow=="팔로우") {
 					dao.follow(myId,targetId);
 					System.out.println("팔로우 신청!");
 					dao.alarm(targetId,myId);
 					System.out.println("알람 전송");
-				}else{
-					dao.notFollow(myId,targetId);
-					System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
-				}
+//				}else{
+//					dao.notFollow(myId,targetId);
+//					System.out.println(myId+"님이, "+targetId+"님을 팔로우취소");
+//				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/member");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
 		}
 	}
-	
 	
 	public void followingList() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
@@ -488,7 +533,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followerList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("../movie/home");
 		}
 	}
 	
@@ -509,7 +554,7 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member/alarm.jsp");
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarm.jsp");
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
@@ -532,30 +577,30 @@ public class MemberService {
 			}finally {
 				dao.resClose();
 			}
-			RequestDispatcher dis = req.getRequestDispatcher("/member/alarmList?id="+loginId);
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/alarm?id="+loginId);
 			dis.forward(req, resp);
 		} else {
 			resp.sendRedirect("../movie/home");
 		}
 	}
 
-	public void followCheck() throws ServletException, IOException {
-		String id = (String) req.getSession().getAttribute("myLoginId");
-		String target_id = req.getParameter("target_id");
-		System.out.println(id+"는 "+target_id+"를 팔로우 하나?");
-		
-		MemberDAO dao = new MemberDAO();
-		boolean fChk = dao.followCheck(id, target_id);
-		System.out.println(fChk);
-		
-		if(fChk) {
-			req.setAttribute("fChk", fChk);
-			req.setAttribute("target", target_id);
-		}
-		dao.resClose();
-		RequestDispatcher dis = req.getRequestDispatcher("/follow?target_id="+target_id);
-		dis.forward(req, resp);
-	}
+//	public void followCheck() throws ServletException, IOException {
+//		String id = (String) req.getSession().getAttribute("myLoginId");
+//		String target_id = req.getParameter("target_id");
+//		System.out.println(id+"는 "+target_id+"를 팔로우 하나?");
+//		
+//		MemberDAO dao = new MemberDAO();
+//		boolean fChk = dao.followCheck(id, target_id);
+//		System.out.println(fChk);
+//		
+//		if(fChk) {
+//			req.setAttribute("fChk", fChk);
+//			req.setAttribute("target", target_id);
+//		}
+//		dao.resClose();
+//		RequestDispatcher dis = req.getRequestDispatcher("/follow?target_id="+target_id);
+//		dis.forward(req, resp);
+//	}
 
 	public void alramChk() throws ServletException, IOException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
@@ -588,5 +633,71 @@ public class MemberService {
 			resp.sendRedirect("/movie/home");
 		}	
 	}
+
+	public void notFollow() throws ServletException, IOException {
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
+		if(loginId != null) {
+			String myId = (String) req.getSession().getAttribute("myLoginId");
+			String targetId = req.getParameter("target_id");
+			System.out.println(myId+"님이 "+targetId+"님 팔로우 취소");
+			
+			MemberDAO dao = new MemberDAO();
+			boolean success = dao.notFollow(myId,targetId);
+			
+			if(success) {
+				System.out.println("팔로워 삭제!");
+			}
+			dao.resClose();
+			
+			RequestDispatcher dis = req.getRequestDispatcher("/myPage/followingList?id="+loginId);
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("../movie/home");
+		}
+	}
+	
+	//비동기화로 회원리스트에서 팔로우 또는 언팔로우 추가 21.03.19 -- 이주원
+		public void memberFollow() throws IOException {
+			String loginId = (String) req.getSession().getAttribute("myLoginId");
+			if(loginId != null) {
+				String target_id = req.getParameter("target_id");
+				System.out.println(target_id);
+				
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				
+				int success = 0;
+				int follow_check = 0;
+				
+				MemberDAO dao = new MemberDAO();
+				follow_check = dao.myFollowCheck(loginId, target_id);
+				
+				if(follow_check == 1) {//팔로우 되어있음
+					if(dao.memberUnFollow(loginId, target_id)){
+						success = 1;
+					}
+				}else { //팔로우 안되어있음
+					if(dao.memberFollow(loginId, target_id)) {
+						success = 1;
+					}
+				}
+				dao.resClose();
+				
+				map.put("success",success);
+				map.put("follow_check", follow_check);
+				
+				Gson gson = new Gson();
+				String json = gson.toJson(map);
+				System.out.println(json);
+				
+				resp.setContentType("text/html; charset=UTF-8");
+				resp.setHeader("Access-Control-Allow", "*"); 
+				
+				PrintWriter out = resp.getWriter();
+				out.println(json);
+			}
+			else {
+				resp.sendRedirect("../movie/home");
+			}
+		}
 
 }

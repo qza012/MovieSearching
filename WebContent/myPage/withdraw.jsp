@@ -7,7 +7,7 @@
 		<title>Withdraw</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<style>
-			h3{
+			h2{
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -50,7 +50,7 @@
        <jsp:include page="/movie/include.jsp" />
        <form action="./withdraw">
         	<div class="withdraw">
-            	<h3>회원 탈퇴</h3>
+            	<h2>회원 탈퇴</h2>
             	<span class="conPW">
                 	비밀번호 &nbsp;
                     <input type="text" name="userPw" placeholder="현재 비밀번호"/>
