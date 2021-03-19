@@ -318,12 +318,13 @@ public class MemberDAO {
 	 * @throws SQLException
 	 */
 	public ArrayList<ReviewDTO> top() throws SQLException {
-		String scoreSQL = "SELECT subject,score FROM (SELECT subject,score FROM review3 ORDER BY score DESC) WHERE ROWNUM <= 7";
+		String scoreSQL = "SELECT subject,score,idx FROM (SELECT subject,score,idx FROM review3 ORDER BY score DESC) WHERE ROWNUM <= 7";
 		ArrayList<ReviewDTO> top_list = new ArrayList<ReviewDTO>();
 		ps = conn.prepareStatement(scoreSQL);
 		rs = ps.executeQuery();
 		while (rs.next()) {
 			ReviewDTO dto = new ReviewDTO();
+			dto.setIdx(rs.getInt("idx"));
 			dto.setSubject(rs.getString("subject"));
 			dto.setScore(rs.getInt("score"));
 			top_list.add(dto);
