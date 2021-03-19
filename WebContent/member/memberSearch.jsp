@@ -128,7 +128,7 @@
 		border : 1px solid lightgray;
 		padding: 2px 10px;		
 		margin: 5px;		
-		color : gray;
+		color : white;
 	}
 	#page{
 		font-weight: 600;
@@ -152,7 +152,7 @@
         <c:forEach items="${top_list}" var="review3">
 	        <nav id="topMenu">
 		        <ul>
-		            <li class="topMenuLi"> <a class="menuLink" href="#">${review3.subject}</a>
+		            <li class="topMenuLi"> <a class="menuLink" href="../reviewDetail?Idx=${review3.idx}">${review3.subject}</a>
 		                <ul class="submenu">
 		                    <li><href class="submenuLink longLink">평점:${review3.score}</href></li>
 		                </ul>
