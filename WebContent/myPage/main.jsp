@@ -7,7 +7,7 @@
 		<title>Main</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<style>
-          h3{
+          	h3{
 				margin-left: 2%;
 			}            
 			a:link, a:visited{/*링크를 클릭 하기 전*/
@@ -53,7 +53,7 @@
        </style>
    </head>
    <body>
-        <jsp:include page="/movie/include.jsp" />
+       <jsp:include page="/movie/include.jsp" />
        <div class="mainData">
            <h1>로그인</h1>
            <form action="./loginForMyPage" method="post">

@@ -340,7 +340,7 @@ public class ReviewDAO {
 				list.add(dto);
 			}
 			System.out.println("listSize : "+list.size());
-			int maxPage = (int) Math.ceil(list.size()/(double)pagePerCnt);
+			int maxPage = getMyReviewMaxPage(pagePerCnt,loginId);
 			map.put("list", list);
 			map.put("maxPage", maxPage);
 			System.out.println("maxPage : "+maxPage);	
@@ -348,6 +348,24 @@ public class ReviewDAO {
 			e.printStackTrace();
 		}
 		return map;
+	}
+
+	private int getMyReviewMaxPage(int pagePerCnt, String loginId) {
+		String sql= "SELECT COUNT(idx) FROM review3 WHERE id=?";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, loginId);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				System.out.println(cnt);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
 	}
 
 	public HashMap<String, Object> myLikeReview(String loginId, int group) { //좋아요한 리뷰 리스트 얻기

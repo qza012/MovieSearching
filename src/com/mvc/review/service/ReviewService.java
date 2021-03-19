@@ -272,7 +272,7 @@ public class ReviewService {
 			ReviewDAO dao = new ReviewDAO();
 			HashMap<String, Object> map = dao.myReviewList(loginId,group);
 			
-			String page="./main.jsp";
+			String page="/MovieSearching/movie/home";
 			
 			if(map!=null) {
 				page="/myPage/reviewList.jsp";
@@ -284,7 +284,7 @@ public class ReviewService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}	
 	}
 
@@ -300,7 +300,7 @@ public class ReviewService {
 			
 			ReviewDAO dao = new ReviewDAO();
 			HashMap<String, Object> map = dao.myLikeReview(loginId,group);
-			String page="./main.jsp";
+			String page="/MovieSearching/movie/home";
 			
 			if(map != null) {
 				page="/myPage/likeReview.jsp";
@@ -312,7 +312,7 @@ public class ReviewService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
 	}
 
@@ -334,7 +334,7 @@ public class ReviewService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/iLikeReview?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
 	}
 
@@ -356,7 +356,7 @@ public class ReviewService {
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/myReviewList?id="+loginId);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("./main.jsp");
+			resp.sendRedirect("/MovieSearching/movie/home");
 		}
 	}
 
