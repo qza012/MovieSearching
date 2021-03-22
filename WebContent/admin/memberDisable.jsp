@@ -131,11 +131,17 @@
 							<td>${member.withdraw }</td>
 							<td id="${member.id }">${member.disable }</td>
 							<td>
-								<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
+								<%-- <c:if test="${member.disable == 'y' || member.disable == 'Y'}">
 									<button value="${member.id }">비활성화</button>
 								</c:if>
 								<c:if test="${member.disable == 'n' || member.disable == 'N'}">
 									<button value="${member.id }">활성화</button>
+								</c:if> --%>
+								<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
+									<button value="${member.id }" onclick='toggleDisable(this)'>비활성화</button>
+								</c:if>
+								<c:if test="${member.disable == 'n' || member.disable == 'N'}">
+									<button value="${member.id }" onclick='toggleDisable(this)'>활성화</button>
 								</c:if>
 							</td>
 						</tr>
@@ -187,21 +193,18 @@
 		});
 		
 		// 활성화 버튼 비동기 통신.
-		$('button').click(function() {
-			if(this.value == "move") {
-				return;
-			}
+		function toggleDisable(buttonObj) {
 			
-			var button = $(this);
-			var flag = $("#"+this.value);
+			var button = $(buttonObj);
+			var flag = $("#"+buttonObj.value);
 		
-			//console.log(button);
-			//console.log(flag);
+			console.log(button);
+			console.log(flag);
 			
 			$.ajax({
 				type:'GET'
 				,url:'toggleMemberDisable'
-				,data:{'id' : this.value}
+				,data:{'id' : buttonObj.value}
 				,dataType:'JSON'
 				,success:function(data) {
 
@@ -217,7 +220,7 @@
 					console.log("활성화/비활성화 버튼 비동기 에러");
 				}
 			})	
-		});
+		};
 		
 		
 		// input박스 자동 교체.

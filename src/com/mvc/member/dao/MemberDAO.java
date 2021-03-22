@@ -835,13 +835,15 @@ public class MemberDAO {
 	}
 	
 	public int alarm(String target_id, String loginId) {
-		String sql = "INSERT INTO alarm3(idx,reg_date,content,target_id,id)VALUES(alarm3_seq.NEXTVAL,SYSDATE,?,?,?)";
+		String sql = "INSERT INTO alarm3(idx,content,target_id,id,type_idx)VALUES(alarm3_seq.NEXTVAL,?,?,?,?)";
+		String msg=loginId+"님이 "+target_id+"님을 팔로우 했습니다.";
 		int success = 0;
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, loginId+"님이"+target_id+"를 팔로우");
+			ps.setString(1, msg);
 			ps.setString(2, target_id);
 			ps.setString(3, loginId);
+			ps.setInt(4, 1001);
 			success = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

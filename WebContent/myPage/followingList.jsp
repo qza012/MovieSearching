@@ -65,8 +65,8 @@
 			.pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 40%;
-				margin-left: 35%;
+				margin-top: 36%;
+				margin-left: 30%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -89,16 +89,20 @@
         <jsp:include page="/movie/include.jsp" />
         <div class="followingList">
 	       	<h2>팔로잉</h2>
-         	<c:forEach items="${fList}" var="follow">
-            	<div id="table">
-	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
-                	<span>
-	                	&nbsp;<div id="followingId">${follow.target_id}</div>	
-	                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
-	                	<div id="notLike"><button onclick="location.href='./notFollow?target_id=${follow.target_id}'">팔로우 취소</button></div>
-                	</span>
-                </div>
-        	</c:forEach>
+	       	<table>
+	         	<c:forEach items="${fList}" var="follow">
+	         		<tr>
+		            	<div id="table">
+			             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
+		                	<span>
+			                	&nbsp;<div id="followingId">${follow.target_id}</div>	
+			                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
+			                	<div id="notLike"><button onclick="location.href='./notFollow?target_id=${follow.target_id}'">팔로우 취소</button></div>
+		                	</span>
+		                </div>
+		        	</tr> 
+	        	</c:forEach>
+	    	</table>    	
         </div>
         <div class="pageArea">
 			<span id="btn">

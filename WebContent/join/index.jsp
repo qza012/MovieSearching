@@ -68,8 +68,7 @@ a:hover {
 										<label>비밀번호</label><br/> <input type="password" id="pw" name="pw" />
 									</div>
 								</form>
-							</td>
-						</tr>
+
 						<tr>
 							<td colspan="3" align="right" style="color: lightgray">
 								<a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a>

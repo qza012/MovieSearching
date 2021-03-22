@@ -82,10 +82,10 @@
 						<td id="${report.idx }">${report.complete }</td>
 						<td>
 							<c:if test="${report.complete == 'y' || report.complete == 'Y'}">
-								<button value="${report.idx }">처리중</button>
+								<button value="${report.idx }" onclick="toggleComplete(this)">처리중</button>
 							</c:if>
 							<c:if test="${report.complete == 'n' || report.complete == 'N'}">
-								<button value="${report.idx }">처리완료</button>
+								<button value="${report.idx }" onclick="toggleComplete(this)">처리완료</button>
 							</c:if>
 						</td>
 					</tr>
@@ -136,18 +136,16 @@
 			setPageNum();
 		});
 		
-		$('button').click(function() {
-			if(this.value == "move") {
-				return;
-			}
-			
-			var button = $(this);
-			var flag = $("#"+this.value);
+		// 처리 완료 버튼 비동기 통신
+		function toggleComplete(buttonObj) {
+
+			var button = $(buttonObj);
+			var flag = $("#"+buttonObj.value);
 			
 			$.ajax({
 				type:'GET'
 				,url:'toggleReportReviewComplete'
-				,data:{'idx' : this.value}
+				,data:{'idx' : buttonObj.value}
 				,dataType:'JSON'
 				,success:function(data) {
 					
@@ -163,7 +161,7 @@
 					console.log("처리 중/처리 완료 버튼 비동기 에러");
 				}
 			})				
-		})
+		}
 		
 		// input박스 자동 교체.
 		function changeSearchInput(value) {
@@ -180,6 +178,8 @@
 			case "idx" :
 			case "report_idx" :		
 			case "reg_date" :
+			case "content" :
+			case "report_id" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord'/>"
 						);	
