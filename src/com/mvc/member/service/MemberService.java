@@ -70,21 +70,21 @@ public class MemberService {
 			FileService file = new FileService(req);
 			MemberDTO dto = file.regist();
 			System.out.println(dto.getOriFileName()+"=>"+dto.getNewFileName());
+			System.out.println("or input : "+dto.getProfileURL());
 		
 			MemberDAO dao = new MemberDAO();
 			int success = dao.updateMember(dto);
 			
-			if(dto.getOriFileName() != null) {
-				String id = dto.getId();
-				String delFileName = dao.getFileName(id);
-				int change = dao.savePhoto(delFileName,dto);
-				System.out.println("교체한 파일 갯수 : "+change);
-				if(delFileName != null) {
-					file.delete(delFileName);
-				}
-			}
 			if(success > 0) {
-				req.setAttribute("photoPath", dto.getNewFileName());
+				if(dto.getOriFileName() != null || dto.getProfileURL() != null) {
+					String id = dto.getId();
+					String delFileName = dao.getFileName(id);
+					int change = dao.savePhoto(delFileName,dto);
+					System.out.println("교체한 파일 갯수 : "+change);
+					if(delFileName != null) {
+						file.delete(delFileName);
+					}
+				} 
 			}
 			dao.resClose();
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);

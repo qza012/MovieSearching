@@ -65,7 +65,7 @@
 			.pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 36%;
+				margin-top: 38%;
 				margin-left: 30%;
 			}
 			.pageArea span{
@@ -93,7 +93,14 @@
 	         	<c:forEach items="${fList}" var="follow">
 	         		<tr>
 		            	<div id="table">
-			             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
+			             	<div id="profile">
+			             		<c:if test="${follow.profileURL == null}">
+				             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
+			             		</c:if>
+			             		<c:if test="${follow.profileURL != null}">
+			             			<img src="${follow.profileURL}" width="100px" height="100px"/>
+			             		</c:if>
+			             	</div>
 		                	<span>
 			                	&nbsp;<div id="followingId">${follow.target_id}</div>	
 			                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>

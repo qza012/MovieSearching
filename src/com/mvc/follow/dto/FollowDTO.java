@@ -12,6 +12,14 @@ public class FollowDTO {
 	//프로필 사진
 	private String oriFileName = null;
 	private String newFileName = null;
+	private String profileURL = null;
+	
+	public String getProfileURL() {
+		return profileURL;
+	}
+	public void setProfileURL(String profileURL) {
+		this.profileURL = profileURL;
+	}
 	public int getIdx() {
 		return idx;
 	}

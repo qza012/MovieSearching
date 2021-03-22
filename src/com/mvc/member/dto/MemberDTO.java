@@ -22,7 +22,14 @@ public class MemberDTO {
 	private int idx = 0;
 	private String oriFileName = null;
 	private String newFileName = null;
+	private String profileURL = null;
 	
+	public String getProfileURL() {
+		return profileURL;
+	}
+	public void setProfileURL(String profileURL) {
+		this.profileURL = profileURL;
+	}
 	public String getId() {
 		return id;
 	}

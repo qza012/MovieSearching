@@ -60,6 +60,9 @@
             	width: 40%;
             	margin-left:1%;
             }
+            #forURL{
+            	visibility: hidden;
+            }
         </style>
     </head>
     <body>
@@ -167,9 +170,14 @@
 	                </tr>
 	                <tr>
 	                	<td>
-	                		<input type="url" id="urlInput" placeholder="url로 등록하기"/>
-	                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
-                			<input type="file"  name="photo"/>
+	                		<div id="forFile">
+		                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
+    	            			<input type="file"  name="photo"/>	                		
+	                		</div>
+	                		<div id="forURL">
+		                		<input type="text" name="urlInput" placeholder="URL로 등록하기"/>	                		
+	                		</div>
+	                		<input type="button" id="switchType" value="URL로 등록하기" style="margin-top: 1%;">
 		    			</td>
 	                <tr>
 	                    <th colspan="2">
@@ -199,6 +207,18 @@
 			$('#email').focus();
 		} else {
 			$('form').submit();
+		}
+	});
+	
+	$('#switchType').click(function(){
+		if($('#forURL').css({'visibility':'hidden'})){
+			$('#forURL').css({'visibility':'visible'});
+			$('#forFile').css({'visibility':'hidden'});
+			$('#switchType').val("File로 등록하기");
+		}else if($('#forFile').css({'visibility':'hidden'})){
+			$('#forURL').css({'visibility':'hidden'});
+			$('#forFile').css({'visibility':'visible'});
+			$('#switchType').val("URL로 등록하기");
 		}
 	});
 	
