@@ -53,7 +53,7 @@ public class MemberDAO {
 	public MemberDTO updateForm(String id) {
 		MemberDTO dto = null;
 		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=?";
+				+ "FROM member3 WHERE id=? AND withdraw='N'";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);

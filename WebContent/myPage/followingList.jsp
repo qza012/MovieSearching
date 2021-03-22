@@ -31,7 +31,7 @@
             #table{
             	padding: 1%;
             	margin: 1%;
-            	width: 18%;
+            	width: 19%;
             	border: 1px solid black;
             	background-color: white;
             	float: left;

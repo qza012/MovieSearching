@@ -45,7 +45,7 @@ public class MemberService {
 			
 			
 			String msg = "현재 이용이 불가합니다.";
-			String page="./main.jsp";
+			String page="/movie/home";
 			
 			if(dto != null) {
 				System.out.println("데이터 보내주기");

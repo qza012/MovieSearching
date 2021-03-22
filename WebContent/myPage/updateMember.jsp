@@ -167,6 +167,7 @@
 	                </tr>
 	                <tr>
 	                	<td>
+	                		<input type="url" id="urlInput" placeholder="url로 등록하기"/>
 	                		<input type="text" id="urlArea" placeholder="프로필 사진 등록(최대 10MB)" value="${photoPath}"/>
                 			<input type="file"  name="photo"/>
 		    			</td>
