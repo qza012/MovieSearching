@@ -109,7 +109,7 @@ public class MemberService {
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="../movie/home";
+				page="/movie/home";
 				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
@@ -117,7 +117,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("../movie/home");
+			resp.sendRedirect("/movie/home");
 		}
 	}
 	
