@@ -839,7 +839,7 @@ public class MemberDAO {
 		int success = 0;
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, "팔로우+1");
+			ps.setString(1, loginId+"님이"+target_id+"를 팔로우");
 			ps.setString(2, target_id);
 			ps.setString(3, loginId);
 			success = ps.executeUpdate();
