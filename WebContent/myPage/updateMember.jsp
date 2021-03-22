@@ -149,7 +149,7 @@
 	                </tr>
 	                <tr>
 	                    <td>
-	                        <input type="text" name="email" value="${mDto.email}"/>
+	                        <input type="text" name="email" value="${mDto.email}" id="email"/>
 	                    </td>
 	                </tr>
 	                <tr>
@@ -172,7 +172,7 @@
 		    			</td>
 	                <tr>
 	                    <th colspan="2">
-	                        <input type="submit" value="저장">
+	                        <input type="button" value="저장" id="saveMem">
 	                    </th>
 	                </tr>
 	            </table>
@@ -180,12 +180,30 @@
 	    </div>
     </body>
 	<script>
-		var showIf = document.getElementById('myPage').style.display;
-		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			} 
+	$('#saveMem').click(function(){
+		if($('#userId').val() == ""){
+			alert("아이디를 확인해주세요");
+			$('#userId').focus();
+		} else if($('#userPw').val() == ""){
+			alert("비밀번호를 확인해주세요");
+			$('#userPw').focus();
+		} else if($('#conPw').val() != $('#userPw').val()){
+			alert("비밀번호가 일치하지 않습니다");
+			$('#conPw').focus();
+		} else if($('#answer').val() == ""){
+			alert("답변을 입력해주세요");
+			$('#answer').focus();
+		} else if($('#email').val() == ""){
+			alert("이메일을 확인해주세요");
+			$('#email').focus();
+		} else {
+			$('form').submit();
+		}
+	});
+	
+	var msg = '${msg}'
+		if(msg != ""){
+			alert(msg);
 		}
 	</script>
 </html>
