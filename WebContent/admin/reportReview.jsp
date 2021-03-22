@@ -138,17 +138,14 @@
 		
 		// 처리 완료 버튼 비동기 통신
 		function toggleComplete(buttonObj) {
-			if(this.value == "move") {
-				return;
-			}
-			
-			var button = $(this);
-			var flag = $("#"+this.value);
+
+			var button = $(buttonObj);
+			var flag = $("#"+buttonObj.value);
 			
 			$.ajax({
 				type:'GET'
 				,url:'toggleReportReviewComplete'
-				,data:{'idx' : this.value}
+				,data:{'idx' : buttonObj.value}
 				,dataType:'JSON'
 				,success:function(data) {
 					
@@ -181,6 +178,8 @@
 			case "idx" :
 			case "report_idx" :		
 			case "reg_date" :
+			case "content" :
+			case "report_id" :
 				searchInput.replaceWith(
 						"<input class='searchInput' type='text' name='keyWord'/>"
 						);	
