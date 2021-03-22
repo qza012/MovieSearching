@@ -11,10 +11,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.movie.dto.MovieDTO;
-import com.mvc.movielike.dto.MovieLikeDTO;
-import com.mvc.rank.dto.RankDTO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieDAO {

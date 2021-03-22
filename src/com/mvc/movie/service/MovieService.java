@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.mvc.movie.dao.MovieDAO;
 import com.mvc.movie.dto.MovieDTO;
-import com.mvc.review.dao.ReviewDAO;
 import com.mvc.review.dto.ReviewDTO;
 
 public class MovieService {
@@ -55,35 +54,34 @@ public class MovieService {
 	}
 
 	public void movieList() throws ServletException, IOException {
-//		String loginId = (String) req.getSession().getAttribute("loginId");
-//		if (loginId != null) {
-		String pageParam = req.getParameter("page");
-		System.out.println("현재 페이지 : " + pageParam);
-		int group = 1;
-		if (pageParam != null) {
-			group = Integer.parseInt(pageParam);
-		}
-		MovieDAO dao = new MovieDAO();
-		try {
-			HashMap<String, Object> map = dao.movieList(group);
-			req.setAttribute("maxPage", map.get("maxPage"));
-			if (req.getAttribute("search_list") == null) {
-				req.setAttribute("movie_list", map.get("list"));
-			} else {
-				req.setAttribute("movie_list", req.getAttribute("search_list"));
+		String loginId = (String) req.getSession().getAttribute("loginId");
+		if (loginId != null) {
+			String pageParam = req.getParameter("page");
+			System.out.println("현재 페이지 : " + pageParam);
+			int group = 1;
+			if (pageParam != null) {
+				group = Integer.parseInt(pageParam);
 			}
-			req.setAttribute("currPage", group);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
+			MovieDAO dao = new MovieDAO();
+			try {
+				HashMap<String, Object> map = dao.movieList(group);
+				req.setAttribute("maxPage", map.get("maxPage"));
+				if (req.getAttribute("search_list") == null) {
+					req.setAttribute("movie_list", map.get("list"));
+				} else {
+					req.setAttribute("movie_list", req.getAttribute("search_list"));
+				}
+				req.setAttribute("currPage", group);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				dao.resClose();
+			}
+			dis = req.getRequestDispatcher("movielist.jsp");
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("home");
 		}
-		dis = req.getRequestDispatcher("movielist.jsp");
-		dis.forward(req, resp);
-//		} else {
-//			resp.sendRedirect("index.jsp");
-//		}
-//	}
 	}
 
 	public void detail() throws ServletException, IOException {
@@ -91,34 +89,36 @@ public class MovieService {
 		MovieDTO dto = new MovieDTO();
 		String id = (String) req.getSession().getAttribute("myLoginId");
 
-//		if (loginId == null) {
-//			resp.sendRedirect("home");
-//		} else {
-		String movieCode = req.getParameter("movieCode");
-		ArrayList<ReviewDTO> review = null;
-		int movieLike = 0;
-		try {
-			// 영화
-			dto = dao.detail(movieCode);
-			System.out.println("영화코드 : " + movieCode);
-			req.setAttribute("movie", dto);
-			// 좋아요
-			if (dao.movieLike_Check(id, movieCode)) {
-				movieLike = 1;
+		if (id != null) {
+			String movieCode = req.getParameter("movieCode");
+			ArrayList<ReviewDTO> review = null;
+			int movieLike = 0;
+			try {
+				// 영화
+				dto = dao.detail(movieCode);
+				System.out.println("영화코드 : " + movieCode);
+				req.setAttribute("movie", dto);
+				// 좋아요
+				if (dao.movieLike_Check(id, movieCode)) {
+					movieLike = 1;
+				}
+				req.setAttribute("movieLike", movieLike);
+				dao.getmovieLike_Count(movieCode);
+				req.setAttribute("movieLike_Count", dao.getmovieLike_Count(movieCode));
+				// 리뷰
+				review = dao.review(movieCode);
+				System.out.println("리뷰 갯수 : " + review.size());
+				req.setAttribute("review", review);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				dao.resClose();
 			}
-			req.setAttribute("movieLike", movieLike);
-			// 리뷰
-			review = dao.review(movieCode);
-			System.out.println("리뷰 갯수 : " + review.size());
-			req.setAttribute("review", review);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
+			dis = req.getRequestDispatcher("moviedetail.jsp");
+			dis.forward(req, resp);
+		} else {
+			resp.sendRedirect("home");
 		}
-		dis = req.getRequestDispatcher("moviedetail.jsp");
-		dis.forward(req, resp);
-//		}
 	}
 
 	public void likeMovie() throws IOException, ServletException {
@@ -231,15 +231,15 @@ public class MovieService {
 	public void movieLike() throws ServletException, IOException {
 		String id = req.getParameter("id");
 		String movieCode = req.getParameter("movieCode");
-		
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		int movieLikeState = 0;
 		int success = 0;
 
 		MovieDAO dao = new MovieDAO();
-		
-		if(dao.movieLike_Check(id, movieCode)) {
+
+		if (dao.movieLike_Check(id, movieCode)) {
 			movieLikeState = 1;
 		}
 		if (movieLikeState == 0) {
@@ -258,7 +258,7 @@ public class MovieService {
 		map.put("success", success);
 		map.put("movieLikeState", movieLikeState);
 		map.put("movieLike_Count", movieLike_Count);
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(map);
 		System.out.println(json);

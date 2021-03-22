@@ -45,7 +45,7 @@
 				width:700px;
 				text-align: center;
 				margin-top: 30px;
-				margin-left: 38%;
+				margin-left: 35%;
 			}
 			.pageArea span{
 				font-size:16px;

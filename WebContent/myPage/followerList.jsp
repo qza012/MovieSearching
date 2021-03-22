@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>FollowList</title>
+		<title>FollowerList</title>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <style>
  			h2{
@@ -68,8 +68,8 @@
             .pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 35%;
-				margin-left: 35%;
+				margin-top: 36%;
+				margin-left: 30%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -92,14 +92,16 @@
         <jsp:include page="/movie/include.jsp" />
         <div class="followerList">
         	<h2>팔로워</h2>
-         	<c:forEach items="${fList}" var="follow">
-            	<div id="table">
-	             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
-                	&nbsp;<div id="followerId">${follow.id}</div>	
-                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
-                	<div id="notLike"><button onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div>
-                </div>
-        	</c:forEach>
+        	<table>
+	         	<c:forEach items="${fList}" var="follow">
+	            	<div id="table">
+		             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
+	                	&nbsp;<div id="followerId">${follow.id}</div>	
+	                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
+	                	<div id="notLike"><button onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div>
+	                </div>
+	        	</c:forEach>
+        	</table>
         </div>
         <div></div>
         <div class="pageArea">
