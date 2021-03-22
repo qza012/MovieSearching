@@ -74,10 +74,10 @@
 						<td id="${review.idx }">${review.del_type }</td>
 						<td>
 							<c:if test="${review.del_type == 'y' || review.del_type == 'Y'}">
-								<button value="${review.idx }">삭제 취소</button>
+								<button value="${review.idx }" onclick="toggleDel(this)">삭제 취소</button>
 							</c:if>
 							<c:if test="${review.del_type == 'n' || review.del_type == 'N'}">
-								<button value="${review.idx }">삭제</button>
+								<button value="${review.idx }" onclick="toggleDel(this)">삭제</button>
 							</c:if>
 						</td>
 					</tr>
@@ -128,14 +128,15 @@
 			setPageNum();
 		});
 		
-		$('button').click(function() {
-			var button = $(this);
-			var flag = $("#"+this.value);
+		// 삭제 버튼 비동기 통신
+		function toggleDel(buttonObj) {
+			var button = $(buttonObj);
+			var flag = $("#"+buttonObj.value);
 			
 			$.ajax({
 				type:'GET'
 				,url:'toggleRevieDelType'
-				,data:{'idx' : this.value}
+				,data:{'idx' : buttonObj.value}
 				,dataType:'JSON'
 				,success:function(data) {
 					
@@ -151,7 +152,7 @@
 					console.log("삭제/삭제 취소 버튼 비동기 에러");
 				}
 			})				
-		})
+		}
 		
 		// input박스 자동 교체.
 		function changeSearchInput(value) {
