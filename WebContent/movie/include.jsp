@@ -139,7 +139,7 @@ li {
 	});
 
 	$("#btn2").click(function() {
-		location.href = "/MovieSearching/join/joinForm.jsp";
+		location.href = "/MovieSearching/questionList";
 	});
 
 	$("#btn3").click(function() {

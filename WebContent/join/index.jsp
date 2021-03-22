@@ -73,7 +73,7 @@
 									<td colspan="3" align="right" style="color:lightgray"><a href="idFind.jsp">아이디</a>/<a href="../pwQuestionList">비밀번호 찾기</a></td>
 								</tr>
 								<tr>
-									<td colspan="3" ><input type="button" value="로그인"  id="login"/> </br> 
+									<td colspan="3" ><input type="button" value="로그인"  id="login"/>
 									<input type="button" value="회원가입" onclick="location.href='../questionList'"/></td>
 								</tr>
 			
