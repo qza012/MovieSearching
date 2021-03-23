@@ -173,14 +173,15 @@ $(function(){
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj);
-					if(obj.use){
+					if(obj.use==false){
+						alert('이미 사용중인 아이디 입니다.');
+						$("#id").val('').focus();
+						
+					}else if(obj.use){
 						alert('사용할 수 있는 아이디 입니다.');
 						$('#img').show();
 						$('#idChk').hide();
 						idChk= true;
-					}else if(obj.use==false){
-						alert('이미 사용중인 아이디 입니다.');
-						$("#id").val('').focus();
 					}
 				}
 				,error:function(e){
