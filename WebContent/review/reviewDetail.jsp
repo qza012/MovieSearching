@@ -60,7 +60,7 @@ th, td {
 							<td colspan="5" style="cursor: pointer;" onclick="location.href='/MovieSearching/movie/moviedetail?movieCode=${review.movieCode}' ">
 							<c:if test="${review.posterURL ne null}">
 									<div>
-										<img src="${review.posterURL}" />
+										<img src="${review.posterURL}" style="width: 100px; height: 150px;"/>
 									</div>
 							</c:if>
 								<div>${review.movieName}</div>
