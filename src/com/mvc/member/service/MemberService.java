@@ -45,7 +45,7 @@ public class MemberService {
 			
 			
 			String msg = "현재 이용이 불가합니다.";
-			String page="./main.jsp";
+			String page="/movie/home";
 			
 			if(dto != null) {
 				System.out.println("데이터 보내주기");
@@ -70,21 +70,21 @@ public class MemberService {
 			FileService file = new FileService(req);
 			MemberDTO dto = file.regist();
 			System.out.println(dto.getOriFileName()+"=>"+dto.getNewFileName());
+			System.out.println("or input : "+dto.getProfileURL());
 		
 			MemberDAO dao = new MemberDAO();
 			int success = dao.updateMember(dto);
 			
-			if(dto.getOriFileName() != null) {
-				String id = dto.getId();
-				String delFileName = dao.getFileName(id);
-				int change = dao.savePhoto(delFileName,dto);
-				System.out.println("교체한 파일 갯수 : "+change);
-				if(delFileName != null) {
-					file.delete(delFileName);
-				}
-			}
 			if(success > 0) {
-				req.setAttribute("photoPath", dto.getNewFileName());
+				if(dto.getOriFileName() != null || dto.getProfileURL() != null) {
+					String id = dto.getId();
+					String delFileName = dao.getFileName(id);
+					int change = dao.savePhoto(delFileName,dto);
+					System.out.println("교체한 파일 갯수 : "+change);
+					if(delFileName != null) {
+						file.delete(delFileName);
+					}
+				} 
 			}
 			dao.resClose();
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
@@ -109,7 +109,7 @@ public class MemberService {
 			
 			if(success) {
 				msg="탈퇴되었습니다.";
-				page="../movie/home";
+				page="/movie/home";
 				req.getSession().removeAttribute("myLoginId");
 			}
 			dao.resClose();
@@ -117,7 +117,7 @@ public class MemberService {
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
-			resp.sendRedirect("../movie/home");
+			resp.sendRedirect("/movie/home");
 		}
 	}
 	

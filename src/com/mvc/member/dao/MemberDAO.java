@@ -53,7 +53,7 @@ public class MemberDAO {
 	public MemberDTO updateForm(String id) {
 		MemberDTO dto = null;
 		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=?";
+				+ "FROM member3 WHERE id=? AND withdraw='N'";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
@@ -103,19 +103,21 @@ public class MemberDAO {
 		String sql="";
 		try {
 			if(delFileName != null) {
-				sql = "UPDATE photo3 SET oriFileName=?, newFileName=? WHERE id=?";
+				sql = "UPDATE photo3 SET oriFileName=?, newFileName=?, profileURL=? WHERE id=?";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, dto.getOriFileName());
 				ps.setString(2, dto.getNewFileName());
-				ps.setString(3, dto.getId());
+				ps.setString(3, dto.getProfileURL());
+				ps.setString(4, dto.getId());
 			} else {
-				sql = "INSERT INTO photo3(idx,oriFileName,newFileName,id) "
-						+ "VALUES(photo3_seq.NEXTVAL,?,?,?)";
+				sql = "INSERT INTO photo3(idx,oriFileName,newFileName,id,profileURL) "
+						+ "VALUES(photo3_seq.NEXTVAL,?,?,?,?)";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, dto.getOriFileName());
 				ps.setString(2, dto.getNewFileName());
 				ps.setString(3, dto.getId());
-			} 
+				ps.setString(4, dto.getProfileURL());
+			}	
 			success = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,13 +154,17 @@ public class MemberDAO {
 
 	public String getFileName(String id) { //파일 변경(파일 기보유 여부 확인)
 		String delFileName = null;
-		String sql = "SELECT newFileName FROM photo3 WHERE id =?";
+		String sql = "SELECT newFileName,profileURL FROM photo3 WHERE id =?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
 			rs = ps.executeQuery();
 			if(rs.next()) { 
-				delFileName = rs.getString("newFileName");
+				if(rs.getString("newFileName") != null) {
+					delFileName = rs.getString("newFileName");					
+				} else if(rs.getString("profileURL") != null) {
+					delFileName = rs.getString("newFileName");			
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -606,13 +612,14 @@ public class MemberDAO {
 					dto.setFollowerNum(rs.getInt("from_num"));					
 				}
 				//프로필 사진
-				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				sql="SELECT oriFileName,newFileName, profileURL FROM photo3 WHERE id=?";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, tarid);
 				rs = ps.executeQuery();
 				if(rs.next()) {
 					dto.setOriFileName(rs.getString("oriFileName"));
 					dto.setNewFileName(rs.getString("newFileName"));
+					dto.setProfileURL(rs.getString("profileURL"));
 				}
 				follow3List.add(dto);
 			}	
@@ -688,13 +695,14 @@ public class MemberDAO {
 					dto.setFollowerNum(rs.getInt("from_num"));					
 				}
 				//프로필 사진
-				sql="SELECT oriFileName,newFileName FROM photo3 WHERE id=?";
+				sql="SELECT oriFileName,newFileName,profileURL FROM photo3 WHERE id=?";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, fId);
 				rs = ps.executeQuery();
 				if(rs.next()) {
 					dto.setOriFileName(rs.getString("oriFileName"));
 					dto.setNewFileName(rs.getString("newFileName"));
+					dto.setProfileURL(rs.getString("profileURL"));
 				}
 				follow3List.add(dto);
 			}

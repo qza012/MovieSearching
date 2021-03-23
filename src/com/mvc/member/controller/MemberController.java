@@ -86,7 +86,7 @@ public class MemberController extends HttpServlet {
 				break;
 				
 			case "/myPage/update":
-				System.out.println("프로필 사진 저장 요청");
+				System.out.println("프로필 수정사항 저장 요청");
 				service.update();
 				break;
 				

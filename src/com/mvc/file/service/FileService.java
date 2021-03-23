@@ -47,18 +47,22 @@ public class FileService {
 			dto.setEmail(email);
 			dto.setGenre(genre);
 			
-			String oriFileName = multi.getFilesystemName("photo");
-			if(oriFileName != null) {
-				String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
-				String newFileName = System.currentTimeMillis()+ext;
-				File oriFile = new File(savePath+oriFileName);
-				File newFile = new File(savePath+newFileName);
-				System.out.println(savePath+oriFileName);
-				boolean success = oriFile.renameTo(newFile);
-				System.out.println("이름이 바뀌었는가?"+success);
-				dto.setOriFileName(oriFileName);
-				dto.setNewFileName(newFileName);
-				
+			String profileURL = multi.getParameter("urlInput");
+			if(profileURL != null) {
+				dto.setProfileURL(profileURL);
+			}else {
+				String oriFileName = multi.getFilesystemName("photo");
+				if(oriFileName != null) {
+					String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+					String newFileName = System.currentTimeMillis()+ext;
+					File oriFile = new File(savePath+oriFileName);
+					File newFile = new File(savePath+newFileName);
+					System.out.println(savePath+oriFileName);
+					boolean success = oriFile.renameTo(newFile);
+					System.out.println("이름이 바뀌었는가?"+success);
+					dto.setOriFileName(oriFileName);
+					dto.setNewFileName(newFileName);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

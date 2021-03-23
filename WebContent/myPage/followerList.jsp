@@ -29,13 +29,10 @@
                 margin-left: 25%;
 
             } 
-            div{
-            	float: none;
-           	}
-            #table{
+           #table{
             	padding: 1%;
             	margin: 1%;
-            	width: 18%;
+            	width: 19%;
             	border: 1px solid black;
             	background-color: white;
             	float: left;
@@ -68,7 +65,7 @@
             .pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 36%;
+				margin-top: 38%;
 				margin-left: 30%;
 			}
 			.pageArea span{
@@ -95,10 +92,19 @@
         	<table>
 	         	<c:forEach items="${fList}" var="follow">
 	            	<div id="table">
-		             	<div id="profile"><img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/></div>
-	                	&nbsp;<div id="followerId">${follow.id}</div>	
-	                	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
-	                	<div id="notLike"><button onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div>
+		             	<div id="profile">
+			             		<c:if test="${follow.profileURL == null}">
+				             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
+			             		</c:if>
+			             		<c:if test="${follow.profileURL != null}">
+			             			<img src="${follow.profileURL}" width="100px" height="100px"/>
+			             		</c:if>
+			             	</div>
+			             	<span>
+		        	        	&nbsp;<div id="followerId">${follow.id}</div>	
+		    	            	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
+	    	        	    	<div id="notLike"><button onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div> 	
+			             	</span>
 	                </div>
 	        	</c:forEach>
         	</table>

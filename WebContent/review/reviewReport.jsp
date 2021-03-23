@@ -77,29 +77,33 @@ $("#report").click(function(){
 	var content = $("#content").val(); //내용
 	
 	console.log(type_idx + report_idx + content);
-
-	$.ajax({ 
-		type:'post' 
-		,url:'./reviewReport'
-		,data:{ 
-			'type_idx':type_idx,
-			'report_idx':report_idx,
-			'content':content
-		}
-		,dataType: 'json' 
-		,success: function(data){
-			console.log(data);
-			if(data.success == 1){
-				alert(data.msg);
-				window.close();
-			}else{
-				alert(data.msg);
+	
+	if(content==""){
+		alert('신고 사유를 입력해주세요.');
+	}else{
+		$.ajax({ 
+			type:'post' 
+			,url:'./reviewReport'
+			,data:{ 
+				'type_idx':type_idx,
+				'report_idx':report_idx,
+				'content':content
 			}
-		}
-		,error: function(e){
-			console.log(e);
-		}
-	});
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				if(data.success == 1){
+					alert(data.msg);
+					window.close();
+				}else{
+					alert(data.msg);
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
 });
 
 function cancel(){
