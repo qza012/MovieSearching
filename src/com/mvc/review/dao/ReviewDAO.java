@@ -351,7 +351,7 @@ public class ReviewDAO {
 	}
 
 	private int getMyReviewMaxPage(int pagePerCnt, String loginId) {
-		String sql= "SELECT COUNT(idx) FROM review3 WHERE id=?";
+		String sql= "SELECT COUNT(idx) FROM review3 WHERE id=? AND del_type='N'";
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
