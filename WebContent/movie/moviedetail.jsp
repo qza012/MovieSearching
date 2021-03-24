@@ -137,7 +137,7 @@ table, th, td {
 							</c:forEach>
 						</table>
 						<div class="review_Write">
-							<input type="button" value="리뷰 작성" onclick="location.href='../movieReviewWriteForm?movieCode=${movie.movieCode}&movieName=${movie.movieName}' ">
+							<input type="button" value="리뷰 작성" onclick="reviewWrite()">
 						</div>
 					</li>
 				</ul>
@@ -173,6 +173,32 @@ table, th, td {
 			}
 		});
 	}
+	
+	function reviewWrite(){
+		var movieCode = "${movie.movieCode}";
+		console.log(movieCode);
+		
+		$.ajax({
+			type:'post' 
+			,url:'/MovieSearching/reviewMovieChoice' 
+			,data:{
+				'movieCode':movieCode,
+			}
+			,dataType: 'json' 
+			,success: function(data){
+				console.log(data);
+				if(data.haveReview == 1){
+					alert('이미 리뷰를 작성한 영화입니다.');
+				}else{
+					location.href='../movieReviewWriteForm?movieCode='+data.movieCode+'&movieName='+data.movieName;
+				}
+			}
+			,error: function(e){
+				console.log(e);
+			}
+		});
+	}
+	
 	var msg = "${msg}";
 	if (msg != "") {
 		alert(msg);

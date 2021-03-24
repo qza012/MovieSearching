@@ -57,7 +57,7 @@ textarea {
 						<tr>
 							<th>영화제목</th>
 							<td><input type="hidden"  value="${movieCode}" id="movieCode" /> 
-							<input type="text" id="movieName" value="${movieName}"  style="width: 80%;" /> 
+							<input type="text" id="movieName" value="${movieName}"  style="width: 80%;" readonly/> 
 							<input type="button" value="검색" onclick="movieSearchOpen()" /></td>
 
 							<th>평점</th>
@@ -129,7 +129,7 @@ $("#save").click(function(){
 				console.log('data.success');
 				if(data.success == 1){
 					alert(data.msg);
-					location.href = "../reviewList";
+					location.href = "/MovieSearching/reviewList";
 				}else{
 					alert('리뷰 작성에 실패했습니다.');
 				}
@@ -143,7 +143,7 @@ $("#save").click(function(){
 
 function movieSearchOpen(){
 	var movieName = $("#movieName").val();
-	window.open("../reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
+	window.open("/MovieSearching/reviewMovieSearch?page=1&subName="+movieName, "report", "width=1000, height=600, left=300, top=100");
 }
 
 function cancel(){

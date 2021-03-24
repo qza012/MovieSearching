@@ -54,7 +54,7 @@ public class MovieService {
 	}
 
 	public void movieList() throws ServletException, IOException {
-		String loginId = (String) req.getSession().getAttribute("loginId");
+		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if (loginId != null) {
 			String pageParam = req.getParameter("page");
 			System.out.println("현재 페이지 : " + pageParam);
