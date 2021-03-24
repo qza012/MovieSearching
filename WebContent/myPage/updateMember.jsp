@@ -219,14 +219,16 @@
 	});
 	
 	$('#switchType').click(function(){
-		if($('#forURL').css({'visibility':'hidden'})){
+		if($('#switchType').val() == "URL로 등록하기"){
 			$('#forURL').css({'visibility':'visible'});
 			$('#forFile').css({'visibility':'hidden'});
 			$('#switchType').val("File로 등록하기");
-		}else if($('#forFile').css({'visibility':'hidden'})){
+			console.log("file로 등록 -> url로 등록");
+		}else if($('#switchType').val() == "File로 등록하기"){
 			$('#forURL').css({'visibility':'hidden'});
 			$('#forFile').css({'visibility':'visible'});
 			$('#switchType').val("URL로 등록하기");
+			console.log("url로 등록 -> file로 등록");
 		}
 	});
 	
