@@ -92,8 +92,6 @@ a:hover {
 	 
 	var id = document.getElementById("id");
 	var pw = document.getElementById("pw");
-	/* var id = $('#id').val();
-	var pw = $('#pw').val(); */
 	$("#login").click(function() {
 		console.log(id + "/" + pw);
 		if (id.value == "") {
@@ -101,6 +99,12 @@ a:hover {
 			id.focus();
 		} else if (pw.value == "") {
 			alert("패스워드를 입력하세요.");
+			pw.focus();
+		}else if (pw.value.lenth>50) {
+			pw.focus();
+			document.getElementById('pw').innerHTML = '<font color=red>비밀번호는 200자 이하여야 합니다.</font>';
+		}else if (pw.value == "") {
+			alert("");
 			pw.focus();
 		} else {
 			$.ajax({
@@ -114,7 +118,7 @@ a:hover {
 					console.log(data);
 					console.log(data.use);
 					if(data=='{"use":true}'){
-						location.href="../movie/home";//임시
+						location.href="../movie/home";
 					}else{
 						alert("아이디 또는 비밀번호를 확인하세요.");
 					}

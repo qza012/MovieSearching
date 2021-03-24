@@ -65,7 +65,7 @@ label{
 									</div>
 									<div>
 										<label>비밀번호 확인</label><br> <input type="password" name="pw2"
-											id="pw2" onkeyup="check_pw()" />
+											id="pw2" onkeyup="check_pw()" /><span id="check"></span>
 									</div>
 				
 				
