@@ -38,7 +38,7 @@
             }
             img{
             	width:100px; 
-            	height:100px;
+            	height:110px;
             	margin-left: 30%;
             }
             #followingId{
@@ -98,7 +98,7 @@
 				             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
 			             		</c:if>
 			             		<c:if test="${follow.profileURL != null}">
-			             			<img src="${follow.profileURL}" width="100px" height="100px"/>
+			             			<img src="${follow.profileURL}"/>
 			             		</c:if>
 			             	</div>
 		                	<span>

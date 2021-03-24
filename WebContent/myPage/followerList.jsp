@@ -39,7 +39,7 @@
             }
             img{
             	width:100px; 
-            	height:100px;
+            	height:110px;
             	margin-left: 30%;
             }
             #followerId{

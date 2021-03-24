@@ -5,7 +5,14 @@ public class PhotoDTO {
 	private String oriFileName;
 	private String newFileName;
 	private String id;
+	private String profileURL;
 	
+	public String getProfileURL() {
+		return profileURL;
+	}
+	public void setProfileURL(String profileURL) {
+		this.profileURL = profileURL;
+	}
 	public int getIdx() {
 		return idx;
 	}

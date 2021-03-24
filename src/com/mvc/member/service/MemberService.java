@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.file.service.FileService;
 import com.mvc.follow.dto.FollowDTO;
+import com.mvc.genre.dto.GenreDTO;
 import com.mvc.member.dao.MemberDAO;
 import com.mvc.member.dto.MemberDTO;
 import com.mvc.question.dto.QuestionDTO;
@@ -40,9 +42,10 @@ public class MemberService {
 			MemberDAO dao = new MemberDAO();
 			MemberDTO dto  = new MemberDTO();
 			dto = dao.updateForm(id);
-			ArrayList<QuestionDTO> list = new ArrayList<QuestionDTO>();
-			list = dao.bringQ();
-			
+			ArrayList<QuestionDTO> qlist = new ArrayList<QuestionDTO>();
+			qlist = dao.bringQ();
+			ArrayList<GenreDTO> glist = new ArrayList<GenreDTO>();
+			glist = dao.bringG();
 			
 			String msg = "현재 이용이 불가합니다.";
 			String page="/movie/home";
@@ -50,7 +53,8 @@ public class MemberService {
 			if(dto != null) {
 				System.out.println("데이터 보내주기");
 				req.setAttribute("mDto", dto);
-				req.setAttribute("qList", list);
+				req.setAttribute("qList", qlist);
+				req.setAttribute("gList", glist);
 				msg = "";
 				page="./updateMember.jsp";
 			}
@@ -78,11 +82,12 @@ public class MemberService {
 			if(success > 0) {
 				if(dto.getOriFileName() != null || dto.getProfileURL() != null) {
 					String id = dto.getId();
-					String delFileName = dao.getFileName(id);
-					int change = dao.savePhoto(delFileName,dto);
+					HashMap<String, Object> delMap = new HashMap<String, Object>();
+					delMap = dao.getFileName(id);
+					int change = dao.savePhoto(delMap,dto);
 					System.out.println("교체한 파일 갯수 : "+change);
-					if(delFileName != null) {
-						file.delete(delFileName);
+					if(delMap.get("delFileName") != null) {
+						file.delete(delMap.get("delFileName"));
 					}
 				} 
 			}

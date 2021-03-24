@@ -161,7 +161,9 @@
 	                <tr>
 	                    <td>
 	                        <select name="genre">
-	                            <option value="${mDto.genre}">${mDto.genre}</option>
+	                            <c:forEach items="${gList}" var="list" >
+	                            	<option value="${list.content}">${list.content}</option>
+	                        	</c:forEach>
 	                         </select>
 	                    </td>
 	                </tr>

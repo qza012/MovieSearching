@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -14,7 +15,9 @@ import javax.sql.DataSource;
 
 import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.follow.dto.FollowDTO;
+import com.mvc.genre.dto.GenreDTO;
 import com.mvc.member.dto.MemberDTO;
+import com.mvc.photo.dto.PhotoDTO;
 import com.mvc.question.dto.QuestionDTO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -98,11 +101,30 @@ public class MemberDAO {
 		return Qlist;
 	}
 	
-	public int savePhoto(String delFileName, MemberDTO dto) { //프로필 사진 저장
+	public ArrayList<GenreDTO> bringG() {
+		String sql = "SELECT * FROM genre3";
+		ArrayList<GenreDTO> Glist = null;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			Glist = new ArrayList<GenreDTO>();
+			while(rs.next()) {
+				GenreDTO dto = new GenreDTO();
+				dto.setIdx(rs.getInt("idx"));
+				dto.setContent(rs.getString("content"));
+				Glist.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return Glist;
+	}
+	
+	public int savePhoto(HashMap<String, Object> delMap, MemberDTO dto) { //프로필 사진 저장
 		int success = 0;
 		String sql="";
 		try {
-			if(delFileName != null) {
+			if(!delMap.isEmpty()) {
 				sql = "UPDATE photo3 SET oriFileName=?, newFileName=?, profileURL=? WHERE id=?";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, dto.getOriFileName());
@@ -122,6 +144,7 @@ public class MemberDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println(dto.getOriFileName()+" / "+dto.getNewFileName()+" / "+dto.getId()+" / "+dto.getProfileURL());
 		return success;
 	}
 	
@@ -152,25 +175,26 @@ public class MemberDAO {
 		return success;
 	}
 
-	public String getFileName(String id) { //파일 변경(파일 기보유 여부 확인)
+	public HashMap<String, Object> getFileName(String id) { //파일 변경(파일 기보유 여부 확인)
+		HashMap<String, Object> delMap = new HashMap<String, Object>();
 		String delFileName = null;
+		String delURL = null;
 		String sql = "SELECT newFileName,profileURL FROM photo3 WHERE id =?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
 			rs = ps.executeQuery();
 			if(rs.next()) { 
-				if(rs.getString("newFileName") != null) {
-					delFileName = rs.getString("newFileName");					
-				} else if(rs.getString("profileURL") != null) {
-					delFileName = rs.getString("newFileName");			
-				}
+				delFileName = rs.getString("newFileName");					
+				delURL = rs.getString("profileURL");
+				delMap.put("delFileName", delFileName);
+				delMap.put("delURL", delURL);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("삭제파일 : "+delFileName);
-		return delFileName;
+		System.out.println("삭제파일 : "+delFileName+" / "+delURL);
+		return delMap;
 	}
 
 	public boolean withdraw(String id, String pw) {// 회원 탈퇴
@@ -620,6 +644,7 @@ public class MemberDAO {
 					dto.setOriFileName(rs.getString("oriFileName"));
 					dto.setNewFileName(rs.getString("newFileName"));
 					dto.setProfileURL(rs.getString("profileURL"));
+					System.out.println(dto.getOriFileName()+" / "+dto.getNewFileName()+" / "+dto.getProfileURL());
 				}
 				follow3List.add(dto);
 			}	
