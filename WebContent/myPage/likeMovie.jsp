@@ -99,12 +99,10 @@
 		</div>
     </body>
 	<script>
-		var showIf = document.getElementById('myPage').style.display;
-		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			}
-		}
+	var msg = "${msg}";
+	if(msg != ""){
+		alert(msg);
+		console.log(msg);
+	}
 	</script>
 </html>
