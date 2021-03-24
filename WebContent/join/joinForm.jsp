@@ -90,7 +90,7 @@ label{
 											id="name" />
 									</div>
 									<div>
-										<label>나이</label><br> <input type="number" min="15" max="100"
+										<label>나이</label><br> <input type="number" min="1" max="130"
 											name="age" id="age" />
 									</div>
 									<div>
@@ -141,21 +141,12 @@ label{
 <script>
 $("button").remove("#btn2");
 var idChk = false;//중복 체크 여부
+var re = /^[a-zA-Z0-9]{4,50}$/; //ID 유효
+var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,200}$/; //PW 유효
+var re3 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //이름 유효
+var re4 = /^[0-9]{1,3}$/; //나이 유효
+	 
 
-//id 값 변경 -> 중복 체크 
-/* $("#id").on("propertychange change keyup paste input",function(){
-	if(idChk==false){
-		alert("아이디 중복체크를 해주세요.");
-		id.focus();
-		return false;
-	}
-}); 
-//아이디를 수정했을 때 
-	$('#id').change(function(){
-		$('#img').hide();
-		$('#idChk').show();
-	});
-*/
 
 $(function(){
 	$('#id').change(function(){
@@ -173,17 +164,24 @@ $(function(){
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj);
-					if(obj.use==false){
-						alert('이미 사용중인 아이디 입니다.');
-						$("#id").val('').focus();
-						
-					}else if(obj.use){
-						alert('사용할 수 있는 아이디 입니다.');
-						$('#img').show();
-						$('#idChk').hide();
-						idChk= true;
+					if(!re.test(id.value)) {
+					 alert("아이디는 4~50자 이내의 영문 대소문자와 숫자로만 입력");
+					 id.focus(); 
+					 idChk=false;
+					}else{
+						if(obj.use==false){
+							alert('이미 사용중인 아이디 입니다.');
+							$("#id").val('').focus();
+							
+						}else if(obj.use){
+							alert('사용할 수 있는 아이디 입니다.');
+							$('#img').show();
+							$('#idChk').hide();
+							idChk= true;
+						}
 					}
-				}
+					}
+				
 				,error:function(e){
 					console.log(e);
 				}
@@ -211,13 +209,19 @@ $(function(){
 		if (id.value == "") {
 			alert("아이디를 입력하세요.")
 			id.focus()
-		}else if (idChk==false) {
+		}else if(!re.test(id.value)) {
+			 alert("아이디는 4~50자 이내의 영문 대소문자와 숫자로만 입력");
+			 id.focus(); 
+	    }else if (idChk==false) {
 			alert("아이디 중복체크를 해주세요.");
 			id.focus();
 		}else if (pw.value == "") {
 			alert("비밀번호를 입력하세요.");
 			pw.focus();
-		}else if (pw2.value !== pw.value) {
+		}else if(!re2.test(pw.value)) {
+			 alert("비밀번호는 4~200자 이내의 영문 대소문자와 숫자,특수문자 조합이여야 합니다");
+			 pw.focus(); 
+	    }else if (pw2.value !== pw.value) {
 			alert("비밀번호가 다릅니다.");
 			pw2.focus();
 		}else if(A.value == "") {
@@ -226,10 +230,16 @@ $(function(){
 		}else if(name.value == "") {
 			alert("이름을 입력하세요.");
 			name.focus();
-		}else if(age.value == "") {
+		}else if(!re3.test(name.value)) {
+			 alert("이름은 한글만 가능합니다.");
+			 name.focus(); 
+	    }else if(age.value == "") {
 			alert("나이를 입력하세요.");
 			age.focus();
-		}else if(!female.checked && !male.checked) {//둘 다 선택 X
+		}else if(!re4.test(age.value)) {
+			 alert("나이를 확인해주세요.");
+			 age.focus(); 
+	    }else if(!female.checked && !male.checked) {//둘 다 선택 X
 			alert("성별을 선택해주세요.");
 			male.focus();
 		}else if(email_id.value == "") {//@이전 입력 X

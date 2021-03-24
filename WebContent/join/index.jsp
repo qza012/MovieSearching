@@ -89,18 +89,29 @@ a:hover {
 </body>
 <script>
 	 $("div").remove("#login");
-	 
 	var id = document.getElementById("id");
 	var pw = document.getElementById("pw");
+	var re = /^[a-zA-Z0-9]{4,50}$/; //ID 유효
+	var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,200}$/; //PW 유효
+		 
+
+	
+	 
 	$("#login").click(function() {
 		console.log(id + "/" + pw);
 		if (id.value == "") {
 			alert("아이디를 입력하세요.");
 			id.focus();
-		} else if (pw.value == "") {
+		}else if(!re.test(id.value)) {
+			 alert("아이디는 4~50자 이내의 영문 대소문자와 숫자로만 입력");
+			 id.focus(); 
+	    } else if (pw.value == "") {
 			alert("패스워드를 입력하세요.");
 			pw.focus();
-		}else if (pw.value.lenth>50) {
+		}else if(!re2.test(pw.value)) {
+			 alert("비밀번호는 4~200자 이내의 영문 대소문자와 숫자,특수문자 조합이여야 합니다");
+			 pw.focus(); 
+	    }else if (pw.value.lenth>50) {
 			pw.focus();
 			document.getElementById('pw').innerHTML = '<font color=red>비밀번호는 200자 이하여야 합니다.</font>';
 		}else if (pw.value == "") {
