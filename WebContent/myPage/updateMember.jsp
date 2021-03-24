@@ -207,6 +207,12 @@
 		} else if($('#email').val() == ""){
 			alert("이메일을 확인해주세요");
 			$('#email').focus();
+		} else if($('#email').val().indexOf('@')<0){
+                alert('이메일의 형식을 맞춰 주세요!(@ 추가)'); 
+				$('#email').focus();   
+       	} else if($('#email').val().indexOf('.')<0) {
+                alert('이메일의 형식을 갖춰 주세요!(. 추가)');
+                $('#email').focus();
 		} else {
 			$('form').submit();
 		}

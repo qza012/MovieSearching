@@ -318,10 +318,10 @@ public class ReviewDAO {
 		int end = group*pagePerCnt;
 		int start = end-(pagePerCnt-1);
 		
-		String sql="SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY idx DESC)AS rnum, r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName "
-				+ "FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode AND r.id = ?)r JOIN (SELECT IDX, COUNT(REVIEW_IDX)cntLike "
-				+ "FROM (SELECT r.IDX, l.REVIEW_IDX FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l ON r.IDX = l.IDX "
-				+ "WHERE del_type='N' AND rnum BETWEEN ? AND ?";
+		String sql="SELECT * FROM(SELECT ROW_NUMBER() OVER(ORDER BY r.idx DESC) AS rnum, r.idx idx, id, subject, score, reg_date, del_type, movieName, movieCode, cntlike "
+				+ "FROM (SELECT r.idx, r.id, r.subject, r.score, r.reg_date, r.del_type, m.movieName, m.movieCode FROM review3 r INNER JOIN movie3 m ON r.moviecode = m.moviecode)r "
+				+ "JOIN (SELECT idx, COUNT(review_idx)cntLike FROM (SELECT r.idx, l.review_idx FROM review3 r LEFT OUTER JOIN review_like3 l ON r.idx = l.review_idx) GROUP BY IDX)l "
+				+ "ON r.idx = l.idx WHERE del_type='N' AND id=? ORDER BY idx DESC) WHERE rnum BETWEEN ? AND ?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, loginId);
@@ -341,9 +341,9 @@ public class ReviewDAO {
 			}
 			System.out.println("listSize : "+list.size());
 			int maxPage = getMyReviewMaxPage(pagePerCnt,loginId);
+			System.out.println("maxPage : "+maxPage);
 			map.put("list", list);
 			map.put("maxPage", maxPage);
-			System.out.println("maxPage : "+maxPage);	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

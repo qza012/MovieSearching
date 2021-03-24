@@ -10,13 +10,13 @@
 			h2{
 				margin-left: 2%;
 			}            
-			a:link, a:visited{/*링크를 클릭 하기 전*/
+			a:link, a:visited{
 				color:darkslategrey;
 				text-decoration: none;
 				font-size: 14px;
 				font-weight: 600;
 			}
-            a:active{/*링크 실행 시*/
+            a:active{
            		color: cornflowerblue;
             }
             ::marker {

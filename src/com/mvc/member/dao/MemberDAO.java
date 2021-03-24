@@ -161,9 +161,6 @@ public class MemberDAO {
 			ps.setString(5, mDto.getEmail());
 			ps.setString(6, mDto.getGenre());
 			ps.setString(7, mDto.getPw_answer());
-			/*질문 변경 불가
-			ps.setInt(8, mDto.getQuestion_idx());
-			*/
 			ps.setString(8, mDto.getId());
 			success = ps.executeUpdate();
 			if(success > 0) {
@@ -211,7 +208,6 @@ public class MemberDAO {
 				ps.setString(1, "Y");
 				ps.setString(2, "Y");
 				ps.setString(3, rs.getString("id"));
-				System.out.println(rs.getString("id"));
 				int data = ps.executeUpdate();
 				if(data>0) {
 					success = true;
@@ -543,8 +539,6 @@ public class MemberDAO {
 		String pw = null;
 		String sql ="SELECT pw FROM member3 WHERE id=? AND question_idx=? AND pw_answer=?";
 		
-		
-		
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1,id);
@@ -613,7 +607,6 @@ public class MemberDAO {
 			rs = ps.executeQuery();
 			List<String> tarlist = new ArrayList<String>();
 			while(rs.next()) {
-				System.out.println(rs.getString("target_id"));
 				tarlist.add(rs.getString("target_id"));
 			}
 			for(String tarid : tarlist) {
@@ -697,7 +690,6 @@ public class MemberDAO {
 			rs = ps.executeQuery();
 			List<String> idList = new ArrayList<String>();
 			while(rs.next()) {
-//				System.out.println(rs.getString("target_id"));
 				idList.add(rs.getString("id"));
 			}
 			for(String fId : idList) {
