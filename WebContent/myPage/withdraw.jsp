@@ -65,5 +65,5 @@
 			alert(msg);
 			console.log(msg);
 		}
-    </script>
+	</script>
 </html>

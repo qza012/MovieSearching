@@ -63,6 +63,11 @@
             #forURL{
             	visibility: hidden;
             }
+            img{
+            	width:200px; 
+            	height:200px;
+            	margin-left: 10%;
+            }
         </style>
     </head>
     <body>
@@ -181,6 +186,17 @@
 	                		</div>
 	                		<input type="button" id="switchType" value="URL로 등록하기" style="margin-top: 1%;">
 		    			</td>
+		    		</tr>
+		    		<tr>
+		    			<td>
+		    				<c:if test="${mDto.profileURL == null}">
+					     		<img src="photo/${mDto.newFileName}" alt="${mDto.oriFileName}"/>		             		
+				         	</c:if>
+				            <c:if test="${mDto.profileURL != null}">
+				             	<img src="${mDto.profileURL}"/>
+				            </c:if>
+		    			</td>
+		    		</tr>	
 	                <tr>
 	                    <th colspan="2">
 	                        <input type="button" value="저장" id="saveMem">
