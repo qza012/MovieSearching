@@ -77,7 +77,7 @@ public class MovieDAO {
 		int start = end - (pagePerCnt - 1);
 
 		String sql = "SELECT posterUrl, movieName, movieCode FROM "
-				+ "(SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) AS rnum, posterUrl, movieName, movieCode FROM movie3)"
+				+ "(SELECT ROW_NUMBER() OVER(ORDER BY openDate) AS rnum, posterUrl, movieName, movieCode FROM movie3)"
 				+ " WHERE rnum BETWEEN ? AND ?";
 		ps = conn.prepareStatement(sql);
 		ps.setInt(1, start);
@@ -152,7 +152,7 @@ public class MovieDAO {
 	}
 
 	public ArrayList<ReviewDTO> review(String movieCode) {
-		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND del_type='N' AND movieCode=? ORDER BY reg_date DESC";
+		String sql = "SELECT idx, id, movieCode, subject, content, reg_date, del_type FROM review3 WHERE ROWNUM <= 5 AND movieCode=? ORDER BY reg_date DESC";
 		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 		try {
 			ps = conn.prepareStatement(sql);
@@ -214,7 +214,7 @@ public class MovieDAO {
 		}
 
 		System.out.println("페이지별 영화 수 : " + list.size());
-		int maxPage = getMaxPage(pagePerCnt, keyWord, search);
+		int maxPage = getMaxPage(pagePerCnt, keyWord);
 		map.put("list", list);
 		map.put("maxPage", maxPage);
 		System.out.println("최대 페이지 수 : " + maxPage);
@@ -238,25 +238,12 @@ public class MovieDAO {
 		return max;
 	}
 
-	private int getMaxPage(int pagePerCnt, String keyWord, String search) {
-
-		String sql = null;
+	private int getMaxPage(int pagePerCnt, String keyWord) {
+		String sql = "SELECT COUNT(movieCode) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
+				+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?)";
 		int max = 0;
-
 		try {
-			if (search.equals("movieName")) {
-				sql = "SELECT COUNT(*) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
-						+ "movieName, openDate, genre, director, country FROM movie3 WHERE movieName LIKE ?)";
-				ps = conn.prepareStatement(sql);
-			} else if (search.equals("genre")) {
-				sql = "SELECT COUNT(*) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
-						+ "movieName, openDate, genre, director, country FROM movie3 WHERE genre LIKE ?)";
-				ps = conn.prepareStatement(sql);
-			} else if (search.equals("director")) {
-				sql = "SELECT COUNT(*) FROM (SELECT ROW_NUMBER() OVER(ORDER BY openDate DESC) rnum, movieCode, "
-						+ "movieName, openDate, genre, director, country FROM movie3 WHERE director LIKE ?)";
-				ps = conn.prepareStatement(sql);
-			}
+			ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyWord + "%");
 			rs = ps.executeQuery();
 			if (rs.next()) {

@@ -45,7 +45,7 @@
 				width:700px;
 				text-align: center;
 				margin-top: 30px;
-				margin-left: 35%;
+				margin-left: 38%;
 			}
 			.pageArea span{
 				font-size:16px;
@@ -99,10 +99,10 @@
 		</div>
     </body>
 	<script>
-	var msg = "${msg}";
-	if(msg != ""){
-		alert(msg);
-		console.log(msg);
-	}
+		var msg = "${msg}";
+		if(msg != ""){
+			alert(msg);
+			console.log(msg);
+		}
 	</script>
 </html>

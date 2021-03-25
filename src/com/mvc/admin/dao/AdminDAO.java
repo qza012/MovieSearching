@@ -467,7 +467,7 @@ public class AdminDAO {
 	public List<MovieDTO> getMovieList(int curPage, int rowsPerPage) throws SQLException {
 		AdminQuery query = new AdminQuery
 				.Builder(AdminSql.MOVIE_COLUMNS.getValue(), AdminSql.MOVIE_TABLE.getValue())
-				.rnumSortColumn("openDate")
+				.rnumSortColumn("movieCode")
 				.build();
 
 		setRsPaging(curPage, rowsPerPage, query);

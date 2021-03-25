@@ -114,7 +114,7 @@ $("#save").click(function(){
 	}else{
 		$.ajax({ 
 			type:'post' 
-			,url:'../reviewWrite' 
+			,url:'/MovieSearching/reviewWrite' 
 			,data:{
 				'subject':subject,
 				'id':id,
