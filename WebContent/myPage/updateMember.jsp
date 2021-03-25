@@ -63,6 +63,11 @@
             #forURL{
             	visibility: hidden;
             }
+            img{
+            	width:200px; 
+            	height:200px;
+            	margin-left: 10%;
+            }
         </style>
     </head>
     <body>
@@ -181,6 +186,17 @@
 	                		</div>
 	                		<input type="button" id="switchType" value="URL로 등록하기" style="margin-top: 1%;">
 		    			</td>
+		    		</tr>
+		    		<tr>
+		    			<td>
+		    				<c:if test="${mDto.profileURL == null}">
+					     		<img src="photo/${mDto.newFileName}" alt="${mDto.oriFileName}"/>		             		
+				         	</c:if>
+				            <c:if test="${mDto.profileURL != null}">
+				             	<img src="${mDto.profileURL}"/>
+				            </c:if>
+		    			</td>
+		    		</tr>	
 	                <tr>
 	                    <th colspan="2">
 	                        <input type="button" value="저장" id="saveMem">
@@ -191,51 +207,54 @@
 	    </div>
     </body>
 	<script>
-	$('#saveMem').click(function(){
-		if($('#userId').val() == ""){
-			alert("아이디를 확인해주세요");
-			$('#userId').focus();
-		} else if($('#userPw').val() == ""){
-			alert("비밀번호를 확인해주세요");
-			$('#userPw').focus();
-		} else if($('#conPw').val() != $('#userPw').val()){
-			alert("비밀번호가 일치하지 않습니다");
-			$('#conPw').focus();
-		} else if($('#answer').val() == ""){
-			alert("답변을 입력해주세요");
-			$('#answer').focus();
-		} else if($('#email').val() == ""){
-			alert("이메일을 확인해주세요");
-			$('#email').focus();
-		} else if($('#email').val().indexOf('@')<0){
-                alert('이메일의 형식을 맞춰 주세요!(@ 추가)'); 
-				$('#email').focus();   
-       	} else if($('#email').val().indexOf('.')<0) {
-                alert('이메일의 형식을 갖춰 주세요!(. 추가)');
-                $('#email').focus();
-		} else {
-			$('form').submit();
+		$('#saveMem').click(function(){
+			if($('#userId').val() == ""){
+				alert("아이디를 확인해주세요");
+				$('#userId').focus();
+			} else if($('#userPw').val() == ""){
+				alert("비밀번호를 확인해주세요");
+				$('#userPw').focus();
+			} else if($('#userPw').val().length<4) {
+				alert("비밀번호는 4자 이상 입력해주세요");
+				$('#userPw').focus();
+			} else if($('#conPw').val() != $('#userPw').val()){
+				alert("비밀번호가 일치하지 않습니다");
+				$('#conPw').focus();
+			} else if($('#answer').val() == ""){
+				alert("답변을 입력해주세요");
+				$('#answer').focus();
+			} else if($('#email').val() == ""){
+				alert("이메일을 확인해주세요");
+				$('#email').focus();
+			} else if($('#email').val().indexOf('@')<0){
+	                alert('이메일의 형식을 맞춰 주세요!(@ 추가)'); 
+					$('#email').focus();   
+	       	} else if($('#email').val().indexOf('.')<0) {
+	                alert('이메일의 형식을 갖춰 주세요!(. 추가)');
+	                $('#email').focus();
+			} else {
+				$('form').submit();
+			}
+		});
+		
+		$('#switchType').click(function(){
+			if($('#switchType').val() == "URL로 등록하기"){
+				$('#forURL').css({'visibility':'visible'});
+				$('#forFile').css({'visibility':'hidden'});
+				$('#switchType').val("File로 등록하기");
+				console.log("file로 등록 -> url로 등록");
+			}else if($('#switchType').val() == "File로 등록하기"){
+				$('#forURL').css({'visibility':'hidden'});
+				$('#forFile').css({'visibility':'visible'});
+				$('#switchType').val("URL로 등록하기");
+				console.log("url로 등록 -> file로 등록");
+			}
+		});
+		
+		var msg = "${msg}";
+		if(msg != ""){
+			alert(msg);
+			console.log(msg);
 		}
-	});
-	
-	$('#switchType').click(function(){
-		if($('#switchType').val() == "URL로 등록하기"){
-			$('#forURL').css({'visibility':'visible'});
-			$('#forFile').css({'visibility':'hidden'});
-			$('#switchType').val("File로 등록하기");
-			console.log("file로 등록 -> url로 등록");
-		}else if($('#switchType').val() == "File로 등록하기"){
-			$('#forURL').css({'visibility':'hidden'});
-			$('#forFile').css({'visibility':'visible'});
-			$('#switchType').val("URL로 등록하기");
-			console.log("url로 등록 -> file로 등록");
-		}
-	});
-	
-	var msg = "${msg}";
-	if(msg != ""){
-		alert(msg);
-		console.log(msg);
-	}
 	</script>
 </html>

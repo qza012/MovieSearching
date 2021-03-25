@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,7 +16,6 @@ import com.mvc.alarm.dto.AlarmDTO;
 import com.mvc.follow.dto.FollowDTO;
 import com.mvc.genre.dto.GenreDTO;
 import com.mvc.member.dto.MemberDTO;
-import com.mvc.photo.dto.PhotoDTO;
 import com.mvc.question.dto.QuestionDTO;
 import com.mvc.review.dto.ReviewDTO;
 
@@ -55,8 +53,7 @@ public class MemberDAO {
 
 	public MemberDTO updateForm(String id) {
 		MemberDTO dto = null;
-		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=?";
+		String sql = "SELECT id, pw, name, age, gender, email, genre, pw_answer, question_idx FROM member3 WHERE id=?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
@@ -73,6 +70,15 @@ public class MemberDAO {
 				dto.setGenre(rs.getString("genre"));
 				dto.setPw_answer(rs.getString("pw_answer"));
 				dto.setQuestion_idx(rs.getInt("question_idx"));
+			}
+			sql="SELECT oriFileName, newFileName, profileURL FROM photo3 WHERE id=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				dto.setOriFileName(rs.getString("oriFileName"));
+				dto.setNewFileName(rs.getString("newFileName"));
+				dto.setProfileURL(rs.getString("profileURL"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

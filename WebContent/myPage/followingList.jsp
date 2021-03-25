@@ -128,10 +128,10 @@
 		</div>
     </body>
 	<script>
-	var msg = "${msg}";
-	if(msg != ""){
-		alert(msg);
-		console.log(msg);
-	}
+		var msg = "${msg}";
+		if(msg != ""){
+			alert(msg);
+			console.log(msg);
+		}
 	</script>
 </html>
