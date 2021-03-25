@@ -131,7 +131,7 @@
 			setPageNum();
 		});
 		
-		// 활성화 버튼 비동기 통신.
+		// 삭제 버튼 비동기 통신.
 		function toggleDel(buttonObj) {
 			var button = $(buttonObj);
 			var flag = $("#"+buttonObj.value);
