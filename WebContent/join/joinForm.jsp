@@ -198,6 +198,11 @@ $(function(){
 		$('#emailChk').show();
 		emailChk = false;
 	});
+	$('#email_sel').change(function(){
+		$('#img2').hide();
+		$('#emailChk').show();
+		emailChk = false;
+	});
 
 	 $("#emailChk").click(function(){
 		 if(email_id.value == "") {//@이전 입력 X
