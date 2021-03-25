@@ -129,8 +129,9 @@ function movieChoice(movieCode){
 			if(data.haveReview == 1){
 				alert("이미 리뷰를 작성한 영화입니다.");
 			}else{
+				console.log(data.movieCode);
 				if(data.success == 1){
-					opener.document.getElementById("movieCode").value=data.moiveCode;
+					opener.document.getElementById("movieCode").value=data.movieCode;
 					opener.document.getElementById("movieName").value=data.movieName;
 					window.close();
 				}
