@@ -69,7 +69,7 @@ table, th, td {
 					<li>
 						<table>
 							<tr>
-								<th>${movie.youtubeUrl}</th>
+								<iframe width="720" height="450" src="${movie.youtubeUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 							</tr>
 							<tr>
 								<td>제목 : ${movie.movieName}</td>
@@ -146,8 +146,8 @@ table, th, td {
 	</div>
 </body>
 <script>
-	function movieLike(movieCode){
 		var id = "${sessionScope.myLoginId}";
+	function movieLike(movieCode){
 		$.ajax({
 			type:'post' 
 			,url:'movieLike' 
@@ -187,9 +187,11 @@ table, th, td {
 			,dataType: 'json' 
 			,success: function(data){
 				console.log(data);
-				if(data.haveReview == 1){
+				if(id == "") {
+					alert('로그인 후 이용해주세요.');
+				} else if(data.haveReview == 1) {
 					alert('이미 리뷰를 작성한 영화입니다.');
-				}else{
+				} else {
 					location.href='../movieReviewWriteForm?movieCode='+data.movieCode+'&movieName='+data.movieName;
 				}
 			}
