@@ -178,8 +178,8 @@ li {
 	});
 
 	$("#adminpage").click(function() {
-		if (loginId == "") {
-			alert("로그인후 이용해주세요.");
+		if (loginId == "" || loginId != "admin") {
+			alert("관리자로 로그인후 이용해주세요.");
 		} else {			
 			$(".navi_sub2").slideToggle('slow');
 			$(".navi_sub2").css('display', 'block');

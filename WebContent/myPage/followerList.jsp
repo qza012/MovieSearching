@@ -10,13 +10,13 @@
  			h2{
 				margin-left: 2%;
 			}            
-			a:link, a:visited{/*링크를 클릭 하기 전*/
+			a:link, a:visited{
 				color:darkslategrey;
 				text-decoration: none;
 				font-size: 14px;
 				font-weight: 600;
 			}
-            a:active{/*링크 실행 시*/
+            a:active{
                 color: cornflowerblue;
            	}
 			::marker {
@@ -24,9 +24,9 @@
            	}
   			.followerList {
                 font-family: Verdana;
-                width:65%;
+                width:70%;
                 margin-top: 4%;
-                margin-left: 25%;
+                margin-left: 22%;
 
             } 
            #table{
@@ -39,7 +39,7 @@
             }
             img{
             	width:100px; 
-            	height:100px;
+            	height:110px;
             	margin-left: 30%;
             }
             #followerId{
@@ -91,25 +91,26 @@
         	<h2>팔로워</h2>
         	<table>
 	         	<c:forEach items="${fList}" var="follow">
-	            	<div id="table">
-		             	<div id="profile">
-			             		<c:if test="${follow.profileURL == null}">
-				             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
-			             		</c:if>
-			             		<c:if test="${follow.profileURL != null}">
-			             			<img src="${follow.profileURL}" width="100px" height="100px"/>
-			             		</c:if>
-			             	</div>
+	            	<tr>
+		            	<div id="table">
+			             	<div id="profile">
+				             		<c:if test="${follow.profileURL == null}">
+					             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
+				             		</c:if>
+				             		<c:if test="${follow.profileURL != null}">
+				             			<img src="${follow.profileURL}" width="100px" height="100px"/>
+				             		</c:if>
+				             	</div>
 			             	<span>
 		        	        	&nbsp;<div id="followerId">${follow.id}</div>	
 		    	            	<div id="followNum">팔로잉 ${follow.followingNum} 팔로워 ${follow.followerNum}</div>
 	    	        	    	<div id="notLike"><button onclick="location.href='./deleteFollower?id=${follow.id}'">팔로워 삭제</button></div> 	
 			             	</span>
-	                </div>
+	               		</div>
+	               	</tr>	
 	        	</c:forEach>
         	</table>
         </div>
-        <div></div>
         <div class="pageArea">
 			<span id="btn">
 				<c:if test="${currPage == 1}"> 이전</c:if>
@@ -127,12 +128,10 @@
 		</div>
     </body>
 	<script>
-		var showIf = document.getElementById('myPage').style.display;
-		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			}
-		}
+	var msg = "${msg}";
+	if(msg != ""){
+		alert(msg);
+		console.log(msg);
+	}
 	</script>
 </html>

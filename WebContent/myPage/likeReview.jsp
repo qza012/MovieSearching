@@ -72,7 +72,7 @@
             <h2>좋아요한 리뷰</h2>
             <table>
                 <tr>
-                    <th>리뷰 번호</th>
+                    <th>IDX</th>
                     <th>제목</th>
                     <th>영화 제목</th>
                     <th>평점</th>
@@ -105,12 +105,10 @@
 		</div>
     </body>
 	<script>
-		var showIf = document.getElementById('myPage').style.display;
-		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			}
-		}
+	var msg = "${msg}";
+	if(msg != ""){
+		alert(msg);
+		console.log(msg);
+	}
 	</script>
 </html>

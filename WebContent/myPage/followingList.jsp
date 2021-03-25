@@ -10,13 +10,13 @@
 			h2{
 				margin-left: 2%;
 			}            
-			a:link, a:visited{/*링크를 클릭 하기 전*/
+			a:link, a:visited{
 				color:darkslategrey;
 				text-decoration: none;
 				font-size: 14px;
 				font-weight: 600;
 			}
-            a:active{/*링크 실행 시*/
+            a:active{
            		color: cornflowerblue;
             }
             ::marker {
@@ -38,7 +38,7 @@
             }
             img{
             	width:100px; 
-            	height:100px;
+            	height:110px;
             	margin-left: 30%;
             }
             #followingId{
@@ -98,7 +98,7 @@
 				             		<img src="photo/${follow.newFileName}" alt="${follow.oriFileName}"/>		             		
 			             		</c:if>
 			             		<c:if test="${follow.profileURL != null}">
-			             			<img src="${follow.profileURL}" width="100px" height="100px"/>
+			             			<img src="${follow.profileURL}"/>
 			             		</c:if>
 			             	</div>
 		                	<span>
@@ -128,12 +128,10 @@
 		</div>
     </body>
 	<script>
-		var showIf = document.getElementById('myPage').style.display;
-		
-		function showMyPage(){
-			if(showIf = 'none'){
-				document.getElementById('myPage').style.display='block';				
-			}
-		}
+	var msg = "${msg}";
+	if(msg != ""){
+		alert(msg);
+		console.log(msg);
+	}
 	</script>
 </html>

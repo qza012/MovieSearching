@@ -161,7 +161,9 @@
 	                <tr>
 	                    <td>
 	                        <select name="genre">
-	                            <option value="${mDto.genre}">${mDto.genre}</option>
+	                            <c:forEach items="${gList}" var="list" >
+	                            	<option value="${list.content}">${list.content}</option>
+	                        	</c:forEach>
 	                         </select>
 	                    </td>
 	                </tr>
@@ -205,26 +207,35 @@
 		} else if($('#email').val() == ""){
 			alert("이메일을 확인해주세요");
 			$('#email').focus();
+		} else if($('#email').val().indexOf('@')<0){
+                alert('이메일의 형식을 맞춰 주세요!(@ 추가)'); 
+				$('#email').focus();   
+       	} else if($('#email').val().indexOf('.')<0) {
+                alert('이메일의 형식을 갖춰 주세요!(. 추가)');
+                $('#email').focus();
 		} else {
 			$('form').submit();
 		}
 	});
 	
 	$('#switchType').click(function(){
-		if($('#forURL').css({'visibility':'hidden'})){
+		if($('#switchType').val() == "URL로 등록하기"){
 			$('#forURL').css({'visibility':'visible'});
 			$('#forFile').css({'visibility':'hidden'});
 			$('#switchType').val("File로 등록하기");
-		}else if($('#forFile').css({'visibility':'hidden'})){
+			console.log("file로 등록 -> url로 등록");
+		}else if($('#switchType').val() == "File로 등록하기"){
 			$('#forURL').css({'visibility':'hidden'});
 			$('#forFile').css({'visibility':'visible'});
 			$('#switchType').val("URL로 등록하기");
+			console.log("url로 등록 -> file로 등록");
 		}
 	});
 	
-	var msg = '${msg}'
-		if(msg != ""){
-			alert(msg);
-		}
+	var msg = "${msg}";
+	if(msg != ""){
+		alert(msg);
+		console.log(msg);
+	}
 	</script>
 </html>

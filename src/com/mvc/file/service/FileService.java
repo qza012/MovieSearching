@@ -50,19 +50,18 @@ public class FileService {
 			String profileURL = multi.getParameter("urlInput");
 			if(profileURL != null) {
 				dto.setProfileURL(profileURL);
-			}else {
-				String oriFileName = multi.getFilesystemName("photo");
-				if(oriFileName != null) {
-					String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
-					String newFileName = System.currentTimeMillis()+ext;
-					File oriFile = new File(savePath+oriFileName);
-					File newFile = new File(savePath+newFileName);
-					System.out.println(savePath+oriFileName);
-					boolean success = oriFile.renameTo(newFile);
-					System.out.println("이름이 바뀌었는가?"+success);
-					dto.setOriFileName(oriFileName);
-					dto.setNewFileName(newFileName);
-				}
+			}
+			String oriFileName = multi.getFilesystemName("photo");
+			if(oriFileName != null) {
+				String ext = oriFileName.substring(oriFileName.lastIndexOf("."));
+				String newFileName = System.currentTimeMillis()+ext;
+				File oriFile = new File(savePath+oriFileName);
+				File newFile = new File(savePath+newFileName);
+				System.out.println(savePath+oriFileName);
+				boolean success = oriFile.renameTo(newFile);
+				System.out.println("이름이 바뀌었는가?"+success);
+				dto.setOriFileName(oriFileName);
+				dto.setNewFileName(newFileName);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,8 +69,8 @@ public class FileService {
 		return dto;
 	}
 
-	public void delete(String delFileName) {
-		File file = new File("C:/upload/"+delFileName);
+	public void delete(Object object) {
+		File file = new File("C:/upload/"+object);
 		if(file.exists()) {
 			boolean success = file.delete();
 			System.out.println("삭제 성공 여부 : "+success);

@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -270,7 +271,8 @@ public class ReviewService {
 			}
 			
 			ReviewDAO dao = new ReviewDAO();
-			HashMap<String, Object> map = dao.myReviewList(loginId,group);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map = dao.myReviewList(loginId,group);
 			
 			String page="/MovieSearching/movie/home";
 			
