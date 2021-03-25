@@ -47,7 +47,6 @@ public class MemberService {
 			ArrayList<GenreDTO> glist = new ArrayList<GenreDTO>();
 			glist = dao.bringG();
 			
-			String msg = "현재 이용이 불가합니다.";
 			String page="/movie/home";
 			
 			if(dto != null) {
@@ -55,12 +54,9 @@ public class MemberService {
 				req.setAttribute("mDto", dto);
 				req.setAttribute("qList", qlist);
 				req.setAttribute("gList", glist);
-				msg = "";
 				page="./updateMember.jsp";
 			}
 			dao.resClose();
-			
-			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher(page);
 			dis.forward(req, resp);
 		} else {
@@ -78,6 +74,7 @@ public class MemberService {
 		
 			MemberDAO dao = new MemberDAO();
 			int success = dao.updateMember(dto);
+			String msg= "회원정보가 수정되었습니다!";
 			
 			if(success > 0) {
 				if(dto.getOriFileName() != null || dto.getProfileURL() != null) {
@@ -92,6 +89,7 @@ public class MemberService {
 				} 
 			}
 			dao.resClose();
+			req.setAttribute("msg", msg);
 			RequestDispatcher dis = req.getRequestDispatcher("/myPage/updateMF?id="+loginId);
 			dis.forward(req, resp);
 		} else {
@@ -390,27 +388,6 @@ public class MemberService {
 		}
 	}
 	
-	public void loginForMyPage() throws ServletException, IOException {
-		String id = req.getParameter("userId");
-		String pw = req.getParameter("userPw");
-		System.out.println(id+" / "+pw);
-		
-		MemberDAO dao = new MemberDAO();
-		boolean success = false;
-		try {
-			success = dao. loginForMyPage(id,pw);
-			if(success) {
-				req.getSession().setAttribute("myLoginId", id);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dao.resClose();
-		}
-		RequestDispatcher dis = req.getRequestDispatcher("./main.jsp");
-		dis.forward(req, resp);
-	}
-
 	public void followingList() throws IOException, ServletException {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {

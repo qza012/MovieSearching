@@ -56,7 +56,7 @@ public class MemberDAO {
 	public MemberDTO updateForm(String id) {
 		MemberDTO dto = null;
 		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=? AND withdraw='N'";
+				+ "FROM member3 WHERE id=?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
@@ -566,19 +566,6 @@ public class MemberDAO {
 		}
 		
 		return pw;
-	}
-	
-	public boolean loginForMyPage(String id, String pw) throws SQLException {
-		boolean success = false;
-		String sql="SELECT id FROM member3 WHERE id=? AND pw=?";
-		ps=conn.prepareStatement(sql);
-		ps.setString(1, id);
-		ps.setString(2, pw);
-		rs = ps.executeQuery();
-		if(rs.next()) {
-			success=true;
-		}
-		return success;
 	}
 
 	public boolean follow(String myId, String targetId) {
