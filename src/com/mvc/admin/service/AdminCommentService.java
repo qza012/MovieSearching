@@ -77,6 +77,7 @@ public class AdminCommentService {
 			String strIdx = req.getParameter("idx");
 			int idx = 0;
 			if (strIdx != null) {
+				strIdx = strIdx.trim();
 				idx = Integer.parseInt(strIdx);
 			}
 
