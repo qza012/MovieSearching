@@ -556,19 +556,6 @@ public class MemberDAO {
 		
 		return pw;
 	}
-	
-	public boolean loginForMyPage(String id, String pw) throws SQLException {
-		boolean success = false;
-		String sql="SELECT id FROM member3 WHERE id=? AND pw=?";
-		ps=conn.prepareStatement(sql);
-		ps.setString(1, id);
-		ps.setString(2, pw);
-		rs = ps.executeQuery();
-		if(rs.next()) {
-			success=true;
-		}
-		return success;
-	}
 
 	public boolean follow(String myId, String targetId) {
 		boolean success = false;
@@ -653,7 +640,7 @@ public class MemberDAO {
 	}
 
 	private int getFollowingMaxPage(int pagePerCnt, String loginId) {
-		String sql= "SELECT COUNT(target_id) FROM follow3 WHERE id=?";
+		String sql= "SELECT COUNT(target_id) FROM follow3 WHERE id=? AND withdraw='N'";
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
@@ -735,7 +722,7 @@ public class MemberDAO {
 	}
 
 	private int getFollowerMaxPage(int pagePerCnt, String loginId) {
-		String sql= "SELECT COUNT(id) FROM follow3 WHERE target_id=?";
+		String sql= "SELECT COUNT(id) FROM follow3 WHERE target_id=? AND withdraw='N'";
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);

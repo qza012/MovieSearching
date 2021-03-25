@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.mvc.member.service.MemberService;
 
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
-	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
-	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/myPage/alarmDel","/myPage/alarm",
+	"/member/member","/member/search","/follow", "/myPage/follow","/myPage/followerList","/myPage/followingList", "/myPage/notFollow",
+	"/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/myPage/alarmDel","/myPage/alarm",
 	"/member/memberFollow"})
 
 public class MemberController extends HttpServlet {
@@ -67,18 +67,6 @@ public class MemberController extends HttpServlet {
 				System.out.println("질문지 요청");
 				service.questionList();
 				break;
-				
-			case "/myPage/loginForMyPage":
-				System.out.println("마이페이지 구성을 위한 임시 로그인");
-				service.loginForMyPage();
-				break;
-				
-			case "/myPage/logout":
-				System.out.println("마이페이지 구성을 위한 임시 로그아웃");
-				req.getSession().removeAttribute("myLoginId");
-				RequestDispatcher dis = req.getRequestDispatcher("./main.jsp");
-				dis.forward(req, resp);
-				break;	
 				
 			case "/myPage/updateMF":
 				System.out.println("회원정보 수정 폼으로");
