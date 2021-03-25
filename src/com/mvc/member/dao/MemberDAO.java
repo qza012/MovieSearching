@@ -240,7 +240,18 @@ public class MemberDAO {
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		success = rs.next();
-
+		
+		if(success) {
+			sql = "SELECT id FROM member3 WHERE id=? AND withdraw='Y'";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, myLoginId);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				System.out.println("회원탈퇴한 애다 .");
+				return !success;
+			}
+			
+		}
 		return success;
 	}
 
@@ -945,4 +956,16 @@ public class MemberDAO {
 		return success;
 	}
 
+	
+	public boolean emailChk(String email) throws SQLException {
+		boolean success = false;
+		String sql = "SELECT email FROM member3 WHERE email=?";
+
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, email);
+		rs = ps.executeQuery();
+		success = rs.next();
+
+		return !success;
+	}
 }

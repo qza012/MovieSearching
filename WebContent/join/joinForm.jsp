@@ -28,7 +28,7 @@ label{
 :focus{
     	outline-color: black;
     }
-#img{
+#img,#img2{
 	display : none;
 	padding : 0px 5px;
 	height : 18px;
@@ -65,7 +65,7 @@ label{
 									</div>
 									<div>
 										<label>비밀번호 확인</label><br> <input type="password" name="pw2"
-											id="pw2" onkeyup="check_pw()" />
+											id="pw2" onkeyup="check_pw()" /><span id="check"></span>
 									</div>
 				
 				
@@ -90,7 +90,7 @@ label{
 											id="name" />
 									</div>
 									<div>
-										<label>나이</label><br> <input type="number" min="15" max="100"
+										<label>나이</label><br> <input type="number" min="1" max="130"
 											name="age" id="age" />
 									</div>
 									<div>
@@ -106,12 +106,14 @@ label{
 										 <select
 											name="email_sel" id="email_sel" onchange="change_email()">
 											<option value="선택" >선택</option>
-											<option value="직접 입력" >직접 입력</option>
+											<option value="직접 입력">직접 입력</option>
 											<option value="naver.com">naver.com</option>
 											<option value="gmail.com">gmail.com</option>
 											<option value="daum.net">daum.net</option>
 											<option value="nate.com">nate.com</option>
 										</select>
+										<img src="https://img.icons8.com/android/24/000000/checkmark.png" id="img2" />
+										<input type="button" value="중복 확인" id="emailChk" />
 									</div>
 									<div>
 										<label>선호하는 영화 장르</label><br> <select id="genre">
@@ -140,22 +142,14 @@ label{
 </body>
 <script>
 $("button").remove("#btn2");
-var idChk = false;//중복 체크 여부
+var idChk = false;//ID 중복 체크 여부
+var emailChk = false;//이메일 중복체크
+var re = /^[a-zA-Z0-9]{4,15}$/; //ID 유효
+var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,15}$/; //PW 유효
+var re3 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //이름 유효
+var re4 = /^[0-9]{1,3}$/; //나이 유효
+var re5 = /^[a-z0-9]{4,50}$/; //email 유효	 
 
-//id 값 변경 -> 중복 체크 
-/* $("#id").on("propertychange change keyup paste input",function(){
-	if(idChk==false){
-		alert("아이디 중복체크를 해주세요.");
-		id.focus();
-		return false;
-	}
-}); 
-//아이디를 수정했을 때 
-	$('#id').change(function(){
-		$('#img').hide();
-		$('#idChk').show();
-	});
-*/
 
 $(function(){
 	$('#id').change(function(){
@@ -173,17 +167,24 @@ $(function(){
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj);
-					if(obj.use==false){
-						alert('이미 사용중인 아이디 입니다.');
-						$("#id").val('').focus();
-						
-					}else if(obj.use){
-						alert('사용할 수 있는 아이디 입니다.');
-						$('#img').show();
-						$('#idChk').hide();
-						idChk= true;
+					if(!re.test(id.value)) {
+					 alert("아이디는 4~15자 이내의 영문 대소문자와 숫자로만 입력");
+					 id.focus(); 
+					 idChk=false;
+					}else{
+						if(obj.use==false){
+							alert('이미 사용중인 아이디 입니다.');
+							$("#id").val('').focus();
+							
+						}else if(obj.use){
+							alert('사용할 수 있는 아이디 입니다.');
+							$('#img').show();
+							$('#idChk').hide();
+							idChk= true;
+						}
 					}
-				}
+					}
+				
 				,error:function(e){
 					console.log(e);
 				}
@@ -191,6 +192,46 @@ $(function(){
 	});	 
 });	
 	
+$(function(){
+	$('#email').change(function(){
+		$('#img2').hide();
+		$('#emailChk').show();
+		emailChk = false;
+	});
+
+	 $("#emailChk").click(function(){
+		
+			$.ajax({
+				type:'get'
+				,url:'emailChk'
+				,data:{
+					"email_id":$("#email_id").val(),
+					"email_sel":$("#email_sel").val(),
+					"email_add":$("#email_add").val()
+					}
+				,dataType:'JSON'
+				,success:function(obj){
+					console.log(obj);
+					
+						if(obj.use==false){
+							alert('이미 사용중인 email 입니다.');
+							$("#email").val('').focus();
+							
+						}else if(obj.use){
+							alert('사용할 수 있는 email 입니다.');
+							$('#img2').show();
+							$('#emailChk').hide();
+							emailChk= true;
+						}
+					}
+					
+				
+				,error:function(e){
+					console.log(e);
+				}
+			});				
+	});	 
+});	
 
 			
 	function checkAll() {//빈칸 확인 
@@ -211,13 +252,19 @@ $(function(){
 		if (id.value == "") {
 			alert("아이디를 입력하세요.")
 			id.focus()
-		}else if (idChk==false) {
+		}else if(!re.test(id.value)) {
+			 alert("아이디는 4~15자 이내의 영문 대소문자와 숫자로만 입력");
+			 id.focus(); 
+	    }else if (idChk==false) {
 			alert("아이디 중복체크를 해주세요.");
 			id.focus();
 		}else if (pw.value == "") {
 			alert("비밀번호를 입력하세요.");
 			pw.focus();
-		}else if (pw2.value !== pw.value) {
+		}else if(!re2.test(pw.value)) {
+			 alert("비밀번호는 4~15자 이내의 영문 대소문자와 숫자,특수문자 조합이여야 합니다");
+			 pw.focus(); 
+	    }else if (pw2.value !== pw.value) {
 			alert("비밀번호가 다릅니다.");
 			pw2.focus();
 		}else if(A.value == "") {
@@ -226,32 +273,63 @@ $(function(){
 		}else if(name.value == "") {
 			alert("이름을 입력하세요.");
 			name.focus();
-		}else if(age.value == "") {
+		}else if(!re3.test(name.value)) {
+			 alert("이름은 한글만 가능합니다.");
+			 name.focus(); 
+	    }else if(age.value == "") {
 			alert("나이를 입력하세요.");
 			age.focus();
-		}else if(!female.checked && !male.checked) {//둘 다 선택 X
+		}else if(!re4.test(age.value)) {
+			 alert("나이를 확인해주세요.");
+			 age.focus(); 
+	    }else if(!female.checked && !male.checked) {//둘 다 선택 X
 			alert("성별을 선택해주세요.");
 			male.focus();
+		}else if (emailChk==false) {//이게 여기가 맞나 
+			alert("이메일 중복체크를 해주세요.");
+			email.focus();
 		}else if(email_id.value == "") {//@이전 입력 X
 			alert("이메일을 입력하세요.");
 			email_id.focus();
-		} else if (email_sel.value == "선택") {//@이후 입력 X 
+		}else if(!re5.test(email.value)) {
+			 alert("이메일을 확인해주세요.");
+			 id.focus(); 
+	    } else if (email_sel.value == "선택") {//@이후 입력 X 
 			alert("이메일 주소를 확인해주세요.");
 			email_sel.focus();
 		}else if(email_sel.value=="직접 입력"){
 			if ((email_add.value == "naver.com") || (email_add.value == "gmail.com")
 					|| (email_add.value == "nate.com") || (email_add.value == "daum.net")) {
+				
+				$.ajax({
+					type:'post'
+					,url:'join'
+					,data:{
+						"id":$("#id").val(),
+						"pw":$("#pw").val(),
+						"name":$("#name").val(),
+						"age":$("#age").val(),
+						"genre":$("#genre").val(),
+						"gender":$("input[name='gender']:checked").val(),
+						"question_idx":$("#pw_q").val(),
+						"pw_answer":$("#pw_answer").val(),
+						"email_id":$("#email_id").val(),
+						"email_sel":$("#email_add").val()
+						}
+					,dataType:'JSON'
+					,success:function(obj){
+						console.log(obj.use);
+						location.href="join/index.jsp";
+					}
+					,error:function(e){
+						console.log(e);
+					}
+				});	
 			} else {
 				alert("올바른 도메인을 입력해주세요.");
 				email_add.focus();
 			}
 		
-			$("#id").on("propertychange change keyup paste input",function(){
-				alert('중복 체크를 해주세요.');
-				$('#img').hide();
-				$('#idChk').show();
-				idChk= false;
-			});
 			
 		}else{
 			$.ajax({
@@ -267,8 +345,7 @@ $(function(){
 					"question_idx":$("#pw_q").val(),
 					"pw_answer":$("#pw_answer").val(),
 					"email_id":$("#email_id").val(),
-					"email_sel":$("#email_sel").val(),
-					
+					"email_sel":$("#email_sel").val()
 					}
 				,dataType:'JSON'
 				,success:function(obj){
@@ -287,7 +364,7 @@ $(function(){
 	function change_email() {
 		
 		if($('#email_sel').val()=='직접 입력'){
-		$('#email_span').html('<input type="text" name="email_add" id="email_add" />');
+		$('#email_span').html('<input type="text" name="email_add" id="email_add"/>');
 			
 		}else{
 			$('#email_span').html('');
