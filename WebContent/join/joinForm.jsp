@@ -314,16 +314,16 @@ $(function(){
 	    }else if(!female.checked && !male.checked) {//둘 다 선택 X
 			alert("성별을 선택해주세요.");
 			male.focus();
-		}else if (emailChk==false) {
-			alert("이메일 중복체크를 해주세요.");
-			email_id.focus();
 		}else if(email_id.value == "") {//@이전 입력 X
 			alert("이메일을 입력하세요.");
 			email_id.focus();
 		}else if(!re5.test(email_id.value)) {
 			 alert("이메일을 확인해주세요.");
 			 id.focus(); 
-	    } else if (email_sel.value == "선택") {//@이후 입력 X 
+	    }else if (emailChk==false) {
+			alert("이메일 중복체크를 해주세요.");
+			email_id.focus();
+		} else if (email_sel.value == "선택") {//@이후 입력 X 
 			alert("이메일 주소를 확인해주세요.");
 			email_sel.focus();
 		}else if(email_sel.value=="직접 입력"){
