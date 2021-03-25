@@ -65,8 +65,8 @@
 			.pageArea{
 				width:700px;
 				text-align: center;
-				margin-top: 38%;
-				margin-left: 30%;
+				margin-top: 35%;
+				margin-left: 36%;
 			}
 			.pageArea span{
 				font-size:16px;

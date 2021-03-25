@@ -56,7 +56,7 @@ public class MemberDAO {
 	public MemberDTO updateForm(String id) {
 		MemberDTO dto = null;
 		String sql = "SELECT id,pw,name,age,gender,email,genre,pw_answer,question_idx "
-				+ "FROM member3 WHERE id=? AND withdraw='N'";
+				+ "FROM member3 WHERE id=?";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
@@ -651,7 +651,7 @@ public class MemberDAO {
 	}
 
 	private int getFollowingMaxPage(int pagePerCnt, String loginId) {
-		String sql= "SELECT COUNT(target_id) FROM follow3 WHERE id=? AND withdraw='N'";
+		String sql= "SELECT COUNT(target_id) FROM follow3 WHERE id=?";
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
@@ -733,7 +733,7 @@ public class MemberDAO {
 	}
 
 	private int getFollowerMaxPage(int pagePerCnt, String loginId) {
-		String sql= "SELECT COUNT(id) FROM follow3 WHERE target_id=? AND withdraw='N'";
+		String sql= "SELECT COUNT(id) FROM follow3 WHERE target_id=?";
 		int max = 0;
 		try {
 			ps=conn.prepareStatement(sql);
