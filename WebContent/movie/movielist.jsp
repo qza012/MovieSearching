@@ -60,7 +60,7 @@ select, input[type=submit] {
 		<div id="container">
 			<div id="content">
 				<form class="search" action="movieSearch" method="GET">
-					<select id="search" name="search">
+					<select class="select" name="search">
 						<option value="movieName">영화제목</option>
 						<option value="genre">장르</option>
 						<option value="director">감독</option>
@@ -99,6 +99,6 @@ select, input[type=submit] {
 	</div>
 </body>
 <script>
-$("#search > option[value="+'<c:out value="${ param.search }"/>'+"]").attr("selected","selected");
+	
 </script>
 </html>
