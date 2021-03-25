@@ -30,35 +30,6 @@
 					color: white;
 				}
 				
-				/*
-				select {
-					width : 100px;
-					height : 26px;
-					margin-right: 8px ;
-				}
-				.searchInput{
-					width : 320px;
-					height : 20px;
-				}
-				input[type='submit']{
-					width : 80px;
-					height : 26px;
-					margin-top :10px;
-					margin-left: 8px;
-				}
-				#back, #next, #page {
-		            display: inline-block;
-		            width: 30px;
-		            height: 25px;
-		            border: 1px solid #cdcdcd;
-		            color: #000000;
-		            font-size: 11px;
-		            border-collapse: collapse;
-		            line-height:25px;
-		            margin-top : 50px;
-       		 	}
-       		 	*/
-       		 	
        		 	#page{
 					border-radius: 4px;
 					padding : 10px;
@@ -258,7 +229,7 @@
 			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
-						"<input class='searchInput' type='text' name='keyWord' readonly/>"
+						"<input class='searchInput' type='hidden' name='keyWord' readonly/>"
 				);
 				break;
 				

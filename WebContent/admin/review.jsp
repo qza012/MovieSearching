@@ -162,7 +162,7 @@
 			switch(value) {
 			case "all" :
 				searchInput.replaceWith(
-						"<input class='searchInput' type='text' name='keyWord' readonly/>"
+						"<input class='searchInput' type='hidden' name='keyWord' readonly/>"
 				);
 				break;
 				
