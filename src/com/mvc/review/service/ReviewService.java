@@ -657,7 +657,7 @@ public class ReviewService {
 		System.out.println(movieCode + movieName);
 		
 		map.put("haveReview", haveReview);
-		map.put("moiveCode",movieCode);
+		map.put("movieCode",movieCode);
 		map.put("movieName", movieName);
 		map.put("success", success);
 		
@@ -715,6 +715,7 @@ public class ReviewService {
 		if(myLoginId != null) {
 			String movieName = req.getParameter("movieName");
 			String movieCode = req.getParameter("movieCode");
+			System.out.println(movieName + movieCode);
 			
 			String page="";
 			String msg="";
