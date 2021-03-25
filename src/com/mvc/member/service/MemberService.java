@@ -154,7 +154,7 @@ public class MemberService {
 		String gender = req.getParameter("gender");
 		String genre = req.getParameter("genre");
 		String email = req.getParameter("email_id") + "@" + req.getParameter("email_sel");
-
+		
 		System.out.println(id + "/" + pw + "/" + name + "/" + age + "/" + question_idx + "/" + pw_answer + "/" + gender
 				+ "/" + genre + "/" + email);
 

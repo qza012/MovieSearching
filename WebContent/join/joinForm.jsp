@@ -106,7 +106,7 @@ label{
 										 <select
 											name="email_sel" id="email_sel" onchange="change_email()">
 											<option value="선택" >선택</option>
-											<option value="직접 입력" >직접 입력</option>
+											<option value="직접 입력">직접 입력</option>
 											<option value="naver.com">naver.com</option>
 											<option value="gmail.com">gmail.com</option>
 											<option value="daum.net">daum.net</option>
@@ -141,11 +141,11 @@ label{
 <script>
 $("button").remove("#btn2");
 var idChk = false;//중복 체크 여부
-var re = /^[a-zA-Z0-9]{4,50}$/; //ID 유효
-var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,200}$/; //PW 유효
+var re = /^[a-zA-Z0-9]{4,15}$/; //ID 유효
+var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,15}$/; //PW 유효
 var re3 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //이름 유효
 var re4 = /^[0-9]{1,3}$/; //나이 유효
-	 
+var re5 = /^[a-z0-9]{4,50}$/; //email 유효	 
 
 
 $(function(){
@@ -165,7 +165,7 @@ $(function(){
 				,success:function(obj){
 					console.log(obj);
 					if(!re.test(id.value)) {
-					 alert("아이디는 4~50자 이내의 영문 대소문자와 숫자로만 입력");
+					 alert("아이디는 4~15자 이내의 영문 대소문자와 숫자로만 입력");
 					 id.focus(); 
 					 idChk=false;
 					}else{
@@ -210,7 +210,7 @@ $(function(){
 			alert("아이디를 입력하세요.")
 			id.focus()
 		}else if(!re.test(id.value)) {
-			 alert("아이디는 4~50자 이내의 영문 대소문자와 숫자로만 입력");
+			 alert("아이디는 4~15자 이내의 영문 대소문자와 숫자로만 입력");
 			 id.focus(); 
 	    }else if (idChk==false) {
 			alert("아이디 중복체크를 해주세요.");
@@ -219,7 +219,7 @@ $(function(){
 			alert("비밀번호를 입력하세요.");
 			pw.focus();
 		}else if(!re2.test(pw.value)) {
-			 alert("비밀번호는 4~200자 이내의 영문 대소문자와 숫자,특수문자 조합이여야 합니다");
+			 alert("비밀번호는 4~15자 이내의 영문 대소문자와 숫자,특수문자 조합이여야 합니다");
 			 pw.focus(); 
 	    }else if (pw2.value !== pw.value) {
 			alert("비밀번호가 다릅니다.");
@@ -245,23 +245,45 @@ $(function(){
 		}else if(email_id.value == "") {//@이전 입력 X
 			alert("이메일을 입력하세요.");
 			email_id.focus();
-		} else if (email_sel.value == "선택") {//@이후 입력 X 
+		}else if(!re5.test(email.value)) {
+			 alert("이메일을 확인해주세요.");
+			 id.focus(); 
+	    } else if (email_sel.value == "선택") {//@이후 입력 X 
 			alert("이메일 주소를 확인해주세요.");
 			email_sel.focus();
 		}else if(email_sel.value=="직접 입력"){
 			if ((email_add.value == "naver.com") || (email_add.value == "gmail.com")
 					|| (email_add.value == "nate.com") || (email_add.value == "daum.net")) {
+				
+				$.ajax({
+					type:'post'
+					,url:'join'
+					,data:{
+						"id":$("#id").val(),
+						"pw":$("#pw").val(),
+						"name":$("#name").val(),
+						"age":$("#age").val(),
+						"genre":$("#genre").val(),
+						"gender":$("input[name='gender']:checked").val(),
+						"question_idx":$("#pw_q").val(),
+						"pw_answer":$("#pw_answer").val(),
+						"email_id":$("#email_id").val(),
+						"email_sel":$("#email_add").val()
+						}
+					,dataType:'JSON'
+					,success:function(obj){
+						console.log(obj.use);
+						location.href="join/index.jsp";
+					}
+					,error:function(e){
+						console.log(e);
+					}
+				});	
 			} else {
 				alert("올바른 도메인을 입력해주세요.");
 				email_add.focus();
 			}
 		
-			$("#id").on("propertychange change keyup paste input",function(){
-				alert('중복 체크를 해주세요.');
-				$('#img').hide();
-				$('#idChk').show();
-				idChk= false;
-			});
 			
 		}else{
 			$.ajax({
@@ -277,13 +299,12 @@ $(function(){
 					"question_idx":$("#pw_q").val(),
 					"pw_answer":$("#pw_answer").val(),
 					"email_id":$("#email_id").val(),
-					"email_sel":$("#email_sel").val(),
-					
+					"email_sel":$("#email_sel").val()
 					}
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj.use);
-					location.href="join/index.jsp";
+					//location.href="join/index.jsp";
 				}
 				,error:function(e){
 					console.log(e);
@@ -297,7 +318,7 @@ $(function(){
 	function change_email() {
 		
 		if($('#email_sel').val()=='직접 입력'){
-		$('#email_span').html('<input type="text" name="email_add" id="email_add" />');
+		$('#email_span').html('<input type="text" name="email_add" id="email_add"/>');
 			
 		}else{
 			$('#email_span').html('');
