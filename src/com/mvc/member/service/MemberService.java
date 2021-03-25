@@ -654,4 +654,33 @@ public class MemberService {
 			}
 		}
 
+		
+		public void emailChk() throws IOException {
+			String email_sel = req.getParameter("email_sel");
+			String email = req.getParameter("email_id") + "@" + email_sel;
+			String email_add = req.getParameter("email_add");
+			boolean success = false;
+			System.out.println("email : " + email);
+			if(email_sel.equals("직접 입력")) {
+				email = req.getParameter("email_id") + "@" + email_add;
+				System.out.println("직접입력 제대로 뜨냐");
+			}
+			MemberDAO dao = new MemberDAO();
+			HashMap<String, Object> map = new HashMap<String, Object>();
+
+			try {
+				success = dao.emailChk(email);
+				System.out.println("이메일 사용여부 : " + success);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				dao.resClose();
+				map.put("use", success);
+				Gson gson = new Gson();
+				String json = gson.toJson(map);
+				System.out.println(json);
+				resp.getWriter().print(json);
+			}
+
+		}
 }

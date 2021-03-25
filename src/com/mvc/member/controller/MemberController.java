@@ -14,7 +14,7 @@ import com.mvc.member.service.MemberService;
 @WebServlet({"/idChk","/join/login","/join/logout", "/join","/questionList", "/myPage/updateMF","/myPage/update", "/myPage/withdraw",
 	"/member/member","/member/search","/follow","/myPage/loginForMyPage", "/myPage/follow","/myPage/followerList","/myPage/followingList",
 	"/myPage/notFollow","/myPage/deleteFollower","/join/idFind","/pwFind","/pwQuestionList","/join/pwFind","/member/alarmList","/myPage/alarmDel","/myPage/alarm",
-	"/member/memberFollow"})
+	"/member/memberFollow","/emailChk"})
 
 public class MemberController extends HttpServlet {
 
@@ -43,7 +43,7 @@ public class MemberController extends HttpServlet {
 		
 		switch(sub) {
 			case "/idChk":
-				System.out.println("중복체크 요청");
+				System.out.println("아이디 중복체크 요청");
 				service.idChk();
 				break;
 				
@@ -164,6 +164,11 @@ public class MemberController extends HttpServlet {
 			case "/member/memberFollow":
 				System.out.println("회원 검색에서 팔로우");
 				service.memberFollow();
+				break;
+				
+			case "/emailChk":
+				System.out.println("이메일 중복체크 요청");
+				service.emailChk();
 				break;
 				
 		}

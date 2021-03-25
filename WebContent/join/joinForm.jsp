@@ -28,7 +28,7 @@ label{
 :focus{
     	outline-color: black;
     }
-#img{
+#img,#img2{
 	display : none;
 	padding : 0px 5px;
 	height : 18px;
@@ -112,6 +112,8 @@ label{
 											<option value="daum.net">daum.net</option>
 											<option value="nate.com">nate.com</option>
 										</select>
+										<img src="https://img.icons8.com/android/24/000000/checkmark.png" id="img2" />
+										<input type="button" value="중복 확인" id="emailChk" />
 									</div>
 									<div>
 										<label>선호하는 영화 장르</label><br> <select id="genre">
@@ -140,7 +142,8 @@ label{
 </body>
 <script>
 $("button").remove("#btn2");
-var idChk = false;//중복 체크 여부
+var idChk = false;//ID 중복 체크 여부
+var emailChk = false;//이메일 중복체크
 var re = /^[a-zA-Z0-9]{4,15}$/; //ID 유효
 var re2 = /^[a-zA-Z0-9!@#$%^*+=-]{4,15}$/; //PW 유효
 var re3 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //이름 유효
@@ -189,6 +192,46 @@ $(function(){
 	});	 
 });	
 	
+$(function(){
+	$('#email').change(function(){
+		$('#img2').hide();
+		$('#emailChk').show();
+		emailChk = false;
+	});
+
+	 $("#emailChk").click(function(){
+		
+			$.ajax({
+				type:'get'
+				,url:'emailChk'
+				,data:{
+					"email_id":$("#email_id").val(),
+					"email_sel":$("#email_sel").val(),
+					"email_add":$("#email_add").val()
+					}
+				,dataType:'JSON'
+				,success:function(obj){
+					console.log(obj);
+					
+						if(obj.use==false){
+							alert('이미 사용중인 email 입니다.');
+							$("#email").val('').focus();
+							
+						}else if(obj.use){
+							alert('사용할 수 있는 email 입니다.');
+							$('#img2').show();
+							$('#emailChk').hide();
+							emailChk= true;
+						}
+					}
+					
+				
+				,error:function(e){
+					console.log(e);
+				}
+			});				
+	});	 
+});	
 
 			
 	function checkAll() {//빈칸 확인 
@@ -242,6 +285,9 @@ $(function(){
 	    }else if(!female.checked && !male.checked) {//둘 다 선택 X
 			alert("성별을 선택해주세요.");
 			male.focus();
+		}else if (emailChk==false) {//이게 여기가 맞나 
+			alert("이메일 중복체크를 해주세요.");
+			email.focus();
 		}else if(email_id.value == "") {//@이전 입력 X
 			alert("이메일을 입력하세요.");
 			email_id.focus();
@@ -304,7 +350,7 @@ $(function(){
 				,dataType:'JSON'
 				,success:function(obj){
 					console.log(obj.use);
-					//location.href="join/index.jsp";
+					location.href="join/index.jsp";
 				}
 				,error:function(e){
 					console.log(e);
