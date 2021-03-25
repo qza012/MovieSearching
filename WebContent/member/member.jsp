@@ -166,7 +166,7 @@
             <select id="select" name="search">
                 <option value="id">ID</option>
                 <option value="name">이름</option>
-                <option value="age">나이</option>
+                <option value="gender">성별</option>
             </select>
             <input type="text" value="${param.keyWord}" name="keyWord" placeholder="검색어를 입력하세요">
             <input type="submit" value="검색">
@@ -177,7 +177,7 @@
             <tr>
                 <th>아이디</th>
                 <th>이름</th>
-                <th>나이</th>
+                <th>성별</th>
                 <th>선호장르</th>
                 <th>팔로우</th>
             </tr>
@@ -185,7 +185,7 @@
 	            <tr>
 	                <td><a href="memReviewList?id=${member3.id}">${member3.id}</a></td>
 	                <td>${member3.name}</td>
-	                <td>${member3.age}</td>
+	                <td>${member3.gender}</td>
 	                <td>${member3.genre}</td>
 	           		<td>
 	           			<c:if test="${member3.id eq sessionScope.myLoginId}">

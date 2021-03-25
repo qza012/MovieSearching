@@ -400,13 +400,13 @@ public class MemberDAO {
 					"(SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N')) m on f.target_id = m.id" + 
 					")t WHERE name LIKE ?)WHERE rnum BETWEEN ? AND ?)";
 			ps = conn.prepareStatement(nameSql);	
-		}else if(search.equals("age")) {
+		}else if(search.equals("gender")) {
 			String ageSql = "SELECT * FROM " + 
 					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM" + 
 					"(SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum, target_id, loginId, id, name, age, gender, genre, reg_date FROM " + 
 					"(SELECT * FROM (SELECT target_id, id loginId FROM follow3 WHERE id=?)f RIGHT OUTER JOIN " + 
 					"(SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY id DESC) AS rnum,id,name,age,gender,genre,reg_date FROM member3 WHERE withdraw='N' AND disable='N')) m on f.target_id = m.id" + 
-					")t WHERE age LIKE ?)WHERE rnum BETWEEN ? AND ?)";
+					")t WHERE gender LIKE ?)WHERE rnum BETWEEN ? AND ?)";
 			ps = conn.prepareStatement(ageSql);	
 		}
 		
