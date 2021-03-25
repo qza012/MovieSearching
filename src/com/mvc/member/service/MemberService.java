@@ -656,15 +656,9 @@ public class MemberService {
 
 		
 		public void emailChk() throws IOException {
-			String email_sel = req.getParameter("email_sel");
-			String email = req.getParameter("email_id") + "@" + email_sel;
-			String email_add = req.getParameter("email_add");
+			String email = req.getParameter("email_id") + "@" + req.getParameter("email_sel");
 			boolean success = false;
 			System.out.println("email : " + email);
-			if(email_sel.equals("직접 입력")) {
-				email = req.getParameter("email_id") + "@" + email_add;
-				System.out.println("직접입력 제대로 뜨냐");
-			}
 			MemberDAO dao = new MemberDAO();
 			HashMap<String, Object> map = new HashMap<String, Object>();
 

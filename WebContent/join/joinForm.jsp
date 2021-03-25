@@ -193,21 +193,20 @@ $(function(){
 });	
 	
 $(function(){
-	$('#email').change(function(){
+	$('#email_id').change(function(){
 		$('#img2').hide();
 		$('#emailChk').show();
 		emailChk = false;
 	});
 
 	 $("#emailChk").click(function(){
-		
+		if(email_sel.value=="직접 입력"){
 			$.ajax({
 				type:'get'
 				,url:'emailChk'
 				,data:{
 					"email_id":$("#email_id").val(),
-					"email_sel":$("#email_sel").val(),
-					"email_add":$("#email_add").val()
+					"email_sel":$("#email_add").val()
 					}
 				,dataType:'JSON'
 				,success:function(obj){
@@ -215,7 +214,7 @@ $(function(){
 					
 						if(obj.use==false){
 							alert('이미 사용중인 email 입니다.');
-							$("#email").val('').focus();
+							$("#email_id").val('').focus();
 							
 						}else if(obj.use){
 							alert('사용할 수 있는 email 입니다.');
@@ -229,7 +228,37 @@ $(function(){
 				,error:function(e){
 					console.log(e);
 				}
-			});				
+			});	
+		}else{
+			$.ajax({
+				type:'get'
+				,url:'emailChk'
+				,data:{
+					"email_id":$("#email_id").val(),
+					"email_sel":$("#email_sel").val()
+					}
+				,dataType:'JSON'
+				,success:function(obj){
+					console.log(obj);
+					
+						if(obj.use==false){
+							alert('이미 사용중인 email 입니다.');
+							$("#email_id").val('').focus();
+							
+						}else if(obj.use){
+							alert('사용할 수 있는 email 입니다.');
+							$('#img2').show();
+							$('#emailChk').hide();
+							emailChk= true;
+						}
+					}
+					
+				
+				,error:function(e){
+					console.log(e);
+				}
+			});	
+		}
 	});	 
 });	
 
@@ -285,13 +314,13 @@ $(function(){
 	    }else if(!female.checked && !male.checked) {//둘 다 선택 X
 			alert("성별을 선택해주세요.");
 			male.focus();
-		}else if (emailChk==false) {//이게 여기가 맞나 
+		}else if (emailChk==false) {
 			alert("이메일 중복체크를 해주세요.");
-			email.focus();
+			email_id.focus();
 		}else if(email_id.value == "") {//@이전 입력 X
 			alert("이메일을 입력하세요.");
 			email_id.focus();
-		}else if(!re5.test(email.value)) {
+		}else if(!re5.test(email_id.value)) {
 			 alert("이메일을 확인해주세요.");
 			 id.focus(); 
 	    } else if (email_sel.value == "선택") {//@이후 입력 X 
