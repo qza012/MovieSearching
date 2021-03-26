@@ -80,7 +80,7 @@
 					<hr/>
 					<table>
 						<tr>
-							<th>아이디</th><th>이름</th><th>나이</th><th>성별</th><th>이메일</th><th>탈퇴여부</th><th>활성화 여부</th>
+							<th>아이디</th><th>이름</th><th>나이</th><th>성별</th><th>이메일</th><th>탈퇴여부</th><th>비활성화 여부</th>
 						</tr>
 						<c:forEach items="${list }" var="member">
 						<tr>
@@ -93,17 +93,11 @@
 							<td>${member.withdraw }</td>
 							<td id="${member.id }">${member.disable }</td>
 							<td>
-								<%-- <c:if test="${member.disable == 'y' || member.disable == 'Y'}">
-									<button value="${member.id }">비활성화</button>
-								</c:if>
-								<c:if test="${member.disable == 'n' || member.disable == 'N'}">
-									<button value="${member.id }">활성화</button>
-								</c:if> --%>
 								<c:if test="${member.disable == 'y' || member.disable == 'Y'}">
-									<button value="${member.id }" onclick='toggleDisable(this)'>비활성화</button>
+									<button value="${member.id }" onclick='toggleDisable(this)'>활성화</button>
 								</c:if>
 								<c:if test="${member.disable == 'n' || member.disable == 'N'}">
-									<button value="${member.id }" onclick='toggleDisable(this)'>활성화</button>
+									<button value="${member.id }" onclick='toggleDisable(this)'>비활성화</button>
 								</c:if>
 							</td>
 						</tr>
@@ -172,10 +166,10 @@
 
 					if(data.disable == "Y") {
 						flag.html("Y");
-						button.html("비활성화");
+						button.html("활성화");
 					} else {
 						flag.html("N");
-						button.html("활성화");
+						button.html("비활성화");
 					}
 
 				},error:function(e) {
