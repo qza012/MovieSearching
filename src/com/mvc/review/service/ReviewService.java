@@ -147,13 +147,20 @@ public class ReviewService {
 		String loginId = (String) req.getSession().getAttribute("myLoginId");
 		if(loginId != null) {	
 			String id = req.getParameter("id");
+			req.getSession().setAttribute("target_id", id);
 			System.out.println("상세보기 할 id:"+id);
+			String pageParam = req.getParameter("page");
+			System.out.println("page:"+pageParam);
+			int group = 1;
+			if(pageParam != null) {
+				group = Integer.parseInt(pageParam);
+			}	
 			ReviewDAO dao = new ReviewDAO();
 			try {
-				ArrayList<ReviewDTO> review_list = dao.memReviewList(id);
-				if(review_list!=null) {
-					req.setAttribute("review_list", review_list);
-				}
+				HashMap<String, Object> map = dao.memReviewList(id,group);
+					req.setAttribute("maxPage", map.get("maxPage"));
+					req.setAttribute("review_list", map.get("list"));
+					req.setAttribute("currPage", group);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}finally {

@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import com.mvc.comment.dto.CommentDTO;
 import com.mvc.follow.dto.FollowDTO;
+import com.mvc.member.dto.MemberDTO;
 import com.mvc.movie.dto.MovieDTO;
 import com.mvc.report.dto.ReportDTO;
 import com.mvc.review.dto.ReviewDTO;
@@ -186,22 +187,53 @@ public class ReviewDAO {
 		return list;
 	}
 	
-	public ArrayList<ReviewDTO> memReviewList(String id) throws SQLException {
-		String sql = "SELECT idx,subject,movieCode,score,reg_date FROM review3 WHERE id=? ORDER BY reg_date DESC";
-		ArrayList<ReviewDTO> review_list = new ArrayList<ReviewDTO>();
+	public HashMap<String, Object> memReviewList(String id, int page) throws SQLException {
+		int pagePerCnt = 10;
+		int end = page * pagePerCnt;	
+		int start = end-(pagePerCnt-1);
+		String sql = "SELECT idx,subject,movieCode,score,reg_date FROM "
+				+ "(SELECT ROW_NUMBER() OVER(ORDER BY idx DESC) AS rnum,idx,subject,movieCode,score,reg_date FROM review3 WHERE id=? AND del_type='N') "
+				+ "WHERE rnum BETWEEN ? AND ?";
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ReviewDTO> list = new ArrayList<ReviewDTO>();
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, id);
+			ps.setInt(2, start);
+			ps.setInt(3, end);
 			rs = ps.executeQuery();
-			if(rs.next()) {
+			while(rs.next()) {
 				ReviewDTO dto = new ReviewDTO();
 				dto.setIdx(rs.getInt("idx"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setMovieCode(rs.getString("movieCode"));
 				dto.setScore(rs.getInt("score"));
 				dto.setReg_date(rs.getDate("reg_date"));
-				review_list.add(dto);
+				list.add(dto);
 			}
-		return review_list;
+			System.out.println("list size : "+list.size());
+			
+			int maxPage = getMemReviewMaxPage(pagePerCnt, id);
+			map.put("list", list);
+			map.put("maxPage", maxPage);
+			System.out.println("max page : "+maxPage);
+		return map;
+	}
+	private int getMemReviewMaxPage(int pagePerCnt, String id) {
+		String sql= "SELECT COUNT(idx) FROM review3 WHERE id=? AND del_type='N'";
+		int max = 0;
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setString(1, id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				int cnt = rs.getInt(1);
+				System.out.println(cnt);
+				max = (int) Math.ceil(cnt/(double)pagePerCnt);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return max;
 	}
 	
 	public ReviewDTO updateForm(int idx) {
