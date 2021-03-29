@@ -94,8 +94,8 @@ label{
 											name="age" id="age" />
 									</div>
 									<div>
-										<label>성별</label> <input type="radio" name="gender" value="male"
-											id="male" /> 남 <input type="radio" name="gender" value="female"
+										<label>성별</label> <input type="radio" name="gender" value="남"
+											id="male" /> 남 <input type="radio" name="gender" value="여"
 											id="female" /> 여
 									</div>
 									<div>
