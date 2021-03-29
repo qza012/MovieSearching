@@ -240,24 +240,13 @@ public class MemberDAO {
 
 	public boolean login(String myLoginId, String pw) throws SQLException {
 		boolean success = false;
-		String sql = "SELECT id FROM member3 WHERE id=? AND pw=?";
+		String sql = "SELECT id FROM member3 WHERE id=? AND pw=? AND withdraw='N' AND disable='N'";
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, myLoginId);
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		success = rs.next();
 		
-		if(success) {
-			sql = "SELECT id FROM member3 WHERE id=? AND withdraw='Y'";
-			ps = conn.prepareStatement(sql);
-			ps.setString(1, myLoginId);
-			rs = ps.executeQuery();
-			if(rs.next()) {
-				System.out.println("회원탈퇴한 애다 .");
-				return !success;
-			}
-			
-		}
 		return success;
 	}
 
